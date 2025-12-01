@@ -59,6 +59,8 @@ public class multiple_duplicates_in_array {
     /*
     so what we do is we use the array itself as a hash array
 
+    O(n)time and O(1)space
+
     example 4 3 2 7 8 2 3 1
     index   0 1 2 3 4 5 6 7
     first loop
