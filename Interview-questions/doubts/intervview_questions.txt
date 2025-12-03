@@ -1,0 +1,30 @@
+
+------------------------------------------------------------------------------------------------
+shivrajkaravinakopp@Shivrajs-MacBook-Air Bloomdev % mkdir Interview-questions/doubts
+mkdir: Interview-questions: No such file or directory
+shivrajkaravinakopp@Shivrajs-MacBook-Air Bloomdev % mkdir Interview-questions/doubts
+mkdir: Interview-questions: No such file or directory
+shivrajkaravinakopp@Shivrajs-MacBook-Air Bloomdev % mkdir -p Interview-questions/doubts
+
+We can't use the / the git sees it as different command like ittries creating folder doubts but the Interview-questions folder is not yet created so we can use the command 
+
+mkdir -p Interview-questions/doubts
+
+this command creates a parent directory and sub directory also 
+
+------------------------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------------------------
+why was react introduced what problem did it resolve?
+
+
+the react solved a very common problem of the js when even a single component is being changed or updated the whole page reloads in the js but in react the component which is changed only loads 
+
+react creates a virtual copy of the dom and than compares itwith the chages we have done in it with the main do and pushes only the chnsges not the full dom
+
+------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------
+
+what does react dom does than 
+
+the react dom connects the react 
