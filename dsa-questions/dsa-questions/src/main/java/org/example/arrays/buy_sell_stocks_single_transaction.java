@@ -55,6 +55,7 @@ public class buy_sell_stocks_single_transaction {
     /*
     this is a prefix sum wala solution like will use 2 array to
     store the minimum till end and than another array from last to first
+    this itself you can call as dp
      */
     public void i_never_thpught_of_it(int arr[]){
         int n=arr.length;
