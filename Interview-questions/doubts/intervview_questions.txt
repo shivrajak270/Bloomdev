@@ -28,3 +28,265 @@ react creates a virtual copy of the dom and than compares itwith the chages we h
 what does react dom does than 
 
 the react dom connects the react 
+
+
+
+
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+How does the Hashmap work and why is the threshold 8 
+
+
+1. What is a HashMap?
+
+A HashMap stores data as key–value pairs:
+
+Key → hash() → index → bucket → value
+
+
+It provides:
+
+O(1) average insert
+
+O(1) average search
+
+O(1) average delete
+
+🔶 2. Internal Structure
+
+A HashMap internally contains:
+
+Node<K, V>[] table;   // array of buckets
+
+
+Each bucket stores either:
+
+Linked List of nodes (Java 7)
+
+Linked List OR Red-Black Tree (Java 8+)
+
+Each node looks like:
+
+Node {
+    int hash;
+    K key;
+    V value;
+    Node next;
+}
+
+🔶 3. How HashMap Works Step-by-Step
+Step 1 — Compute hash
+
+Java computes hash using:
+
+hash = key.hashCode()
+
+
+Then it mixes it using:
+
+(hash ^ (hash >>> 16))
+
+
+(Improves distribution)
+
+Step 2 — Find bucket index
+index = hash & (capacity - 1)
+
+
+Example:
+
+Capacity = 16
+
+Computed hash = 01101100
+
+Index = last 4 bits → 1100 → bucket 12
+
+Step 3 — Insert / Search in that bucket
+
+If bucket empty → directly insert
+
+If bucket has nodes → compare keys
+
+If collision → insert in list or tree
+
+🔶 4. What Are Collisions?
+
+Collision = when two different keys go to the same bucket index.
+
+Java handles collisions using:
+
+✔ Before Java 8 → Linked List
+Node → Node → Node → ...
+
+✔ After Java 8 → Linked List + Tree (Red-Black Tree)
+If bucket size ≥ 8 → convert to Tree
+If bucket size ≤ 6 → convert back to List
+
+🔶 5. Java 7 vs Java 8 — Big Change
+Feature	Java 7	Java 8
+Collision handling	Only Linked List	Linked List + Red-Black Tree
+Worst-case lookup	❌ O(n)	✔ O(log n)
+Hash mixing	Weak	Better hashing
+Rehash process	Can cause loops	Safe + improved
+🔶 6. Why Java Added Red-Black Trees (Java 8)?
+
+Because earlier:
+
+If many collisions happen
+
+Linked List becomes long
+
+Searching becomes O(n)
+
+Worst-case attacks possible
+
+Now:
+
+Tree height = log n
+
+Worst-case is O(log n), not O(n)
+
+🔶 7. Why Treeify Threshold = 8? (WHY EXACTLY 8)
+
+This is the most common interview question.
+
+✔ Reason 1 — Probability
+Chance of 8 elements landing in the same bucket is extremely rare → about 1 in 60 million.
+So if it happens → hash function is weak → use tree.
+
+✔ Reason 2 — Performance Benchmark
+For bucket size 1–7 → LinkedList is faster
+For 8+ → Red-Black Tree becomes faster
+
+✔ Reason 3 — Memory Optimization
+Tree nodes are heavy → don’t create them early.
+
+✔ Reason 4 — Tree height
+With 8 nodes, tree height is about 3 → good performance.
+
+✔ Reason 5 — Avoid frequent switching
+Java also untreeifies when size drops to 6
+→ prevents flip-flop at 7.
+
+🔶 8. Operations Time Complexity
+Operation	Average	Worst Case
+Insert	O(1)	O(log n)
+Search	O(1)	O(log n)
+Delete	O(1)	O(log n)
+
+Worst case happens only if bucket becomes a tree.
+
+🔶 9. Rehashing (When Table Grows)
+
+When size exceeds:
+
+loadFactor * capacity
+(default loadFactor = 0.75)
+
+
+→ HashMap doubles capacity
+→ reassigns elements to new buckets
+→ still O(1) on average
+
+🔶 10. What is a Bucket?
+
+A bucket is simply an array index.
+
+Each bucket can contain:
+
+Empty
+↓
+Single Node
+↓
+LinkedList
+↓
+Red-Black Tree
+
+🔶 11. Complete HashMap Flow in One Diagram
+            hashCode()
+Key ----------------------> hash
+                               |
+                               v
+                        hash mixing 
+                               |
+                               v
+                   index = hash & (n-1)
+                               |
+                               v
+            +---------------------------------+
+Bucket[i] → |  Node -> Node -> Node -> ...    |  (LL)
+            |      OR Red-Black Tree          |
+            +---------------------------------+
+
+🔶 12. Why Average O(1)?
+
+Because:
+
+Hashing is constant time
+
+Bucket has only a few elements
+
+Probability of collisions is small
+
+Even in collisions, tree gives O(log n).
+
+🔶 13. Why HashMap Is Faster Than TreeMap?
+
+HashMap → O(1) average
+TreeMap → O(log n) always
+
+But HashMap loses ordering — TreeMap maintains sorted keys.
+
+🎉 DONE — Complete HashMap Notes (Everything Covered)
+
+This chart includes:
+
+✔ How HashMap works
+✔ Buckets, hashing, collisions
+✔ Java 7 vs Java 8
+✔ LinkedList vs Red-Black Tree
+✔ Why threshold is 8
+✔ Why untreeify at 6
+✔ Rehashing
+✔ Time complexities
+✔ Internal structure visuals 
+
+Bucket 8:
+
+                     (Root: Key M)
+                    /             \
+           (Key D)                   (Key T)
+           /    \                     /    \
+     (A)        (F)             (R)        (Z)
+
+
+
+Index:       0        1        2        3        4        5        6        7        8        9 ...
+-----------------------------------------------------------------------------------------------------
+Bucket:     ∅        ∅        ∅       [LL]      ∅       [LL]      ∅        ∅       [Tree]    ∅
+-----------------------------------------------------------------------------------------------------
+
+[LL] at index 3  (Linked List Collision Chain)
+     Node1 (hash=120, key="A", value=10)
+         |
+         v
+     Node2 (hash=120, key="B", value=20)
+         |
+         v
+     Node3 (hash=120, key="C", value=30)
+
+
+[LL] at index 5  (Another Linked List)
+     Node(hash, key="X", value=100)
+         |
+         v
+     Node(hash, key="Y", value=200)
+
+
+[Tree] at index 8 (Red-Black Tree)
+                       (M)
+                      /   \
+                   (D)     (T)
+                  /  \     /  \
+                (A) (F)  (R)  (Z)
+=====see till 7 element it's just tree after 7th element its tree 
