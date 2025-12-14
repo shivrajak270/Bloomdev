@@ -11,4 +11,5 @@ public interface UsersService {
 
     public UsersDTO createUsers(Users users);
     public PharmasistDTO createPharmasist(PharmasistDTO PharmasistDTO);
+    public String verify(Users users);
 }
