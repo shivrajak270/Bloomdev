@@ -1,0 +1,510 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2867
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;\f1\froman\fcharset0 Times-Bold;\f2\fmodern\fcharset0 Courier-Bold;
+\f3\fnil\fcharset0 AppleColorEmoji;\f4\froman\fcharset0 Times-Roman;\f5\fmodern\fcharset0 Courier;
+\f6\fmodern\fcharset0 Courier-Oblique;}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue0;\red174\green176\blue183;\red23\green23\blue26;
+\red185\green101\blue173;\red175\green177\blue183;\red0\green0\blue0;\red164\green160\blue78;\red195\green123\blue90;
+\red71\green149\blue242;\red185\green101\blue173;\red23\green23\blue26;\red185\green101\blue173;\red25\green60\blue255;
+\red38\green157\blue169;\red174\green176\blue183;\red25\green61\blue255;\red89\green158\blue96;\red103\green107\blue114;
+\red29\green174\blue156;\red252\green90\blue64;}
+{\*\expandedcolortbl;;\cssrgb\c0\c0\c0;\csgenericrgb\c68235\c69020\c71765;\csgenericrgb\c9020\c9020\c10196;
+\csgenericrgb\c72549\c39608\c67843;\cssrgb\c73977\c74746\c76784;\cssrgb\c0\c1\c1;\csgenericrgb\c64314\c62745\c30588;\csgenericrgb\c76471\c48235\c35294;
+\csgenericrgb\c27843\c58431\c94902;\csgenericrgb\c72549\c39608\c67843;\csgenericrgb\c9020\c9020\c10196;\cssrgb\c78111\c49205\c73393;\cssrgb\c12594\c35385\c100000;
+\csgenericrgb\c14902\c61569\c66275;\cssrgb\c73788\c74552\c76774;\cssrgb\c13005\c35866\c100000;\csgenericrgb\c34902\c61961\c37647;\csgenericrgb\c40392\c41961\c44706;
+\csgenericrgb\c11373\c68235\c61176;\cssrgb\c100000\c44604\c31621;}
+{\*\listtable{\list\listtemplateid1\listhybrid{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{disc\}}{\leveltext\leveltemplateid1\'01\uc0\u8226 ;}{\levelnumbers;}\fi-360\li720\lin720 }{\listname ;}\listid1}
+{\list\listtemplateid2\listhybrid{\listlevel\levelnfc0\levelnfcn0\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{decimal\}}{\leveltext\leveltemplateid101\'01\'00;}{\levelnumbers\'01;}\fi-360\li720\lin720 }{\listname ;}\listid2}}
+{\*\listoverridetable{\listoverride\listid1\listoverridecount0\ls1}{\listoverride\listid2\listoverridecount0\ls2}}
+\paperw11900\paperh16840\margl1440\margr1440\vieww14940\viewh9860\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 React actually a html doubt \
+\
+\pard\pardeftab720\sa321\partightenfactor0
+
+\f1\b\fs48 \cf0 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 1. Will 
+\f2\fs52 handleSubmit
+\f1\fs48  trigger even if button type is something else?\
+\pard\pardeftab720\sa280\partightenfactor0
+
+\f3\b0\fs28 \cf0 \uc0\u10004 \u65039 
+\f1\b  
+\f2\fs30\fsmilli15210 handleSubmit
+\f1\fs28  triggers ONLY when:\
+\pard\tx220\tx720\pardeftab720\li720\fi-720\sa240\partightenfactor0
+\ls1\ilvl0
+\f4\b0\fs24 \cf0 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	\uc0\u8226 	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 You have a 
+\f5\fs26 <form>
+\f4\fs24  element\
+\ls1\ilvl0\kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	\uc0\u8226 	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 And you submit that form\
+\ls1\ilvl0\kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	\uc0\u8226 	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 The button has 
+\f5\fs26 type="submit"
+\f4\fs24 \
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 \
+\pard\pardeftab720\sa321\partightenfactor0
+
+\f3\fs48 \cf0 \uc0\u10060 
+\f1\b  If button type is NOT submit:\
+
+\itap1\trowd \taflags0 \trgaph108\trleft-108 \trbrdrt\brdrnil \trbrdrl\brdrnil \trbrdrr\brdrnil 
+\clvertalc \clshdrawnil \clwWidth2028\clftsWidth3 \clmart10 \clmarl10 \clmarb10 \clmarr10 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt20 \clpadl20 \clpadb20 \clpadr20 \gaph\cellx4320
+\clvertalc \clshdrawnil \clwWidth2642\clftsWidth3 \clmart10 \clmarl10 \clmarb10 \clmarr10 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt20 \clpadl20 \clpadb20 \clpadr20 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\qc\partightenfactor0
+
+\fs24 \cf0 \strokec2 Button Type\cell 
+\pard\intbl\itap1\pardeftab720\qc\partightenfactor0
+\cf0 Does it trigger onSubmit?\cell \row
+
+\itap1\trowd \taflags0 \trgaph108\trleft-108 \trbrdrl\brdrnil \trbrdrr\brdrnil 
+\clvertalc \clshdrawnil \clwWidth2028\clftsWidth3 \clmart10 \clmarl10 \clmarb10 \clmarr10 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt20 \clpadl20 \clpadb20 \clpadr20 \gaph\cellx4320
+\clvertalc \clshdrawnil \clwWidth2642\clftsWidth3 \clmart10 \clmarl10 \clmarb10 \clmarr10 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt20 \clpadl20 \clpadb20 \clpadr20 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f5\b0\fs26 \cf0 type="submit"
+\f4\fs24 \cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3 \cf0 \uc0\u9989 
+\f4  YES\cell \row
+
+\itap1\trowd \taflags0 \trgaph108\trleft-108 \trbrdrl\brdrnil \trbrdrr\brdrnil 
+\clvertalc \clshdrawnil \clwWidth2028\clftsWidth3 \clmart10 \clmarl10 \clmarb10 \clmarr10 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt20 \clpadl20 \clpadb20 \clpadr20 \gaph\cellx4320
+\clvertalc \clshdrawnil \clwWidth2642\clftsWidth3 \clmart10 \clmarl10 \clmarb10 \clmarr10 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt20 \clpadl20 \clpadb20 \clpadr20 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f5\fs26 \cf0 type="button"
+\f4\fs24 \cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3 \cf0 \uc0\u10060 
+\f4  NO\cell \row
+
+\itap1\trowd \taflags0 \trgaph108\trleft-108 \trbrdrl\brdrnil \trbrdrt\brdrnil \trbrdrr\brdrnil 
+\clvertalc \clshdrawnil \clwWidth2028\clftsWidth3 \clheight367 \clmart10 \clmarl10 \clmarb10 \clmarr10 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt20 \clpadl20 \clpadb20 \clpadr20 \gaph\cellx4320
+\clvertalc \clshdrawnil \clwWidth2642\clftsWidth3 \clheight367 \clmart10 \clmarl10 \clmarb10 \clmarr10 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt20 \clpadl20 \clpadb20 \clpadr20 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f5\fs26 \cf0 type="reset"
+\f4\fs24 \cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3 \cf0 \uc0\u10060 
+\f4  NO\
+\
+\cell \lastrow\row
+\pard\pardeftab720\partightenfactor0
+\cf0 \strokec2 3. What is 
+\f5\fs26 onChange
+\f4\fs24  in React?\
+\
+It replaces:\
+element.addEventListener("change", function()\{\})\
+React version:\
+onChange=\{(e) => setUsername(e.target.value)\}\
+====================================================================================\
+=======================JWT-TOKEN============GENERATION============================\
+\
+Step 1: In the POM add the dependency \
+\
+Step 2 : to override the security create a new config class in that SecurityConfig the name can be actually. Anything\
+Here a bean you make which will return a SecurityFilterChain because we are now overriding the securityfilterchain\
+\'97In that http.csrf will disable to skip that session things session token\
+\'97And than authorizeHttprequest authenticate will tell which all url\'92s should be there to access or. Removal \
+\'97Formlogin so that will get the form to login \
+\'97And than its httpBasic which will be there for postman to work\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f5\fs26 \cf3 \cb4 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 http.sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.
+\f6\i \cf5 STATELESS
+\f5\i0 \cf3 ));\
+Now this will make sure that every request will require to authenticate \
+\cf6 \cb1 ===========================\cf7 ===================================================\
+\
+Now will authenticate though the db the password \
+\'97so we need the authentication provider which will return authentication object\
+So will have a function in the securityconfig \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf8 \cb4 @Bean\
+\cf9 public \cf3 AuthenticationProvider \cf10 authenticationProvider\cf3 () \{\
+    DaoAuthenticationProvider provider = \cf9 new \cf3 DaoAuthenticationProvider();\
+    provider.setPasswordEncoder(NoOpPasswordEncoder.
+\f6\i getInstance
+\f5\i0 ());\
+    provider.setUserDetailsService(\cf5 userDetailsService\cf3 );\
+    \cf9 return \cf3 provider; \
+\}\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf7 \cb1 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf11 \cb12 userDetailsService this \cf13 \cb1 thing we have to implement this class so create a new class for this \
+And implements you put this \
+\
+For this service we have to return the userDetails class some will make another class imoplemetiong all the methods od user details and than we will pass our model as constructor \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f0 \cf3 \cb4 \
+
+\f5 \cf8 @Component\
+\cf9 public class \cf3 UserPrincipal \cf9 implements \cf3 UserDetails \{\
+\
+\
+    \cf9 private \cf3 Users \cf5 user\cf3 ;\
+\
+    \cf10 UserPrincipal\cf3 (Users user) \{\
+        \cf9 this\cf3 .\cf5 user \cf3 = user;\
+    \}\
+\
+    \cf8 @Override\
+    \cf9 public \cf3 Collection<? \cf9 extends \cf3 GrantedAuthority> \cf10 getAuthorities\cf3 () \{\
+        \cf9 return \cf3 Collections.
+\f6\i singleton
+\f5\i0 (\
+                \cf9 new \cf3 SimpleGrantedAuthority(\cf5 user\cf3 .getRole())\
+        );\
+    \}\
+\
+\
+    \cf8 @Override\
+    \cf9 public \cf3 String \cf10 getPassword\cf3 () \{\
+        \cf9 return \cf5 user\cf3 .getPassword();\
+    \}\
+\
+    \cf8 @Override\
+    \cf9 public \cf3 String \cf10 getUsername\cf3 () \{\
+        \cf9 return \cf5 user\cf3 .getUsername();\
+    \}\
+\
+    \cf8 @Override\
+    \cf9 public boolean \cf10 isAccountNonExpired\cf3 () \{\
+        \cf9 return \cf3 UserDetails.\cf9 super\cf3 .isAccountNonExpired();\
+    \}\
+\
+    \cf8 @Override\
+    \cf9 public boolean \cf10 isAccountNonLocked\cf3 () \{\
+        \cf9 return \cf3 UserDetails.\cf9 super\cf3 .isAccountNonLocked();\
+    \}\
+\
+    \cf8 @Override\
+    \cf9 public boolean \cf10 isCredentialsNonExpired\cf3 () \{\
+        \cf9 return \cf3 UserDetails.\cf9 super\cf3 .isCredentialsNonExpired();\
+    \}\
+\
+    \cf8 @Override\
+    \cf9 public boolean \cf10 isEnabled\cf3 () \{\
+        \cf9 return \cf3 UserDetails.\cf9 super\cf3 .isEnabled();\
+    \}\
+\}\
+\
+\
+\
+\cf14 \cb1 For the roles you have to return the granted authority\
+\
+\cf3 \cb4 BCryptPasswordEncoder \cf5 bCryptPasswordEncoder\cf3 =\cf9 new \cf3 BCryptPasswordEncoder(\cf15 10\cf3 );\
+\cf16 \cb1 So this is what we need to store the password in the db in decrptpted manner \
+We are using the hashing method so what we will do is store it in the dycypted manner in hashed manner and we can also provide the number of rounds as the considered like \
+Above I have mentioned ass 10 so 10 rounds it will hash the same thing for 10 times.\
+\
+Same thing in security config update the dauprovider \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf3 \cb4 provider.setPasswordEncoder(\cf9 new \cf3 BCryptPasswordEncoder(\cf15 10\cf3 ));\
+\
+=======jwt token starts from here===========\cf0 \cb1 \
+\cf17 This is the next step for this I need the dependencies \
+Like 
+\f3\fs48 \cf0 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 5\uc0\u65039 \u8419 
+\f1\b  Simple analogy (easy to remember)\
+
+\itap1\trowd \taflags0 \trgaph108\trleft-108 \trbrdrt\brdrnil \trbrdrl\brdrnil \trbrdrr\brdrnil 
+\clvertalc \clshdrawnil \clwWidth1872\clftsWidth3 \clmart10 \clmarl10 \clmarb10 \clmarr10 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt20 \clpadl20 \clpadb20 \clpadr20 \gaph\cellx4320
+\clvertalc \clshdrawnil \clwWidth1540\clftsWidth3 \clmart10 \clmarl10 \clmarb10 \clmarr10 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt20 \clpadl20 \clpadb20 \clpadr20 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\qc\partightenfactor0
+
+\fs24 \cf0 \strokec2 Part\cell 
+\pard\intbl\itap1\pardeftab720\qc\partightenfactor0
+\cf0 Analogy\cell \row
+
+\itap1\trowd \taflags0 \trgaph108\trleft-108 \trbrdrl\brdrnil \trbrdrr\brdrnil 
+\clvertalc \clshdrawnil \clwWidth1872\clftsWidth3 \clmart10 \clmarl10 \clmarb10 \clmarr10 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt20 \clpadl20 \clpadb20 \clpadr20 \gaph\cellx4320
+\clvertalc \clshdrawnil \clwWidth1540\clftsWidth3 \clmart10 \clmarl10 \clmarb10 \clmarr10 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt20 \clpadl20 \clpadb20 \clpadr20 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f5\b0\fs26 \cf0 jjwt-api
+\f4\fs24 \cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf0 Interface\cell \row
+
+\itap1\trowd \taflags0 \trgaph108\trleft-108 \trbrdrl\brdrnil \trbrdrr\brdrnil 
+\clvertalc \clshdrawnil \clwWidth1872\clftsWidth3 \clmart10 \clmarl10 \clmarb10 \clmarr10 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt20 \clpadl20 \clpadb20 \clpadr20 \gaph\cellx4320
+\clvertalc \clshdrawnil \clwWidth1540\clftsWidth3 \clmart10 \clmarl10 \clmarb10 \clmarr10 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt20 \clpadl20 \clpadb20 \clpadr20 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f5\fs26 \cf0 jjwt-impl
+\f4\fs24 \cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf0 Implementation\cell \row
+
+\itap1\trowd \taflags0 \trgaph108\trleft-108 \trbrdrl\brdrnil \trbrdrt\brdrnil \trbrdrr\brdrnil 
+\clvertalc \clshdrawnil \clwWidth1872\clftsWidth3 \clmart10 \clmarl10 \clmarb10 \clmarr10 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt20 \clpadl20 \clpadb20 \clpadr20 \gaph\cellx4320
+\clvertalc \clshdrawnil \clwWidth1540\clftsWidth3 \clmart10 \clmarl10 \clmarb10 \clmarr10 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt20 \clpadl20 \clpadb20 \clpadr20 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f5\fs26 \cf0 jjwt-jackson
+\f4\fs24 \cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf0 JSON translator\cell \lastrow\row
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f5\fs26 \cf16 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 These three are required for the setup \
+Basically in the past the authentication manger was handling the things like the how the authentication provider will work and authenticate now we will be using the jet token \
+So we have to override the authentication manager \
+\cf8 \cb4 @Bean\
+\cf9 public \cf3 AuthenticationManager \cf10 authenticationManager\cf3 (AuthenticationConfiguration config) \cf9 throws \cf3 Exception \{\
+    \cf9 return \cf3 config.getAuthenticationManager();\
+\}\
+\cf16 \cb1 \
+\cf8 \cb4 @Override\
+\cf9 public \cf3 String \cf10 verify\cf3 (Users users)\{\
+    Authentication authentication = \cf5 authenticationManager\cf3 .authenticate(\cf9 new \cf3 UsernamePasswordAuthenticationToken(users.getUsername(), users.getPassword()));\
+    \cf9 if\cf3 (authentication.isAuthenticated())\{\
+        \cf9 return \cf18 "success"\cf3 ;\
+    \}\
+    \cf9 else\cf3 \{\
+        \cf9 return \cf18 "fail"\cf3 ;\
+    \}\
+\
+\cf16 \cb1 \
+\pard\pardeftab720\sa298\partightenfactor0
+
+\f3\fs36 \cf0 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 \uc0\u55357 \u56593 
+\f1\b  Short Answer\
+\pard\pardeftab720\sa240\partightenfactor0
+
+\f5\b0\fs26 \cf0 .authenticate()
+\f4\fs24  knows to use 
+\f2\b\fs26 DaoAuthenticationProvider
+\f4\b0\fs24  because:\strokec2 \
+\pard\tx220\tx720\pardeftab720\li720\fi-720\sa240\partightenfactor0
+\ls2\ilvl0\cf0 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	1	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 You passed a 
+\f5\fs26 UsernamePasswordAuthenticationToken
+\f4\fs24 \
+\ls2\ilvl0
+\f5\fs26 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	2	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 DaoAuthenticationProvider.supports()
+\f4\fs24  returns 
+\f5\fs26 true
+\f4\fs24  for that token\
+\ls2\ilvl0\kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	3	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 Spring auto-registers 
+\f5\fs26 DaoAuthenticationProvider
+\f4\fs24  when a 
+\f5\fs26 UserDetailsService
+\f4\fs24  exists\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f5\fs26 \cf16 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 \
+\cf3 \cb4 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf16 \cb1 Now the token generation \
+\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf9 \cb4 public \cf3 String \cf10 generateToken\cf3 (Users users)\{\
+        Map<String,Object> claims = \cf9 new \cf3 HashMap<>();\
+\
+        \cf9 return \cf3 Jwts.
+\f6\i builder
+\f5\i0 ()\
+                .claims()\
+                .add(claims)\
+                .subject(users.getUsername())\
+                .issuedAt(\cf9 new \cf3 Date(System.
+\f6\i currentTimeMillis
+\f5\i0 ()))\
+                .expiration(\cf9 new \cf3 Date(System.
+\f6\i currentTimeMillis
+\f5\i0 () + \cf15 600000\cf3 ))\
+                .and()\
+                .signWith(getKey())\
+                .compact();\
+\
+    \}\
+    \cf9 private \cf3 Key \cf10 getKey\cf3 ()\{\
+        \cf9 byte\cf3 []keybytes = Decoders.
+\f6\i \cf5 BASE64
+\f5\i0 \cf3 .decode(\cf5 secreteKey\cf3 );\
+        \cf9 return \cf3 Keys.
+\f6\i hmacShaKeyFor
+\f5\i0 (keybytes);\
+\
+    \}\
+\}\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf16 \cb1 So the thing now is the jet token generation is okay but we would need to add add a filter before the usernaempassword filter so that we could use the token authentication \
+For that in the security config we have to add\
+\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf3 \cb4 .addFilterBefore(\cf5 jwtFilter\cf3 , UsernamePasswordAuthenticationFilter.\cf9 class\cf3 )\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf16 \cb1 Before the build in security filter class NOW we have to add this classs \
+JwtFilter and extend the once per request filter \
+\
+\
+\cf8 \cb4 Configuration\
+\cf9 public class \cf3 jwtFilter \cf9 extends \cf3 OncePerRequestFilter \{\
+    \cf8 @Autowired\
+    \cf9 private \cf3 JwtServiceImpl \cf5 jwtServiceImpl\cf3 ;\
+\
+\cf8 @Autowired\
+    \cf3 ApplicationContext \cf5 applicationContext\cf3 ;\
+\
+\
+    \cf8 @Override\
+    \cf9 protected void \cf10 doFilterInternal\cf3 (HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) \cf9 throws \cf3 ServletException, IOException \{\
+        String username=\cf9 null\cf3 ;\
+        String token = \cf18 ""\cf3 ;\
+        String authorizationHeader = request.getHeader(\cf18 "Authorization"\cf3 );\
+        \cf9 if \cf3 (authorizationHeader != \cf9 null \cf3 && authorizationHeader.startsWith(\cf18 "Bearer "\cf3 )) \{\
+           token = authorizationHeader.substring(\cf15 7\cf3 );\
+           username=\cf5 jwtServiceImpl\cf3 .extractUserName(token);\
+        \}\
+        \cf9 if\cf3 (username!=\cf9 null \cf3 && SecurityContextHolder.
+\f6\i getContext
+\f5\i0 ().getAuthentication()==\cf9 null\cf3 )\
+        \{\
+            UserDetails userDetails=\cf5 applicationContext\cf3 .getBean(UserdetailService.\cf9 class\cf3 ).loadUserByUsername(username);\
+\
+            \cf9 if\cf3 (\cf5 jwtServiceImpl\cf3 .validateToken(token, userDetails))\{\
+                UsernamePasswordAuthenticationToken authtoken =\cf9 new \cf3 UsernamePasswordAuthenticationToken(userDetails,\cf9 null\cf3 ,userDetails.getAuthorities());\
+                authtoken.setDetails(\cf9 new \cf3 WebAuthenticationDetailsSource().buildDetails(request));\
+                SecurityContextHolder.
+\f6\i getContext
+\f5\i0 ().setAuthentication(authtoken);\
+            \}\
+        \}\
+\
+        filterChain.doFilter(request,response);\
+\
+\
+    \}\
+\}\
+\
+\
+================\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf9 package \cf3 com.shivraj.medassist.ServiceImpl;\
+\
+\cf9 import \cf3 com.shivraj.medassist.Models.Users;\
+\cf9 import \cf3 io.jsonwebtoken.*;\
+\cf9 import \cf3 io.jsonwebtoken.io.Decoders;\
+\cf9 import \cf3 io.jsonwebtoken.security.Keys;\
+\cf9 import \cf3 org.springframework.security.core.userdetails.UserDetails;\
+\cf9 import \cf3 org.springframework.stereotype.\cf8 Service\cf3 ;\
+\
+\cf9 import \cf3 javax.crypto.KeyGenerator;\
+\cf9 import \cf3 javax.crypto.SecretKey;\
+\cf9 import \cf3 java.security.Key;\
+\cf9 import \cf3 java.security.NoSuchAlgorithmException;\
+\cf9 import \cf3 java.util.Base64;\
+\cf9 import \cf3 java.util.Date;\
+\cf9 import \cf3 java.util.HashMap;\
+\cf9 import \cf3 java.util.Map;\
+\cf9 import \cf3 java.util.function.Function;\
+\
+\
+\cf8 @Service\
+\cf9 public class \cf3 JwtServiceImpl \{\
+    \cf9 private \cf3 String \cf5 secretkey \cf3 = \cf18 ""\cf3 ;\
+\
+    \cf9 public \cf10 JwtServiceImpl\cf3 () \{\
+\
+        \cf9 try \cf3 \{\
+            KeyGenerator keyGen = KeyGenerator.
+\f6\i getInstance
+\f5\i0 (\cf18 "HmacSHA256"\cf3 );\
+            SecretKey sk = keyGen.generateKey();\
+            \cf5 secretkey \cf3 = Base64.
+\f6\i getEncoder
+\f5\i0 ().encodeToString(sk.getEncoded());\
+        \} \cf9 catch \cf3 (NoSuchAlgorithmException e) \{\
+            \cf9 throw new \cf3 RuntimeException(e);\
+        \}\
+    \}\
+\
+    \cf9 public \cf3 String \cf10 generateToken\cf3 (String username) \{\
+        Map<String, Object> claims = \cf9 new \cf3 HashMap<>();\
+        \cf9 return \cf3 Jwts.
+\f6\i builder
+\f5\i0 ()\
+                .claims()\
+                .add(claims)\
+                .subject(username)\
+                .issuedAt(\cf9 new \cf3 Date(System.
+\f6\i currentTimeMillis
+\f5\i0 ()))\
+                .expiration(\cf9 new \cf3 Date(System.
+\f6\i currentTimeMillis
+\f5\i0 () + \cf15 60 \cf3 * \cf15 60 \cf3 * \cf15 30\cf3 ))\
+                .and()\
+                .signWith(getKey())\
+                .compact();\
+\
+    \}\
+\
+    \cf9 private \cf3 SecretKey \cf10 getKey\cf3 () \{\
+        \cf9 byte\cf3 [] keyBytes = Decoders.
+\f6\i \cf5 BASE64
+\f5\i0 \cf3 .decode(\cf5 secretkey\cf3 );\
+        \cf9 return \cf3 Keys.
+\f6\i hmacShaKeyFor
+\f5\i0 (keyBytes);\
+    \}\
+\
+    \cf9 public \cf3 String \cf10 extractUserName\cf3 (String token) \{\
+        \cf19 // extract the username from jwt token\
+        \cf9 return \cf3 extractClaim(token, Claims::getSubject);\
+    \}\
+\
+    \cf9 private \cf3 <\cf20 T\cf3 > \cf20 T \cf10 extractClaim\cf3 (String token, Function<Claims, \cf20 T\cf3 > claimResolver) \{\
+        \cf9 final \cf3 Claims claims = extractAllClaims(token);\
+        \cf9 return \cf3 claimResolver.apply(claims);\
+    \}\
+\
+    \cf9 private \cf3 Claims \cf10 extractAllClaims\cf3 (String token) \{\
+        \cf9 return \cf3 Jwts.
+\f6\i parser
+\f5\i0 ()\
+                .verifyWith(getKey())\
+                .build()\
+                .parseSignedClaims(token)\
+                .getPayload();\
+    \}\
+\
+    \cf9 public boolean \cf10 validateToken\cf3 (String token, UserDetails userDetails) \{\
+        \cf9 final \cf3 String userName = extractUserName(token);\
+        \cf9 return \cf3 (userName.equals(userDetails.getUsername()) && !isTokenExpired(token));\
+    \}\
+\
+    \cf9 private boolean \cf10 isTokenExpired\cf3 (String token) \{\
+        \cf9 return \cf3 extractExpiration(token).before(\cf9 new \cf3 Date());\
+    \}\
+\
+    \cf9 private \cf3 Date \cf10 extractExpiration\cf3 (String token) \{\
+        \cf9 return \cf3 extractClaim(token, Claims::getExpiration);\
+    \}\
+\
+\}\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 \
+\cf21 \cb1 Just remember one thing the first request goes by controller and the dao is enabled so the ua thentication happened s when the next request is sent the jetfilter places first so it says first that the authentication has happened so no dao is done \
+\
+Understand the topic code will see \
+\cf3 \cb4 \
+}

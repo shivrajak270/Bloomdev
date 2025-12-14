@@ -30,10 +30,17 @@ public class AuthenticationController {
                 return ResponseEntity.ok(dto);
     }
 
-    @GetMapping
+    @GetMapping("/test")
     public ResponseEntity<?> getUsers(){
         return new ResponseEntity<>("hello", HttpStatus.OK);
     }
+
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@RequestBody Users users){
+        String ans=usersService.verify(users);
+        return ResponseEntity.ok(ans);
+    }
+
 
 
 
