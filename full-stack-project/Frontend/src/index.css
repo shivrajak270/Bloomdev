@@ -10,7 +10,10 @@ body, html {
   display: flex;
   justify-content: center;
   align-items: center;
+  display: flex;
 }
+
+
 
 /* Container for centering */
 .container {
@@ -86,4 +89,50 @@ body, html {
 .login-form button:hover {
   background: linear-gradient(90deg, #2575fc, #6a11cb);
   transform: scale(1.05);
+}
+
+/* ========================= */
+/* Role dropdown styling */
+/* ========================= */
+
+.login-form select {
+  width: 100%;
+  padding: 12px 15px;
+  margin-bottom: 20px;
+
+  border: 1px solid #ccc;
+  border-radius: 12px;
+
+  font-size: 16px;
+  color: #555;
+  background-color: #fff;
+
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  /* Remove default arrow */
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  /* Custom arrow */
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%236a11cb' viewBox='0 0 16 16'%3e%3cpath d='M1.5 5.5l6 6 6-6'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 15px center;
+  background-size: 14px;
+}
+
+.login-form select:hover {
+  border-color: #2575fc;
+}
+
+.login-form select:focus {
+  border-color: #6a11cb;
+  box-shadow: 0 0 8px rgba(106, 17, 203, 0.5);
+  outline: none;
+}
+
+/* Placeholder option */
+.login-form select option[value=""] {
+  color: #999;
 }
