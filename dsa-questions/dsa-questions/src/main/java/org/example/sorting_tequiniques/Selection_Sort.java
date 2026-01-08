@@ -43,6 +43,8 @@ min → stores index of minimum element
     min =i;
     now i+i to n so min will be 7
     than swap and it goes on
+
+    the time complexity is n2
      */
 
     public int[]selection_Sort(int arr[]){
@@ -55,9 +57,11 @@ min → stores index of minimum element
                     min=j;
                 }
             }
-            int temp=arr[min];
-            arr[min]=arr[i];
-            arr[i]=temp;
+            if(i!=min) {
+                int temp = arr[min];
+                arr[min] = arr[i];
+                arr[i] = temp;
+            }
         }
         return arr;
     }

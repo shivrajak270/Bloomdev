@@ -1,0 +1,12 @@
+# macOS
+.DS_Store
+
+# IntelliJ / IDEA
+.idea/
+*.iml
+
+# Node
+node_modules/
+
+# Excel / temp files
+*.xlsx

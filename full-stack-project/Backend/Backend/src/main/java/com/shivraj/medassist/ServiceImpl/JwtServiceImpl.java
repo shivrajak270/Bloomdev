@@ -33,14 +33,17 @@ public class JwtServiceImpl {
         }
     }
 
-    public String generateToken(String username) {
+    public String generateToken(String username,String role) {
         Map<String, Object> claims = new HashMap<>();
+        System.out.println("GENERATING JWT WITH ROLE = " + role);
+
+        claims.put("role",role);
         return Jwts.builder()
                 .claims()
                 .add(claims)
                 .subject(username)
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + 60 * 60 * 30))
+                .expiration(new Date(System.currentTimeMillis() + 100 * 60 * 5))
                 .and()
                 .signWith(getKey())
                 .compact();
@@ -81,6 +84,11 @@ public class JwtServiceImpl {
 
     private Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
+    }
+
+    public String extractRole(String token) {
+        Claims claims = extractAllClaims(token);
+        return claims.get("role", String.class);
     }
 
 }

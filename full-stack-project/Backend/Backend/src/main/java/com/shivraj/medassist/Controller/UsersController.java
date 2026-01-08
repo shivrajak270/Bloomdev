@@ -7,6 +7,7 @@ import com.shivraj.medassist.Models.Users;
 import com.shivraj.medassist.Repository.UsersRepo;
 import com.shivraj.medassist.Service.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,6 +21,10 @@ public class UsersController {
 //
 //    }
 
+    @GetMapping("/")
+    public ResponseEntity<?> getPharmacists(){
+        return new ResponseEntity<>("this is users", HttpStatus.OK);
+    }
 
 
 

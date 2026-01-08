@@ -12,20 +12,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
 
 
-
-
-@Configuration
+@Component
 public class jwtFilter extends OncePerRequestFilter {
     @Autowired
     private JwtServiceImpl jwtServiceImpl;
@@ -48,7 +51,10 @@ public class jwtFilter extends OncePerRequestFilter {
             UserDetails userDetails=applicationContext.getBean(UserdetailService.class).loadUserByUsername(username);
 
             if(jwtServiceImpl.validateToken(token, userDetails)){
-                UsernamePasswordAuthenticationToken authtoken =new UsernamePasswordAuthenticationToken(userDetails,null,userDetails.getAuthorities());
+                String role= jwtServiceImpl.extractRole (token);
+                List<GrantedAuthority> authorities =
+                        Collections.singletonList(new SimpleGrantedAuthority("ROLE_"+ role));
+                UsernamePasswordAuthenticationToken authtoken =new UsernamePasswordAuthenticationToken(userDetails,null,authorities);
                 authtoken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authtoken);
             }

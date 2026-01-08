@@ -15,13 +15,15 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table
-public class ShopMedicineStock {
+public class  ShopMedicineStock {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
-    private String medicine_id;
-    private String shop_id;
-    private long quantity;
+    private Long id;
+    @Column(name = "medicine_id")
+    private Long medicineId;
+    @Column(name = "shop_id")
+    private Long shopId;
+    private Long quantity;
     private double price;
 
 

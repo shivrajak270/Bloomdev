@@ -5,6 +5,7 @@ import com.shivraj.medassist.ServiceImpl.UserdetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -32,10 +33,12 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf(c->c.disable());
+        http.csrf(c -> c.disable())
+                .cors(cors -> {});
         http.authorizeHttpRequests(request->request
                 .requestMatchers("/auth/resister/**","/auth/login/**").permitAll()
-
+                .requestMatchers("/pharmasists/**").hasRole("PHARMACIST")
+                .requestMatchers("/users/**").hasRole("USER")
                 .anyRequest().authenticated());
 
         http.sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

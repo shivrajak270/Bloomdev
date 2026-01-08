@@ -62,9 +62,13 @@ public class UsersServiceImpl implements UsersService {
 
     @Override
     public String verify(Users users){
+
+
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(users.getUsername(), users.getPassword()));
         if(authentication.isAuthenticated()){
-            return  jwtServiceImpl.generateToken(users.getUsername());
+            Users dbUser=usersRepo.findByUsername(users.getUsername());
+
+            return  jwtServiceImpl.generateToken(dbUser.getUsername(),dbUser.getRole());
         }
         else{
             throw new BadCredentialsException("Invalid username or password");
