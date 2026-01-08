@@ -14,13 +14,14 @@ import lombok.NoArgsConstructor;
 public class Pharmacists {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private Long ShopId;
     private String shopName;
     private String shopState;
     private String shopCity;
     private String shopCountry;
     private String shopOpenHours;
     private Double latitude;
-    private Long userid;
+    @Column(name = "user_id")
+    private Long userId;
     private Double longitude;
 }

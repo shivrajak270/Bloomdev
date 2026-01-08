@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 public class PharmasistDTO {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private Long shop_id;
     private String shopName;
     private String shopState;
     private String shopCity;

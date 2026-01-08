@@ -290,3 +290,16 @@ Bucket:     ∅        ∅        ∅       [LL]      ∅       [LL]      ∅   
                   /  \     /  \
                 (A) (F)  (R)  (Z)
 =====see till 7 element it's just tree after 7th element its tree 
+
+
+
+
+
+
+==============================================================================================
+| Case             | Bubble Sort               | Selection Sort |
+| ---------------- | ------------------------- | -------------- |
+| **Best case**    | **O(n)** (with swap flag) | **O(n²)**      |
+| **Average case** | O(n²)                     | O(n²)          |
+| **Worst case**   | O(n²)                     | O(n²)          |
+
