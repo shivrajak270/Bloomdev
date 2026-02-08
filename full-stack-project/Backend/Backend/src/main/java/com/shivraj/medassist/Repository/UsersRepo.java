@@ -10,4 +10,8 @@ public interface UsersRepo extends JpaRepository<Users, Long> {
 
     public Users findByUsername(String username);
 
+    public Users findById(long id);
+
+
+
 }

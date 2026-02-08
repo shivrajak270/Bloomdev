@@ -10,4 +10,6 @@ import java.util.List;
 @Repository
 public interface PharmasistRepo extends JpaRepository<Pharmacists,Long> {
     Pharmacists findByUserId(Long userId);
+
+    Pharmacists findByShopId(Long shopId);
 }
