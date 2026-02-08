@@ -1,7 +1,7 @@
 # Build stage
 FROM maven:3.8.3-openjdk-17 AS build
 WORKDIR /app
-COPY target .
+COPY . .
 RUN mvn clean package -DskipTests
 
 # Run stage
