@@ -11,7 +11,7 @@ const navigate=useNavigate();
       <div style={styles.buttonRow}>
         <button  onClick={()=>navigate("/login")}style={styles.loginBtn}>LOGIN</button>
         <button onClick={()=>navigate("/resister")} style={styles.registerBtn}>RESISTER</button>
-      </div>
+      </div> 
     </div>
   )
 }

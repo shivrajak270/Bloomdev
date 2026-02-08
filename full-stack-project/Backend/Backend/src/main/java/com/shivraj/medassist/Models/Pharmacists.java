@@ -14,7 +14,8 @@ import lombok.NoArgsConstructor;
 public class Pharmacists {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long ShopId;
+    @Column(name = "shop_id")
+    private Long shopId;
     private String shopName;
     private String shopState;
     private String shopCity;
@@ -24,4 +25,6 @@ public class Pharmacists {
     @Column(name = "user_id")
     private Long userId;
     private Double longitude;
+
+    private String addressLine;
 }
