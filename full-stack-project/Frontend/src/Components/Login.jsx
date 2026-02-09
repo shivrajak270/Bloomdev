@@ -3,6 +3,8 @@ import { jwtDecode } from 'jwt-decode';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import BASE_URL from '../config.js';
+
 const Login = () => {
 
   const [username, setusername] = useState('');
@@ -12,7 +14,7 @@ const Login = () => {
   const navigate=useNavigate();
 
   const handlesubmit = async () => {
-    const loginurl = 'http://localhost:8080/auth/login';
+    const loginurl = `${BASE_URL}/auth/login`;
     const data = {
       username: username,
       password: password

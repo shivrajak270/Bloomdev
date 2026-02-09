@@ -3,6 +3,8 @@ import React, { useState } from 'react'
 import { FaSearch } from "react-icons/fa";
 import SerachList from './SerachList';
 
+import BASE_URL from '../config.js'; 
+
 
 const UserPage = () => {
 
@@ -15,7 +17,7 @@ const [serch, setfirst] = useState('')
 const [resuts,setresults]=useState([])
  const token=localStorage.getItem("token")
 const fetchData=async (value)=>{
-  const response=await axios.get('http://localhost:8080/users',{
+  const response=await axios.get(`${BASE_URL}/users`,{
     headers:{
        Authorization:`Bearer ${token}`
     }
