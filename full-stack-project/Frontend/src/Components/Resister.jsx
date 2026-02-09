@@ -1,8 +1,12 @@
 import React, { useState } from 'react'
 import axios from 'axios'
 import '../index.css' 
+import BASE_URL from '../config.js'; 
+import { useNavigate } from "react-router-dom";
+
 
 const Login = () => {
+  const navigate = useNavigate();
 
   const [username, setusername] = useState('')
   const [password,setpassword] = useState('')
@@ -19,7 +23,7 @@ const Login = () => {
   const handleSubmit=async (e)=>{
       e.preventDefault();
 
-      const url='http://localhost:8080/auth/resister'
+      const url=`${BASE_URL}/auth/resister`
       const data={
           username:username,
           password:password,
@@ -30,7 +34,7 @@ const Login = () => {
         const response= await axios.post(url,data);
         console.log(response)
         if(data.role=="PHARMACIST"){
-         const url_pharm='http://localhost:8080/auth/resister/pharmacy'
+         const url_pharm = `${BASE_URL}/auth/resister/pharmacy`;
          const dataForPharma={
     
             shopName: shopName,
@@ -51,6 +55,7 @@ console.log("TYPE OF DATA:", typeof response.data);
         console.log(response);
  
     alert("Form submitted successfully!");
+    navigate("/login");
     setusername('');
     setpassword('');
     setrole('');
@@ -58,6 +63,7 @@ console.log("TYPE OF DATA:", typeof response.data);
       }
       catch(error){
         console.log(error);
+         alert("Registration failed");
       }
   }
 

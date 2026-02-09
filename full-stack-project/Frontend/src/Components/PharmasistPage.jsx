@@ -1,5 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
+import BASE_URL from '../config.js'; 
 
 const PharmasistPage = () => {
 
@@ -21,11 +22,21 @@ const PharmasistPage = () => {
     });
   }, [medicinename, quantity, price]);
 
+  const fetchStocks = async () => {
+  const url = `${BASE_URL}/pharmasists/stockscheck`;
+
+  const response = await axios.get(url, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+
+  setresponsedata(response.data);
+};
+
   const handledelete = async (item, index) => {
     console.log("entered");
     const confirm = window.confirm("Are you sure brooo");
 
-    const url = 'http://localhost:8080/pharmasists/stock/delete'
+    const url = `${BASE_URL}/pharmasists/stock/delete`;
 
     if (confirm) {
       console.log("confirmed")
@@ -40,6 +51,7 @@ const PharmasistPage = () => {
         }
       });
       console.log(response);
+      await fetchStocks();
     }
   }
 
@@ -50,7 +62,7 @@ const PharmasistPage = () => {
   const hanndleSumit = async () => {
     setclick(true)
     try {
-      const url = 'http://localhost:8080/pharmasists/stockscheck';
+      const url = `${BASE_URL}/pharmasists/stockscheck`;
 
       const response = await axios.get(url,
         {
@@ -75,7 +87,7 @@ const PharmasistPage = () => {
   }
 
   const handleaddpostrequest = async () => {
-    const url = 'http://localhost:8080/pharmasists/stocks/add'
+    const url = `${BASE_URL}/pharmasists/stocks/add`;
     const data = {
       "medicine_name": medicinename,
       "quantity": quantity,
@@ -87,6 +99,11 @@ const PharmasistPage = () => {
         Authorization: `Bearer ${token}`
       }
     })
+    setadd("");            
+    setmedicinename("");
+    setquantity("");
+    setprice("");
+    await fetchStocks();
 
     console.log(response);
   }
@@ -101,7 +118,7 @@ const PharmasistPage = () => {
 
   const handleupdatesubmit = async () => {
     console.log("inside the function ");
-    const url = 'http://localhost:8080/pharmasists/stock/update'
+    const url = `${BASE_URL}/pharmasists/stock/update`;
     const data = {
       "medicine_name": medicinename,
       "quantity": quantity,
@@ -113,6 +130,11 @@ const PharmasistPage = () => {
         Authorization: `Bearer ${token}`
       }
     })
+    await fetchStocks();
+      setindex(null); 
+    setmedicinename("");
+    setquantity("");
+    setprice("");
   }
 
   return (
