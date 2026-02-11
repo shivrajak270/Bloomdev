@@ -48,7 +48,7 @@ public class UsersController {
     public ResponseEntity<?> getMedicine(@RequestBody MedicineRequestDTO medicineRequestDTO){
         List<ShopDto>shopList=usersService.searchShop(medicineRequestDTO.getId(), medicineRequestDTO.getMedicineName());
         if(shopList.size()==0){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(shopList,HttpStatus.OK);
         }
         return new ResponseEntity<>(shopList,HttpStatus.OK);
     }

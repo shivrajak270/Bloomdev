@@ -1,6 +1,8 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import BASE_URL from '../config.js'; 
+import Swal from 'sweetalert2';
+
 
 const PharmasistPage = () => {
 
@@ -21,6 +23,19 @@ const PharmasistPage = () => {
       price
     });
   }, [medicinename, quantity, price]);
+
+
+  const handlecancel=()=>{
+     setadd("");            
+  setmedicinename("");    
+  setquantity("");
+  setprice("");
+  }
+   const handleeditcancel=()=>{
+   setindex(null)
+  setquantity("");
+  setprice("");
+  }
 
   const fetchStocks = async () => {
   const url = `${BASE_URL}/pharmasists/stockscheck`;
@@ -81,6 +96,7 @@ const PharmasistPage = () => {
 
   const handleadd = () => {
     setadd("ADD")
+    setindex(null)
     console.log(medicinename);
     console.log(quantity);
     console.log(price);
@@ -88,17 +104,54 @@ const PharmasistPage = () => {
 
   const handleaddpostrequest = async () => {
     const url = `${BASE_URL}/pharmasists/stocks/add`;
+      const qty = Number(quantity);
+  if (!Number.isInteger(qty)) {
+     Swal.fire({
+      icon: 'error',
+    title: 'Invalid Price',
+    text: 'Quantity must be a positive number',
+     })
+
+     
+     return;
+  }
+
+  const pricecheck = Number(price);
+
+if (isNaN(pricecheck) || pricecheck <= 0) {
+   Swal.fire({
+      icon: 'error',
+    title: 'Invalid Price',
+    text: 'Price must be a positive number',
+     })
+  return;
+}
     const data = {
       "medicine_name": medicinename,
       "quantity": quantity,
       "price": price
     }
-
+    try{
     const response = await axios.post(url, data, {
       headers: {
         Authorization: `Bearer ${token}`
       }
     })
+    Swal.fire({
+      icon: 'Success',
+    title: 'Success',
+    text: `Adding of the medicine ${medicinename} was successfull`,
+     })
+    }
+    catch(error){
+      console.log(error.response);
+
+      Swal.fire({
+      icon: 'error',
+    title: 'Failed',
+    text: error.response?.data || `Error: adding of the medicine ${medicinename} failed`,
+     })
+    }
     setadd("");            
     setmedicinename("");
     setquantity("");
@@ -119,17 +172,47 @@ const PharmasistPage = () => {
   const handleupdatesubmit = async () => {
     console.log("inside the function ");
     const url = `${BASE_URL}/pharmasists/stock/update`;
+   const quantitycheck = Number(quantity);
+if(!Number.isInteger(quantitycheck) || quantitycheck <= 0){
+  Swal.fire({
+    icon: 'error',
+    title:'Invalid Input',
+    text:'Please enter quantity as a positive integer'
+  })
+  return;
+}
+
+
+   const pricecheck=Number(price);
+   if(isNaN(pricecheck) || pricecheck<=0){
+    Swal.fire({
+      icon: 'error',
+      title:'Invalid Input',
+      text:'Please enter price as a positive number'
+    })
+    return;
+   }
     const data = {
       "medicine_name": medicinename,
       "quantity": quantity,
       "price": price
     }
-
+       try{
     const response = await axios.patch(url, data, {
       headers: {
         Authorization: `Bearer ${token}`
       }
     })
+  }catch(error){
+     console.log(error.response);
+
+      Swal.fire({
+      icon: 'error',
+    title: 'Failed',
+    text: error.response?.data || `updating for the medicine failed ${medicinename} failed`,
+     })
+
+  }
     await fetchStocks();
       setindex(null); 
     setmedicinename("");
@@ -150,6 +233,7 @@ const PharmasistPage = () => {
           <button className="pharmacist-btn pharmacist-btn-secondary" onClick={handleadd}>
             add
           </button>
+          
 
           <table className="pharmacist-table" border="1" cellPadding="10" style={{ marginTop: "20px" }}>
             <thead className="pharmacist-table-head">
@@ -159,6 +243,7 @@ const PharmasistPage = () => {
                 <th className="pharmacist-table-th">Price</th>
                 <th className="pharmacist-table-th">Edit</th>
                 <th className="pharmacist-table-th">Delete</th>
+              
               </tr>
             </thead>
 
@@ -181,6 +266,11 @@ const PharmasistPage = () => {
                   <td className="pharmacist-table-td">
                     <button className="pharmacist-btn pharmacist-btn-primary" onClick={handleaddpostrequest}>
                       save
+                    </button>
+                  </td>
+                  <td className="pharmacist-table-td">
+                    <button className="pharmacist-btn pharmacist-btn-primary" onClick={handlecancel}>
+                      cancel
                     </button>
                   </td>
                 </tr>
@@ -206,7 +296,7 @@ const PharmasistPage = () => {
                         save
                       </button>
 
-                      <button className="pharmacist-btn pharmacist-btn-secondary">
+                      <button className="pharmacist-btn pharmacist-btn-secondary" onClick={handleeditcancel}>
                         cancel
                       </button>
                     </>

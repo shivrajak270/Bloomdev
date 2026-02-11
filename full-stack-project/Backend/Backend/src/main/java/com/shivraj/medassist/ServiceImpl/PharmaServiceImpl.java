@@ -1,8 +1,11 @@
 package com.shivraj.medassist.ServiceImpl;
 
 import com.shivraj.medassist.Dto.StockViewDTO;
+import com.shivraj.medassist.Exceptions.DbException;
+import com.shivraj.medassist.Exceptions.MedicineAlredypresent;
+import com.shivraj.medassist.Exceptions.MedicineNotFoundException;
+import com.shivraj.medassist.Exceptions.QuntityException;
 import com.shivraj.medassist.Models.Medicine;
-import com.shivraj.medassist.Models.Pharmacists;
 import com.shivraj.medassist.Models.ShopMedicineStock;
 import com.shivraj.medassist.Models.UserPrincipal;
 import com.shivraj.medassist.Repository.MedicineRepo;
@@ -80,14 +83,26 @@ public class PharmaServiceImpl implements ParmaService {
 
     @Override
     public StockViewDTO addmedicine(String username,StockViewDTO stockViewDTO) {
+
+        if (stockViewDTO.getQuantity() <= 0) {
+            throw new QuntityException("Quantity must be greater than 0");
+        }
+        if (stockViewDTO.getPrice() <= 0) {
+            throw new QuntityException("Price must be greater than 0");
+        }
         long id= userRepo.findByUsername(username).getId();
         long shopId=pharmasistRepo.findByUserId(id).getShopId();
-        long medicineId=medicineRepo.findByMedicineName(stockViewDTO.getMedicine_name()).getMedicine_id();
+        Medicine medicine=medicineRepo.findByMedicineNameIgnoreCase(stockViewDTO.getMedicine_name()).orElseThrow(() -> new MedicineNotFoundException("Medicine not found wrong medicine entered"));
+        long medicineId=medicine.getMedicine_id();
         ShopMedicineStock shopMedicineStock=new ShopMedicineStock();
         shopMedicineStock.setMedicineId(medicineId);
         shopMedicineStock.setQuantity(stockViewDTO.getQuantity());
         shopMedicineStock.setPrice(stockViewDTO.getPrice());
         shopMedicineStock.setShopId(shopId);
+        ShopMedicineStock ispresent=shopMedicineRepo.findByShopIdAndMedicineId(shopId,medicineId);
+        if(ispresent!=null){
+            throw new MedicineAlredypresent("Medicine Alredy Present please try editing the editing stock and price ");
+        }
         shopMedicineRepo.save(shopMedicineStock);
         StockViewDTO result=new StockViewDTO();
         result.setMedicine_name(stockViewDTO.getMedicine_name());
@@ -101,8 +116,8 @@ public class PharmaServiceImpl implements ParmaService {
     public StockViewDTO updateStocks(String username, StockViewDTO stockViewDTO) {
         long id= userRepo.findByUsername(username).getId();
         long shopId=pharmasistRepo.findByUserId(id).getShopId();
-        long medicineId=medicineRepo.findByMedicineName(stockViewDTO.getMedicine_name()).getMedicine_id();
-
+        Medicine medicine=medicineRepo.findByMedicineNameIgnoreCase(stockViewDTO.getMedicine_name()).orElseThrow(() -> new RuntimeException("Medicine not found wrong medicine entered"));
+        long medicineId=medicine.getMedicine_id();
         ShopMedicineStock shopMedicineStock=shopMedicineRepo.findByShopIdAndMedicineId(shopId,medicineId);
         if(shopMedicineStock.getQuantity()!=stockViewDTO.getQuantity())
             {
@@ -112,7 +127,11 @@ public class PharmaServiceImpl implements ParmaService {
             {
             shopMedicineStock.setPrice(stockViewDTO.getPrice());
             }
-        shopMedicineRepo.save(shopMedicineStock);
+        try {
+            shopMedicineRepo.save(shopMedicineStock);
+        }catch (Exception e){
+            throw new DbException("db exception "+e.getMessage());
+        }
         StockViewDTO result=new StockViewDTO();
         result.setMedicine_name(stockViewDTO.getMedicine_name());
         result.setQuantity(stockViewDTO.getQuantity());
@@ -125,10 +144,14 @@ public class PharmaServiceImpl implements ParmaService {
     public String deletestocks(String username, StockViewDTO stockViewDTO) {
         long id= userRepo.findByUsername(username).getId();
         long shopId=pharmasistRepo.findByUserId(id).getShopId();
-        long medicineId=medicineRepo.findByMedicineName(stockViewDTO.getMedicine_name()).getMedicine_id();
-        ShopMedicineStock shopMedicineStock=shopMedicineRepo.deleteByShopIdAndMedicineId(shopId,medicineId);
+        Medicine medicine=medicineRepo.findByMedicineNameIgnoreCase(stockViewDTO.getMedicine_name()).orElseThrow(() -> new RuntimeException("Medicine not found wrong medicine entered"));
+        long medicineId=medicine.getMedicine_id();
+        try {
+            ShopMedicineStock shopMedicineStock = shopMedicineRepo.deleteByShopIdAndMedicineId(shopId, medicineId);
+        }catch (Exception e){
+            throw new DbException("a db exception"+e.getMessage());
+        }
         String result="deleted the entry which had the ShopId as "+shopId +"and the medicine was"+stockViewDTO.getMedicine_name();
         return result;
-
     }
 }
