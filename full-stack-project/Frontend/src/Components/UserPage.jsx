@@ -16,6 +16,14 @@ const UserPage = () => {
 const [serch, setfirst] = useState('')
 const [resuts,setresults]=useState([])
  const token=localStorage.getItem("token")
+
+ const clearsearch=(name)=>{
+  setfirst(name);
+  setresults([]);
+ }
+
+
+
 const fetchData=async (value)=>{
   const response=await axios.get(`${BASE_URL}/users`,{
     headers:{
@@ -45,7 +53,7 @@ if(value.trim()){
       fetchData(e.target.value);
     }}></input>
     <h1>please enter the search</h1>
-    <SerachList results={resuts}></SerachList>
+    <SerachList results={resuts} clear={clearsearch}></SerachList>
 
 
 
