@@ -48,13 +48,26 @@ const PharmasistPage = () => {
 };
 
   const handledelete = async (item, index) => {
-    console.log("entered");
-    const confirm = window.confirm("Are you sure brooo");
+
+     const result = await Swal.fire({
+    title: `Are you sure you want to delete ${item.medicine_name}?`,
+    text: "This action cannot be undone!",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#d33',
+    cancelButtonColor: '#3085d6',
+    confirmButtonText: 'Yes, delete it!',
+    cancelButtonText: 'Cancel'
+  });
+
 
     const url = `${BASE_URL}/pharmasists/stock/delete`;
 
-    if (confirm) {
+
+
+    if (result.isConfirmed) {
       console.log("confirmed")
+      try{
       const response = await axios.delete(url, {
         data: {
           medicine_name: item.medicine_name,
@@ -65,8 +78,19 @@ const PharmasistPage = () => {
           Authorization: `Bearer ${token}`
         }
       });
+       Swal.fire('Deleted!', `${item.medicine_name} has been deleted.`, 'success');
+        await fetchStocks();
+    
+    }
+      catch(error){
+         Swal.fire({
+      icon: 'error',
+    title: 'Failed',
+    text: error.response?.data || `deletion for medicine:${medicinename} failed`,
+     })
+
+      }
       console.log(response);
-      await fetchStocks();
     }
   }
 
