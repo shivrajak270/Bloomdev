@@ -2,6 +2,7 @@ import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
 
 import BASE_URL from '../config.js';
 
@@ -34,7 +35,11 @@ const Login = () => {
       setrole(decoded.role);
 
     } catch (error) {
-      console.log(error);
+        Swal.fire({
+            icon: 'error',
+          title: 'Failed',
+          text: error.response?.data || `wrong credentials login failed`,
+           })
     }
   };
   useEffect(()=>{

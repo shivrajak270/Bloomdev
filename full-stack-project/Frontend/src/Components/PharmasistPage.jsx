@@ -43,7 +43,8 @@ const PharmasistPage = () => {
   const response = await axios.get(url, {
     headers: { Authorization: `Bearer ${token}` }
   });
-
+ console.log("thisis the data");
+ console.log(response.data);
   setresponsedata(response.data);
 };
 
@@ -248,7 +249,7 @@ if(!Number.isInteger(quantitycheck) || quantitycheck <= 0){
     <div className="pharmacist-container">
 
       <button className="pharmacist-btn pharmacist-btn-primary" onClick={hanndleSumit}>
-        updateStocks
+        View/updateStocks
       </button>
 
       {clicked && (
