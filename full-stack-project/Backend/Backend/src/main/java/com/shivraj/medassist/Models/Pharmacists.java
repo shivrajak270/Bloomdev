@@ -2,9 +2,7 @@ package com.shivraj.medassist.Models;
 
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Table
 @Entity
