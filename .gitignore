@@ -10,3 +10,5 @@ node_modules/
 
 # Excel / temp files
 *.xlsx
+.DS_Store
+.DS_Store
