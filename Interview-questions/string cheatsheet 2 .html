@@ -1,0 +1,1223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Java String — Complete Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+:root{
+  --bg:#07090e; --sur:#0c1019; --sur2:#101520; --sur3:#0a0d14;
+  --bdr:#182035; --bdr2:#1f2d45;
+  --txt:#cdd9e5; --mut:#4a6278; --dim:#6b8299;
+  --cyan:#2dd4f5; --green:#34d87a; --amb:#f59e0b;
+  --red:#f05252; --pur:#a78bfa; --blu:#60a5fa; --pink:#f472b6;
+  --mono:'JetBrains Mono',monospace; --ui:'Outfit',sans-serif;
+}
+body{background:var(--bg);color:var(--txt);font-family:var(--ui);line-height:1.6;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(45,212,245,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(45,212,245,.018) 1px,transparent 1px);background-size:52px 52px;pointer-events:none;z-index:0;}
+.orb{position:fixed;border-radius:50%;filter:blur(130px);pointer-events:none;z-index:0;}
+.o1{width:580px;height:580px;background:#2dd4f5;opacity:.1;top:-200px;right:-120px;}
+.o2{width:440px;height:440px;background:#a78bfa;opacity:.09;bottom:-80px;left:-160px;}
+.o3{width:300px;height:300px;background:#34d87a;opacity:.07;top:55%;left:42%;}
+
+/* ── NAV ── */
+nav{position:sticky;top:0;z-index:200;background:rgba(7,9,14,.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--bdr);padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:52px;gap:10px;}
+.brand{font-family:var(--mono);font-size:.78rem;font-weight:700;color:var(--cyan);display:flex;align-items:center;gap:8px;white-space:nowrap;}
+.dot{width:7px;height:7px;background:var(--cyan);border-radius:50%;animation:blink 2s infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.15}}
+.nav-tabs{display:flex;gap:2px;overflow-x:auto;}
+.nav-tabs::-webkit-scrollbar{height:0;}
+.ntab{font-size:.62rem;font-family:var(--mono);letter-spacing:.4px;padding:5px 12px;border-radius:6px;border:1px solid transparent;color:var(--mut);background:transparent;cursor:pointer;white-space:nowrap;transition:all .18s;}
+.ntab:hover{color:var(--txt);background:rgba(255,255,255,.04);}
+.ntab.act{color:var(--cyan);background:rgba(45,212,245,.09);border-color:rgba(45,212,245,.25);}
+
+/* ── HERO ── */
+.hero{position:relative;z-index:1;padding:64px 24px 48px;max-width:1060px;margin:0 auto;}
+.eyebrow{display:inline-flex;align-items:center;gap:10px;font-family:var(--mono);font-size:.66rem;color:var(--cyan);letter-spacing:2.5px;text-transform:uppercase;margin-bottom:18px;}
+.eyebrow::before{content:'';width:26px;height:1px;background:var(--cyan);}
+h1.hero-title{font-size:clamp(2.2rem,5vw,4.4rem);font-weight:900;line-height:1.06;letter-spacing:-2px;margin-bottom:14px;}
+.hl{color:var(--cyan);}
+.dl{color:var(--mut);font-weight:300;}
+.hero-desc{max-width:540px;color:var(--mut);font-size:.93rem;line-height:1.78;margin-bottom:30px;}
+.hstats{display:flex;gap:28px;flex-wrap:wrap;}
+.sn{font-size:1.8rem;font-weight:800;color:var(--txt);line-height:1;font-family:var(--mono);}
+.sn s{color:var(--cyan);text-decoration:none;font-size:1.4rem;}
+.sl{font-size:.63rem;color:var(--mut);letter-spacing:1.2px;text-transform:uppercase;margin-top:3px;}
+
+/* ── TAB BAR ── */
+.tab-bar{position:relative;z-index:1;max-width:1060px;margin:0 auto;padding:0 24px;border-bottom:1px solid var(--bdr);display:flex;overflow-x:auto;gap:0;}
+.tab-bar::-webkit-scrollbar{height:0;}
+.tab{font-family:var(--mono);font-size:.66rem;letter-spacing:.4px;padding:10px 14px;border:none;border-bottom:2px solid transparent;background:none;color:var(--mut);cursor:pointer;white-space:nowrap;transition:all .18s;}
+.tab:hover{color:var(--txt);}
+.tab.act{color:var(--cyan);border-bottom-color:var(--cyan);}
+
+/* ── MAIN ── */
+main{position:relative;z-index:1;max-width:1060px;margin:0 auto;padding:24px 24px 80px;}
+.sec{display:none;}.sec.show{display:block;}
+
+/* ── CARD ── */
+.card{background:var(--sur);border:1px solid var(--bdr);border-radius:10px;margin-bottom:12px;overflow:hidden;transition:border-color .2s,transform .18s,box-shadow .18s;opacity:0;transform:translateY(12px);animation:up .4s ease forwards;}
+.card:hover{border-color:var(--bdr2);transform:translateY(-2px);box-shadow:0 10px 36px rgba(0,0,0,.4);}
+@keyframes up{to{opacity:1;transform:none;}}
+.card:nth-child(1){animation-delay:.03s}.card:nth-child(2){animation-delay:.06s}.card:nth-child(3){animation-delay:.09s}.card:nth-child(4){animation-delay:.12s}.card:nth-child(5){animation-delay:.15s}.card:nth-child(6){animation-delay:.18s}.card:nth-child(7){animation-delay:.21s}.card:nth-child(8){animation-delay:.24s}.card:nth-child(9){animation-delay:.27s}.card:nth-child(10){animation-delay:.30s}.card:nth-child(11){animation-delay:.33s}.card:nth-child(12){animation-delay:.36s}.card:nth-child(13){animation-delay:.39s}.card:nth-child(14){animation-delay:.42s}.card:nth-child(15){animation-delay:.45s}.card:nth-child(16){animation-delay:.48s}
+
+.ch{display:flex;align-items:center;gap:12px;padding:14px 20px;border-bottom:1px solid var(--bdr);cursor:pointer;user-select:none;position:relative;transition:background .14s;}
+.ch:hover{background:rgba(255,255,255,.012);}
+.ch::after{content:'›';position:absolute;right:18px;font-size:1.3rem;color:var(--mut);transition:transform .2s,color .2s;}
+.card.open .ch::after{transform:rotate(90deg);color:var(--cyan);}
+.qn{font-family:var(--mono);font-size:.56rem;font-weight:700;letter-spacing:1.8px;color:var(--mut);min-width:28px;}
+.ch h2{font-size:.91rem;font-weight:600;flex:1;line-height:1.3;}
+.ch h2 code{font-family:var(--mono);font-size:.84em;color:var(--cyan);background:rgba(45,212,245,.09);padding:1px 5px;border-radius:4px;}
+.cb{padding:20px;display:none;}
+.card.open .cb{display:block;}
+
+/* ── TAGS ── */
+.tag{font-family:var(--mono);font-size:.54rem;letter-spacing:1px;padding:2px 8px;border-radius:99px;border:1px solid;font-weight:700;white-space:nowrap;}
+.tc{color:var(--cyan);border-color:rgba(45,212,245,.33);background:rgba(45,212,245,.07);}
+.tg{color:var(--green);border-color:rgba(52,216,122,.33);background:rgba(52,216,122,.07);}
+.ta{color:var(--amb);border-color:rgba(245,158,11,.33);background:rgba(245,158,11,.07);}
+.tr{color:var(--red);border-color:rgba(240,82,82,.33);background:rgba(240,82,82,.07);}
+.tp{color:var(--pur);border-color:rgba(167,139,250,.33);background:rgba(167,139,250,.07);}
+.tb{color:var(--blu);border-color:rgba(96,165,250,.33);background:rgba(96,165,250,.07);}
+.tpk{color:var(--pink);border-color:rgba(244,114,182,.33);background:rgba(244,114,182,.07);}
+
+/* ── PROSE ── */
+.prose{color:var(--dim);font-size:.875rem;line-height:1.78;margin-bottom:12px;}
+.prose strong{color:var(--txt);}
+.prose code,.prose-inline{font-family:var(--mono);font-size:.8em;color:var(--cyan);background:rgba(45,212,245,.09);padding:1px 5px;border-radius:4px;}
+
+/* ── BULLETS ── */
+.bul{list-style:none;display:flex;flex-direction:column;gap:10px;margin-bottom:14px;}
+.bul li{display:flex;gap:12px;font-size:.86rem;color:var(--dim);line-height:1.7;}
+.bul li::before{content:'▸';color:var(--cyan);font-size:.7rem;margin-top:3px;flex-shrink:0;}
+.bul li strong{color:var(--txt);}
+.bul li em{color:var(--mut);font-style:italic;font-size:.82em;}
+
+/* ── BEGINNER BOX ── */
+.begin-box{background:rgba(45,212,245,.04);border:1px solid rgba(45,212,245,.15);border-radius:8px;padding:14px 16px;margin:12px 0;font-size:.86rem;line-height:1.75;color:var(--dim);}
+.begin-box .bb-head{font-family:var(--mono);font-size:.62rem;letter-spacing:1.5px;color:var(--cyan);margin-bottom:8px;font-weight:700;}
+.begin-box strong{color:var(--txt);}
+.begin-box code{font-family:var(--mono);font-size:.8em;color:var(--cyan);background:rgba(45,212,245,.09);padding:1px 5px;border-radius:4px;}
+
+/* ── CODE ── */
+.cw{background:#050810;border:1px solid var(--bdr);border-radius:8px;overflow:hidden;margin:12px 0;}
+.cbar{display:flex;align-items:center;gap:6px;padding:7px 12px;border-bottom:1px solid var(--bdr);background:#070b12;}
+.cd{width:9px;height:9px;border-radius:50%;}
+.r{background:#ff5f57;}.y{background:#febc2e;}.g{background:#28c840;}
+.fn2{font-family:var(--mono);font-size:.6rem;color:var(--mut);margin-left:6px;}
+pre{padding:16px 18px;font-family:var(--mono);font-size:.73rem;line-height:1.84;overflow-x:auto;color:#abb2bf;margin:0;}
+.kw{color:#c678dd;}.ty{color:#56b6c2;}.str{color:#98c379;}.cm{color:#546070;font-style:italic;}.ok{color:#34d87a;font-weight:600;}.bad{color:#f05252;font-weight:600;}.num{color:#d19a66;}.fn{color:#61afef;}.va{color:#e06c75;}
+
+/* ── GRID LAYOUTS ── */
+.t2{display:grid;grid-template-columns:1fr 1fr;gap:11px;}
+.t3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;}
+@media(max-width:660px){.t2,.t3{grid-template-columns:1fr;}}
+
+/* ── TABLE ── */
+.tw{overflow-x:auto;margin:12px 0;border-radius:8px;border:1px solid var(--bdr);}
+table{width:100%;border-collapse:collapse;font-size:.79rem;}
+thead tr{background:var(--sur2);}
+thead th{padding:9px 14px;text-align:left;font-family:var(--mono);font-size:.59rem;letter-spacing:1.5px;color:var(--mut);border-bottom:1px solid var(--bdr);text-transform:uppercase;}
+tbody td{padding:9px 14px;border-bottom:1px solid var(--bdr);color:var(--dim);}
+tbody tr:last-child td{border-bottom:none;}
+tbody tr:hover td{background:rgba(255,255,255,.014);}
+.cy{color:var(--green);font-weight:700;}.cn{color:var(--red);font-weight:700;}
+.cf{color:var(--green);font-style:italic;}.cs{color:var(--red);font-style:italic;}.cm3{color:var(--amb);font-style:italic;}
+.co1{color:var(--green);font-family:var(--mono);font-weight:700;font-size:.77rem;}
+.con{color:var(--amb);font-family:var(--mono);font-weight:700;font-size:.77rem;}
+.conl{color:var(--red);font-family:var(--mono);font-weight:700;font-size:.77rem;}
+
+/* ── MEMORY DIAGRAM ── */
+.mem{display:flex;gap:10px;align-items:flex-start;flex-wrap:wrap;margin:14px 0;}
+.mb{background:#050810;border:1px solid var(--bdr);border-radius:8px;overflow:hidden;min-width:138px;}
+.mbh{background:var(--sur2);padding:5px 11px;font-family:var(--mono);font-size:.57rem;letter-spacing:2px;color:var(--mut);border-bottom:1px solid var(--bdr);}
+.mr{display:flex;justify-content:space-between;align-items:center;padding:6px 11px;border-bottom:1px dashed var(--bdr);font-family:var(--mono);font-size:.7rem;gap:10px;}
+.mr:last-child{border-bottom:none;}
+.ma{color:var(--mut);font-size:.6rem;}.mref{color:var(--red);font-weight:600;}.mv{color:var(--green);font-weight:600;}.msep{color:var(--mut);font-size:1.4rem;align-self:center;}
+
+/* ── ASCII DIAGRAM ── */
+.ascii{background:#050810;border:1px solid var(--bdr);border-radius:8px;padding:14px 18px;font-family:var(--mono);font-size:.72rem;line-height:1.9;color:#8aa0b8;margin:12px 0;overflow-x:auto;}
+.ascii .hi{color:var(--cyan);}.ascii .lo{color:var(--green);}.ascii .rd{color:var(--red);}
+
+/* ── COMPLEXITY GRID ── */
+.cxg{display:grid;grid-template-columns:repeat(auto-fill,minmax(175px,1fr));gap:7px;margin:12px 0;}
+.cxi{background:#050810;border:1px solid var(--bdr);border-radius:7px;padding:11px 13px;display:flex;justify-content:space-between;align-items:center;gap:8px;font-family:var(--mono);font-size:.71rem;transition:border-color .18s;}
+.cxi:hover{border-color:var(--bdr2);}
+.cfn{color:#8aa0b8;}
+
+/* ── CALLOUT ── */
+.cal{border-radius:8px;padding:12px 15px;font-size:.845rem;line-height:1.7;margin:11px 0;display:flex;gap:10px;}
+.ci{font-size:.95rem;flex-shrink:0;margin-top:1px;}
+.cbody{color:var(--dim);}
+.cbody strong{font-weight:600;}
+.cbody code{font-family:var(--mono);font-size:.8em;color:var(--cyan);background:rgba(45,212,245,.09);padding:1px 5px;border-radius:4px;}
+.ccyan{background:rgba(45,212,245,.05);border:1px solid rgba(45,212,245,.16);}
+.ccyan .cbody strong{color:var(--cyan);}
+.cgreen{background:rgba(52,216,122,.05);border:1px solid rgba(52,216,122,.16);}
+.cgreen .cbody strong{color:var(--green);}
+.camber{background:rgba(245,158,11,.05);border:1px solid rgba(245,158,11,.16);}
+.camber .cbody strong{color:var(--amb);}
+.cred{background:rgba(240,82,82,.05);border:1px solid rgba(240,82,82,.16);}
+.cred .cbody strong{color:var(--red);}
+.cpur{background:rgba(167,139,250,.05);border:1px solid rgba(167,139,250,.16);}
+.cpur .cbody strong{color:var(--pur);}
+
+/* ── TRAP CARD ── */
+.trap-card .ch{background:linear-gradient(135deg,rgba(240,82,82,.05),rgba(167,139,250,.05));}
+.trap-card{border-color:rgba(240,82,82,.18);}
+.trap-card:hover{border-color:rgba(240,82,82,.38);box-shadow:0 0 28px rgba(240,82,82,.07);}
+.ti{border:1px solid var(--bdr);border-radius:8px;overflow:hidden;margin-bottom:10px;}
+.ti:last-child{margin-bottom:0;}
+.tlbl{padding:7px 13px;background:rgba(240,82,82,.05);border-bottom:1px solid var(--bdr);font-size:.67rem;font-weight:700;color:var(--red);font-family:var(--mono);letter-spacing:1px;}
+
+/* ── PROB GRID ── */
+.prob-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:9px;margin-top:14px;}
+.prob{background:#050810;border:1px solid var(--bdr);border-radius:8px;padding:13px 15px;transition:border-color .18s,transform .18s;}
+.prob:hover{border-color:var(--bdr2);transform:translateY(-2px);}
+.prob-num{font-family:var(--mono);font-size:.56rem;color:var(--mut);letter-spacing:1px;margin-bottom:5px;}
+.prob-name{font-size:.86rem;font-weight:600;color:var(--txt);margin-bottom:6px;}
+.diff{font-size:.56rem;font-family:var(--mono);padding:2px 7px;border-radius:99px;font-weight:700;}
+.easy{color:var(--green);background:rgba(52,216,122,.1);border:1px solid rgba(52,216,122,.3);}
+.med{color:var(--amb);background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.3);}
+.hard{color:var(--red);background:rgba(240,82,82,.1);border:1px solid rgba(240,82,82,.3);}
+
+/* ── DIVIDER ── */
+.dv{display:flex;align-items:center;gap:10px;margin:22px 0 16px;color:var(--mut);font-family:var(--mono);font-size:.58rem;letter-spacing:2px;}
+.dv::before,.dv::after{content:'';flex:1;height:1px;background:var(--bdr);}
+
+/* ── INLINE CODE ── */
+code{font-family:var(--mono);font-size:.8em;color:var(--cyan);background:rgba(45,212,245,.09);padding:1px 5px;border-radius:4px;}
+
+/* ── STEPS ── */
+.steps{display:flex;flex-direction:column;gap:10px;margin:12px 0;}
+.step{display:flex;gap:12px;align-items:flex-start;}
+.step-num{width:24px;height:24px;background:rgba(45,212,245,.1);border:1px solid rgba(45,212,245,.25);color:var(--cyan);font-family:var(--mono);font-size:.65rem;font-weight:700;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.step-body{font-size:.86rem;color:var(--dim);line-height:1.65;flex:1;}
+.step-body strong{color:var(--txt);}
+.step-body code{font-family:var(--mono);font-size:.8em;color:var(--cyan);background:rgba(45,212,245,.09);padding:1px 5px;border-radius:4px;}
+
+/* ── FOOTER ── */
+footer{position:relative;z-index:1;text-align:center;padding:24px;border-top:1px solid var(--bdr);font-family:var(--mono);font-size:.62rem;color:var(--mut);letter-spacing:1px;}
+footer span{color:var(--cyan);}
+::-webkit-scrollbar{width:5px;height:5px;}
+::-webkit-scrollbar-track{background:var(--bg);}
+::-webkit-scrollbar-thumb{background:var(--bdr2);border-radius:3px;}
+</style>
+</head>
+<body>
+<div class="orb o1"></div><div class="orb o2"></div><div class="orb o3"></div>
+
+<nav>
+  <div class="brand"><div class="dot"></div>java.lang.String</div>
+  <div class="nav-tabs">
+    <button class="ntab act" onclick="sw('core',this)">⭐ Core</button>
+    <button class="ntab" onclick="sw('medium',this)">📘 Medium</button>
+    <button class="ntab" onclick="sw('advanced',this)">🚀 Advanced</button>
+    <button class="ntab" onclick="sw('objects',this)">📦 Objects &amp; Pool</button>
+    <button class="ntab" onclick="sw('intern',this)">🔗 intern()</button>
+    <button class="ntab" onclick="sw('hashcode',this)">🔢 HashCode</button>
+    <button class="ntab" onclick="sw('unicode',this)">🌐 Unicode</button>
+    <button class="ntab" onclick="sw('substring',this)">✂ substring()</button>
+    <button class="ntab" onclick="sw('reflection',this)">🔬 Reflection</button>
+    <button class="ntab" onclick="sw('traps',this)">⚠ Traps</button>
+    <button class="ntab" onclick="sw('coding',this)">💻 DSA</button>
+    <button class="ntab" onclick="sw('ref',this)">📋 Ref</button>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="eyebrow">Complete Beginner → Interview Guide</div>
+  <h1 class="hero-title">Java <span class="hl">String</span><br><span class="dl">Full Deep Dive</span></h1>
+  <p class="hero-desc">From "what is a String" to advanced JVM internals — explained simply so even a beginner can understand, but deep enough to crack any Java interview.</p>
+  <div class="hstats">
+    <div><div class="sn">25<s>+</s></div><div class="sl">Concepts</div></div>
+    <div><div class="sn">12<s>⚠</s></div><div class="sl">Traps</div></div>
+    <div><div class="sn">10<s>💻</s></div><div class="sl">DSA Problems</div></div>
+    <div><div class="sn">~10<s>LPA</s></div><div class="sl">Target</div></div>
+  </div>
+</div>
+
+<div class="tab-bar">
+  <button class="tab act" onclick="sw('core',this)">⭐ Core Q&amp;A</button>
+  <button class="tab" onclick="sw('medium',this)">📘 Medium Freq</button>
+  <button class="tab" onclick="sw('advanced',this)">🚀 Advanced</button>
+  <button class="tab" onclick="sw('objects',this)">📦 Objects &amp; Pool</button>
+  <button class="tab" onclick="sw('intern',this)">🔗 intern()</button>
+  <button class="tab" onclick="sw('hashcode',this)">🔢 HashCode</button>
+  <button class="tab" onclick="sw('unicode',this)">🌐 Unicode Trap</button>
+  <button class="tab" onclick="sw('substring',this)">✂ substring() Memory</button>
+  <button class="tab" onclick="sw('reflection',this)">🔬 Reflection Hack</button>
+  <button class="tab" onclick="sw('traps',this)">⚠ Traps</button>
+  <button class="tab" onclick="sw('coding',this)">💻 DSA Problems</button>
+  <button class="tab" onclick="sw('ref',this)">📋 Cheat Ref</button>
+</div>
+
+<main>
+
+<!-- ════════════════════════════════════════
+     CORE Q&A
+════════════════════════════════════════ -->
+<div class="sec show" id="sec-core">
+
+<div class="card open">
+  <div class="ch" onclick="tog(this)"><span class="qn">Q 01</span><h2>Why is <code>String</code> immutable in Java?</h2><span class="tag tc">VERY HIGH PROB</span></div>
+  <div class="cb">
+    <div class="begin-box"><div class="bb-head">🟢 BEGINNER FIRST — What does immutable mean?</div>
+    Immutable means <strong>once created, it cannot be changed</strong>. Think of it like writing with a pen on paper — once written, you cannot erase it. You can only write on a new sheet of paper.<br><br>
+    In Java: <code>String s = "hello";</code> — the word "hello" can never be changed. If you do <code>s = s + "!"</code>, Java creates a <strong>brand new object</strong> with "hello!", and <code>s</code> now points to that new object. The old "hello" object still exists untouched.
+    </div>
+    <ul class="bul">
+      <li><strong>Security 🔐</strong> — Strings store passwords, DB URLs, file paths. If mutable, a malicious method could silently change <code>"jdbc:mysql://localhost"</code> to a malicious server after your security check passed. Immutability prevents this.</li>
+      <li><strong>String Pool Memory Optimization</strong> — JVM stores only ONE copy of each unique string. Multiple variables safely point to the same object. This only works because nobody can change that shared object — if they could, changing one variable would corrupt all others pointing to the same string.</li>
+      <li><strong>Thread Safety — Free of Cost</strong> — Many threads can read the same String simultaneously without any locks. No mutation = no race condition. Zero overhead.</li>
+      <li><strong>Stable HashCode for HashMap / HashSet</strong> — HashMap needs the key's hash to never change after insertion. String caches its hash after first use. If a String could change, the hash would go stale → map can't find your entry → broken behavior.</li>
+    </ul>
+    <div class="cal ccyan"><span class="ci">⚙</span><div class="cbody"><strong>How Java enforces immutability:</strong> Inside the String class, the character data is stored in a <code>private final char[] value</code>. No public setter exists. Every method like <code>toUpperCase()</code> always returns a <em>new</em> String — the original is never modified.</div></div>
+    <div class="cal cgreen"><span class="ci">💬</span><div class="cbody"><strong>Perfect interview answer:</strong> "String is immutable in Java to ensure security, thread safety, memory optimization via the String pool, and stable hashcodes for collections like HashMap."</div></div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="ch" onclick="tog(this)"><span class="qn">Q 02</span><h2>String vs StringBuffer vs StringBuilder</h2><span class="tag tg">VERY HIGH PROB</span></div>
+  <div class="cb">
+    <div class="begin-box"><div class="bb-head">🟢 BEGINNER FIRST — What is mutable?</div>
+    Mutable means <strong>can be changed</strong>. Like a whiteboard — you can erase and rewrite.<br><br>
+    <strong>String</strong> = pen on paper. Can't change. New paper every time.<br>
+    <strong>StringBuilder / StringBuffer</strong> = whiteboard. Same board, just erase and write more.
+    </div>
+    <div class="tw"><table>
+      <thead><tr><th>Feature</th><th>String</th><th>StringBuffer</th><th>StringBuilder</th></tr></thead>
+      <tbody>
+        <tr><td>Mutable?</td><td class="cn">❌ No — fixed forever</td><td class="cy">✅ Yes — can change</td><td class="cy">✅ Yes — can change</td></tr>
+        <tr><td>Thread-safe?</td><td class="cy">✅ (can't change, so always safe)</td><td class="cy">✅ (uses locks)</td><td class="cn">❌ (no locks, risky in threads)</td></tr>
+        <tr><td>Speed</td><td class="cs">Slow in loops (new object each time)</td><td class="cm3">Medium (locks slow it down)</td><td class="cf">Fastest (no locks)</td></tr>
+        <tr><td>Storage</td><td>String Pool or Heap</td><td>Heap (char[] buffer)</td><td>Heap (char[] buffer)</td></tr>
+        <tr><td>Use when</td><td>Fixed values, keys, configs</td><td>Multiple threads modifying</td><td>Single thread building strings</td></tr>
+      </tbody>
+    </table></div>
+    <div class="cal camber"><span class="ci">⚡</span><div class="cbody"><strong>Golden rule for DSA / loops:</strong> Never use <code>String +=</code> inside a loop. Use <code>StringBuilder.append()</code> instead. String loop = O(n²). StringBuilder loop = O(n).</div></div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="ch" onclick="tog(this)"><span class="qn">Q 03</span><h2><code>==</code> vs <code>.equals()</code></h2><span class="tag tr">TRICKY — Very often asked</span></div>
+  <div class="cb">
+    <div class="begin-box"><div class="bb-head">🟢 BEGINNER FIRST — Simple analogy</div>
+    Imagine two people both named "John" living at different addresses.<br><br>
+    <strong><code>==</code></strong> = "Are they the <em>same person</em>?" (same house address) — NO, different people.<br>
+    <strong><code>.equals()</code></strong> = "Do they have the <em>same name</em>?" — YES, both named John.<br><br>
+    In Java: <code>==</code> checks memory address. <code>.equals()</code> checks content (the actual characters).
+    </div>
+    <div class="cw"><div class="cbar"><div class="cd r"></div><div class="cd y"></div><div class="cd g"></div><span class="fn2">ReferenceDemo.java</span></div>
+    <pre><span class="ty">String</span> <span class="va">a</span> = <span class="str">"hello"</span>;                <span class="cm">// → pool @ 0x100</span>
+<span class="ty">String</span> <span class="va">b</span> = <span class="str">"hello"</span>;                <span class="cm">// → SAME pool @ 0x100 (reused!)</span>
+<span class="ty">String</span> <span class="va">c</span> = <span class="kw">new</span> <span class="ty">String</span>(<span class="str">"hello"</span>);   <span class="cm">// → new heap object @ 0x200</span>
+
+a == b         <span class="ok">→ true</span>    <span class="cm">// same address → same pool object</span>
+a == c         <span class="bad">→ false</span>   <span class="cm">// different addresses → different objects</span>
+a.<span class="fn">equals</span>(c)   <span class="ok">→ true</span>    <span class="cm">// same content "hello" == "hello"</span></pre></div>
+    <div class="mem">
+      <div class="mb"><div class="mbh">STACK (variables)</div><div class="mr"><span>a</span><span class="mref">→ 0x100</span></div><div class="mr"><span>b</span><span class="mref">→ 0x100</span></div><div class="mr"><span>c</span><span class="mref">→ 0x200</span></div></div>
+      <div class="msep">→</div>
+      <div class="mb"><div class="mbh">STRING POOL</div><div class="mr"><span class="ma">0x100</span><span class="mv">"hello"</span></div></div>
+      <div class="msep">+</div>
+      <div class="mb"><div class="mbh">HEAP</div><div class="mr"><span class="ma">0x200</span><span class="mv">"hello"</span></div></div>
+    </div>
+    <div class="cal cred"><span class="ci">🚨</span><div class="cbody"><strong>Always use <code>.equals()</code> to compare String values.</strong> <code>==</code> on Strings only accidentally works for pool strings. With <code>new String()</code> it will return false even for the same content — a very common bug.</div></div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="ch" onclick="tog(this)"><span class="qn">Q 04</span><h2>Why is <code>String</code> used as <code>HashMap</code> key, not <code>StringBuilder</code>?</h2><span class="tag tr">IMPORTANT</span></div>
+  <div class="cb">
+    <div class="begin-box"><div class="bb-head">🟢 BEGINNER FIRST — How HashMap stores things</div>
+    Think of a HashMap like a library with numbered shelves.<br><br>
+    When you put a book (value) → HashMap calculates a shelf number from the key's hashCode → places book on that shelf.<br>
+    When you get a book → HashMap calculates the same shelf number → goes there → finds the book.<br><br>
+    <strong>Problem:</strong> If the key changes after you put the book on the shelf, the shelf number changes too. Now you can never find your book again — it's "lost" on the old shelf.
+    </div>
+    <div class="cw"><div class="cbar"><div class="cd r"></div><div class="cd y"></div><div class="cd g"></div><span class="fn2">Why StringBuilder breaks HashMap</span></div>
+    <pre>HashMap&lt;<span class="ty">StringBuilder</span>,<span class="ty">Integer</span>&gt; map = <span class="kw">new</span> HashMap&lt;&gt;();
+<span class="ty">StringBuilder</span> key = <span class="kw">new</span> <span class="ty">StringBuilder</span>(<span class="str">"apple"</span>);
+map.put(key, <span class="num">10</span>);         <span class="cm">// stored at bucket for hash("apple")</span>
+
+key.<span class="fn">append</span>(<span class="str">"fruit"</span>);     <span class="cm">// key is now "applefruit"</span>
+map.get(key);             <span class="bad">→ null</span>  <span class="cm">// hash("applefruit") ≠ hash("apple") → wrong bucket!</span></pre></div>
+    <div class="cal ccyan"><span class="ci">💬</span><div class="cbody"><strong>Perfect interview answer:</strong> "String is immutable so its hashCode never changes after creation. HashMap relies on consistent hashCodes to locate keys in the correct bucket. A mutable key like StringBuilder could change after insertion, causing the hashCode to change and making the entry permanently unretrievable."</div></div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="ch" onclick="tog(this)"><span class="qn">Q 05</span><h2>What happens internally with <code>s = s + "world"</code>?</h2><span class="tag tc">INTERNALS</span></div>
+  <div class="cb">
+    <div class="begin-box"><div class="bb-head">🟢 BEGINNER FIRST — Why + on Strings is slow</div>
+    Strings can't be modified. So when you do <code>s = s + "world"</code>, Java has to:<br>
+    1. Read the old value of s ("hello")<br>
+    2. Create a brand new String "hello world" from scratch<br>
+    3. Point s to this new object<br>
+    4. The old "hello" object is now garbage<br><br>
+    Do this in a loop 1000 times → 1000 new objects created!
+    </div>
+    <div class="t2">
+      <div class="cw"><div class="cbar"><div class="cd r"></div><div class="cd y"></div><div class="cd g"></div><span class="fn2">What you write</span></div>
+      <pre><span class="ty">String</span> s = <span class="str">"hello"</span>;
+s = s + <span class="str">" world"</span>;</pre></div>
+      <div class="cw"><div class="cbar"><div class="cd r"></div><div class="cd y"></div><div class="cd g"></div><span class="fn2">What JVM actually runs</span></div>
+      <pre><span class="ty">StringBuilder</span> sb = <span class="kw">new</span> <span class="ty">StringBuilder</span>();
+sb.<span class="fn">append</span>(<span class="str">"hello"</span>);
+sb.<span class="fn">append</span>(<span class="str">" world"</span>);
+s = sb.<span class="fn">toString</span>();</pre></div>
+    </div>
+    <div class="cal cred"><span class="ci">⚠️</span><div class="cbody"><strong>Loop trap:</strong> Even though the compiler uses StringBuilder, it creates a <em>new</em> StringBuilder per loop iteration. 1000 loops = 1000 StringBuilders. Always manually declare one StringBuilder <em>outside</em> the loop to get real O(n) performance.</div></div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="ch" onclick="tog(this)"><span class="qn">Q 06</span><h2>Time complexity of String / StringBuffer operations</h2><span class="tag tg">COMPLEXITY</span></div>
+  <div class="cb">
+    <div class="begin-box"><div class="bb-head">🟢 BEGINNER FIRST — Why operations have different speeds</div>
+    Strings are stored as an array of characters internally: <code>[h][e][l][l][o]</code><br><br>
+    <strong>Reading one position</strong> (like index 2) → instant, O(1). Like opening a book to page 50 directly.<br>
+    <strong>Searching through all characters</strong> (like indexOf) → must check every one, O(n). Like reading every page to find a word.<br>
+    <strong>Deleting a character in the middle</strong> → all characters after it must shift left, O(n). Like removing a card from the middle of a deck.
+    </div>
+    <div class="cxg">
+      <div class="cxi"><span class="cfn">charAt(i)</span><span class="co1">O(1)</span></div>
+      <div class="cxi"><span class="cfn">length()</span><span class="co1">O(1)</span></div>
+      <div class="cxi"><span class="cfn">append()</span><span class="co1">O(1) amort.</span></div>
+      <div class="cxi"><span class="cfn">indexOf()</span><span class="con">O(n)</span></div>
+      <div class="cxi"><span class="cfn">substring()</span><span class="con">O(n)</span></div>
+      <div class="cxi"><span class="cfn">equals()</span><span class="con">O(n)</span></div>
+      <div class="cxi"><span class="cfn">toCharArray()</span><span class="con">O(n)</span></div>
+      <div class="cxi"><span class="cfn">deleteCharAt()</span><span class="con">O(n)</span></div>
+      <div class="cxi"><span class="cfn">String + concat</span><span class="con">O(n)</span></div>
+      <div class="cxi"><span class="cfn">Arrays.sort()</span><span class="conl">O(n log n)</span></div>
+    </div>
+    <div class="cal ccyan"><span class="ci">📏</span><div class="cbody"><strong>Simple interview rule:</strong> Just read a position → O(1). Scan through content / copy → O(n). Delete or insert in middle (characters shift) → O(n). Sort → O(n log n).</div></div>
+  </div>
+</div>
+
+</div><!-- /core -->
+
+<!-- ════════════════════════════════════════
+     OBJECTS & POOL
+════════════════════════════════════════ -->
+<div class="sec" id="sec-objects">
+
+<div class="card open">
+  <div class="ch" onclick="tog(this)"><span class="qn">OBJ 01</span><h2>If you create String "shivraj" 3 times — how many objects?</h2><span class="tag tc">CLASSIC INTERVIEW Q</span></div>
+  <div class="cb">
+    <div class="begin-box"><div class="bb-head">🟢 BEGINNER FIRST — What is an object?</div>
+    When Java creates a String, it allocates memory for it. Each chunk of memory holding a String value is called an <strong>object</strong>. The Java String Pool is like a cache — if you ask for the same string twice, it reuses the same memory instead of creating a new one.
+    </div>
+
+    <div class="dv">CASE 1 — Using String literals (most common way)</div>
+    <div class="cw"><div class="cbar"><div class="cd r"></div><div class="cd y"></div><div class="cd g"></div><span class="fn2">Literals</span></div>
+    <pre><span class="ty">String</span> <span class="va">a</span> = <span class="str">"shivraj"</span>;
+<span class="ty">String</span> <span class="va">b</span> = <span class="str">"shivraj"</span>;
+<span class="ty">String</span> <span class="va">c</span> = <span class="str">"shivraj"</span>;</pre></div>
+    <div class="ascii"><span class="hi">String Pool (only 1 object created):</span>
+  "shivraj" ← <span class="lo">[single copy stored here]</span>
+      ↑
+  a, b, c  ← <span class="lo">[all 3 variables point to SAME object]</span>
+
+<span class="rd">Total objects = 1</span></div>
+    <div class="cal cgreen"><span class="ci">✅</span><div class="cbody"><strong>Why only 1?</strong> Java first checks if "shivraj" already exists in the String Pool. It does (from the first line), so b and c simply get the address of the same existing object. No new memory allocated.</div></div>
+
+    <div class="dv">CASE 2 — Using new String() every time</div>
+    <div class="cw"><div class="cbar"><div class="cd r"></div><div class="cd y"></div><div class="cd g"></div><span class="fn2">new String()</span></div>
+    <pre><span class="ty">String</span> <span class="va">a</span> = <span class="kw">new</span> <span class="ty">String</span>(<span class="str">"shivraj"</span>);
+<span class="ty">String</span> <span class="va">b</span> = <span class="kw">new</span> <span class="ty">String</span>(<span class="str">"shivraj"</span>);
+<span class="ty">String</span> <span class="va">c</span> = <span class="kw">new</span> <span class="ty">String</span>(<span class="str">"shivraj"</span>);</pre></div>
+    <div class="ascii"><span class="hi">String Pool:</span>
+  "shivraj"  ← <span class="lo">1 object (from the literal inside new String)</span>
+
+<span class="hi">Heap (new objects):</span>
+  Object1 → "shivraj"  ← <span class="lo">a points here</span>
+  Object2 → "shivraj"  ← <span class="lo">b points here</span>
+  Object3 → "shivraj"  ← <span class="lo">c points here</span>
+
+<span class="rd">Total objects = 4 (1 pool + 3 heap)</span></div>
+    <div class="cal cred"><span class="ci">⚠️</span><div class="cbody"><strong>Why 4?</strong> The <code>new</code> keyword <em>always</em> creates a brand new heap object, regardless of the pool. PLUS the literal <code>"shivraj"</code> inside gets added to the pool (if not already there). So 1 pool + 3 heap = 4 total. Wasteful!</div></div>
+
+    <div class="dv">CASE 3 — Mixed</div>
+    <div class="cw"><div class="cbar"><div class="cd r"></div><div class="cd y"></div><div class="cd g"></div><span class="fn2">Mixed</span></div>
+    <pre><span class="ty">String</span> <span class="va">a</span> = <span class="str">"shivraj"</span>;               <span class="cm">// pool → 1 object</span>
+<span class="ty">String</span> <span class="va">b</span> = <span class="kw">new</span> <span class="ty">String</span>(<span class="str">"shivraj"</span>); <span class="cm">// heap → 1 new object (pool already has it)</span>
+<span class="ty">String</span> <span class="va">c</span> = <span class="kw">new</span> <span class="ty">String</span>(<span class="str">"shivraj"</span>); <span class="cm">// heap → 1 new object</span>
+<span class="cm">// Total = 3 objects (1 pool + 2 heap)</span></pre></div>
+
+    <div class="dv">SUMMARY TABLE</div>
+    <div class="tw"><table>
+      <thead><tr><th>Code Style</th><th>Pool objects</th><th>Heap objects</th><th>Total</th></tr></thead>
+      <tbody>
+        <tr><td><code>"shivraj"</code> × 3</td><td class="cy">1</td><td class="cy">0</td><td class="cy">1</td></tr>
+        <tr><td><code>new String("shivraj")</code> × 3</td><td class="cy">1</td><td class="cn">3</td><td class="cn">4</td></tr>
+        <tr><td>1 literal + 2 new</td><td class="cy">1</td><td class="cm3">2</td><td class="cm3">3</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="ch" onclick="tog(this)"><span class="qn">OBJ 02</span><h2>Tricky: <code>s3 == s4</code> when <code>s4 = s1 + s2</code></h2><span class="tag tr">TRICKY</span></div>
+  <div class="cb">
+    <div class="cw"><div class="cbar"><div class="cd r"></div><div class="cd y"></div><div class="cd g"></div><span class="fn2">RuntimeConcat.java</span></div>
+    <pre><span class="ty">String</span> <span class="va">s1</span> = <span class="str">"shiv"</span>;
+<span class="ty">String</span> <span class="va">s2</span> = <span class="str">"raj"</span>;
+<span class="ty">String</span> <span class="va">s3</span> = <span class="str">"shivraj"</span>;   <span class="cm">// goes to pool</span>
+<span class="ty">String</span> <span class="va">s4</span> = s1 + s2;    <span class="cm">// built at RUNTIME → new heap object</span>
+
+s3 == s4   <span class="bad">→ false</span>   <span class="cm">// s3 is pool, s4 is heap — different addresses</span>
+s3.<span class="fn">equals</span>(s4) <span class="ok">→ true</span>  <span class="cm">// same content "shivraj" ✓</span></pre></div>
+    <div class="cal camber"><span class="ci">💡</span><div class="cbody"><strong>Why?</strong> <code>s1 + s2</code> involves variables, so it's computed at <em>runtime</em> using StringBuilder internally. The result is a new heap object. It doesn't get added to the pool automatically. Pool only gets compile-time constants like <code>"shivraj"</code>.</div></div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="ch" onclick="tog(this)"><span class="qn">OBJ 03</span><h2>Before Java 7 — String Pool was in PermGen</h2><span class="tag tp">JVM HISTORY</span></div>
+  <div class="cb">
+    <div class="begin-box"><div class="bb-head">🟢 BEGINNER FIRST — What is JVM memory?</div>
+    JVM (Java Virtual Machine) divides memory into areas. Two important ones:<br><br>
+    <strong>Heap</strong> — where most objects live. Garbage collector (GC) can clean unused objects from here automatically.<br>
+    <strong>PermGen</strong> (old) — a special fixed-size area for class metadata and the String Pool. The GC couldn't always clean it well.
+    </div>
+    <div class="t2">
+      <div class="ascii"><span class="hi">Before Java 7:</span>
+
+  ┌─────────────────┐
+  │   Heap Memory   │
+  │   (objects)     │
+  └─────────────────┘
+  ┌─────────────────┐
+  │    PermGen      │
+  │  ┌───────────┐  │
+  │  │String Pool│  │
+  │  └───────────┘  │
+  │  fixed size ❌  │
+  └─────────────────┘</div>
+      <div class="ascii"><span class="lo">After Java 7:</span>
+
+  ┌─────────────────┐
+  │   Heap Memory   │
+  │   (objects)     │
+  │  ┌───────────┐  │
+  │  │String Pool│  │
+  │  └───────────┘  │
+  │  GC can clean ✅│
+  └─────────────────┘
+  PermGen → Removed (Java 8)
+  Replaced by Metaspace</div>
+    </div>
+    <ul class="bul">
+      <li><strong>PermGen problem:</strong> Had a fixed size (e.g., 64MB). If too many strings were added (via <code>intern()</code> or frameworks), it would throw <code>OutOfMemoryError: PermGen space</code>. This was a very common production crash.</li>
+      <li><strong>Java 7 fix:</strong> Moved String Pool to the Heap, which is garbage-collected and grows dynamically. No more PermGen OutOfMemoryError from strings.</li>
+      <li><strong>Java 8:</strong> Removed PermGen entirely. Replaced with Metaspace (native memory, much more flexible).</li>
+    </ul>
+  </div>
+</div>
+
+</div><!-- /objects -->
+
+<!-- ════════════════════════════════════════
+     INTERN
+════════════════════════════════════════ -->
+<div class="sec" id="sec-intern">
+
+<div class="card open">
+  <div class="ch" onclick="tog(this)"><span class="qn">INT 01</span><h2>What problem does <code>intern()</code> solve?</h2><span class="tag tp">MEMORY OPTIMIZATION</span></div>
+  <div class="cb">
+    <div class="begin-box"><div class="bb-head">🟢 BEGINNER FIRST — The duplicate string problem</div>
+    Imagine reading 1 million rows from a database. Each row has a country code: "IN", "US", "IN", "US"...<br><br>
+    Without any optimization, Java creates a <em>new String object for each row</em> — even though the values repeat constantly. That's potentially millions of objects saying "IN" or "US"!<br><br>
+    <code>intern()</code> solves this by saying: <strong>"Check the pool first. If it already has this value, reuse that one object. Don't create a new one."</strong>
+    </div>
+
+    <div class="dv">WITHOUT intern() — Memory wasteful</div>
+    <div class="ascii"><span class="rd">Heap (millions of duplicate objects):</span>
+  "ACTIVE"  ← row 1
+  "ACTIVE"  ← row 2
+  "ACTIVE"  ← row 3
+  "FAILED"  ← row 4
+  "ACTIVE"  ← row 5
+  ... millions more ...</div>
+
+    <div class="dv">WITH intern() — Memory efficient</div>
+    <div class="ascii"><span class="lo">String Pool (only unique values):</span>
+  "ACTIVE"  ← ONE copy shared by all references
+  "FAILED"  ← ONE copy shared by all references
+
+<span class="hi">All variables just point to pool → huge memory saving!</span></div>
+
+    <div class="cw"><div class="cbar"><div class="cd r"></div><div class="cd y"></div><div class="cd g"></div><span class="fn2">InternDemo.java</span></div>
+    <pre><span class="ty">String</span> <span class="va">s1</span> = <span class="kw">new</span> <span class="ty">String</span>(<span class="str">"hello"</span>);  <span class="cm">// heap object @ 0x200</span>
+<span class="ty">String</span> <span class="va">s2</span> = s1.<span class="fn">intern</span>();          <span class="cm">// goes to pool, returns pool ref @ 0x100</span>
+<span class="ty">String</span> <span class="va">s3</span> = <span class="str">"hello"</span>;             <span class="cm">// pool @ 0x100 (same as s2)</span>
+
+s1 == s2   <span class="bad">→ false</span>   <span class="cm">// s1 is heap, s2 is pool → different addresses</span>
+s2 == s3   <span class="ok">→ true</span>    <span class="cm">// both point to pool @ 0x100 ✓</span>
+s1.<span class="fn">equals</span>(s2) <span class="ok">→ true</span> <span class="cm">// same content always</span></pre></div>
+
+    <div class="dv">How intern() works — step by step</div>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div class="step-body">You call <code>someString.intern()</code></div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-body">JVM checks: <strong>Is this string already in the String Pool?</strong></div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-body">If YES → return the existing pool reference. Your heap object is now available for GC.</div></div>
+      <div class="step"><div class="step-num">4</div><div class="step-body">If NO → add the string to the pool, then return the pool reference.</div></div>
+    </div>
+
+    <div class="cal cgreen"><span class="ci">💬</span><div class="cbody"><strong>One-line definition for interviews:</strong> <code>intern()</code> returns the canonical (official, unique) representation of a string from the String Pool — ensuring identical strings share the same memory reference.</div></div>
+    <div class="cal camber"><span class="ci">🔧</span><div class="cbody"><strong>Real-world use cases:</strong> Processing millions of repeated strings from databases (country codes, status values, enum-like strings). Frameworks like Hibernate use interning internally. Reduces heap pressure dramatically on large datasets.</div></div>
+  </div>
+</div>
+
+</div><!-- /intern -->
+
+<!-- ════════════════════════════════════════
+     HASHCODE
+════════════════════════════════════════ -->
+<div class="sec" id="sec-hashcode">
+
+<div class="card open">
+  <div class="ch" onclick="tog(this)"><span class="qn">HC 01</span><h2>How is String's <code>hashCode()</code> calculated?</h2><span class="tag tpk">ADVANCED — Asked at 10+ LPA</span></div>
+  <div class="cb">
+    <div class="begin-box"><div class="bb-head">🟢 BEGINNER FIRST — What is a hashCode?</div>
+    A hashCode is just an <strong>integer number that represents an object</strong>. It's used by HashMap and HashSet to decide "which shelf (bucket) to put this on".<br><br>
+    Think of it like a locker number at a gym. You give your name → the system gives you a locker number → that's where your stuff is stored. Next time you come, same name → same locker number → you find your stuff.
+    </div>
+
+    <div class="dv">The Formula</div>
+    <div class="cal ccyan"><span class="ci">🔢</span><div class="cbody"><strong>Formula:</strong> <code>hash = 31 * hash + currentChar</code> — applied for every character in the string, starting with hash = 0.</div></div>
+
+    <div class="dv">Step-by-step example for "abc"</div>
+    <div class="ascii"><span class="hi">ASCII values:</span>  'a' = 97,  'b' = 98,  'c' = 99
+
+<span class="hi">Start:</span>  hash = 0
+
+<span class="lo">Step 1 (char 'a'):</span>
+  hash = 31 × 0 + 97
+  hash = <span class="hi">97</span>
+
+<span class="lo">Step 2 (char 'b'):</span>
+  hash = 31 × 97 + 98
+  hash = 3007 + 98
+  hash = <span class="hi">3105</span>
+
+<span class="lo">Step 3 (char 'c'):</span>
+  hash = 31 × 3105 + 99
+  hash = 96255 + 99
+  hash = <span class="hi">96354</span>
+
+<span class="rd">Final hashCode of "abc" = 96354</span></div>
+
+    <div class="dv">Why multiply by 31?</div>
+    <ul class="bul">
+      <li><strong>It's a prime number</strong> — Prime numbers create better distribution of hash values, meaning fewer collisions (two different strings accidentally getting the same bucket number).</li>
+      <li><strong>Bit-shift optimization</strong> — <code>31 × x</code> can be computed as <code>(x &lt;&lt; 5) - x</code>, which is a very fast CPU operation. JVM exploits this automatically.</li>
+      <li><strong>Historical testing</strong> — Java's creator James Gosling mentioned 31 gave a good trade-off between speed and collision rate during early testing.</li>
+    </ul>
+
+    <div class="dv">Caching — Why hashCode() is fast after first call</div>
+    <div class="cw"><div class="cbar"><div class="cd r"></div><div class="cd y"></div><div class="cd g"></div><span class="fn2">Simplified String.hashCode() internally</span></div>
+    <pre><span class="kw">private int</span> hash;  <span class="cm">// cached value, starts as 0</span>
+
+<span class="kw">public int</span> <span class="fn">hashCode</span>() {
+    <span class="ty">int</span> h = hash;
+    <span class="kw">if</span> (h == <span class="num">0</span> && value.length > <span class="num">0</span>) {  <span class="cm">// not computed yet</span>
+        <span class="kw">for</span> (<span class="ty">char</span> c : value) {
+            h = <span class="num">31</span> * h + c;           <span class="cm">// compute it</span>
+        }
+        hash = h;                      <span class="cm">// cache it forever</span>
+    }
+    <span class="kw">return</span> h;
+}
+<span class="cm">// First call  → O(n) — computes and stores</span>
+<span class="cm">// Later calls → O(1) — returns cached value instantly</span></pre></div>
+    <div class="cal cgreen"><span class="ci">💬</span><div class="cbody"><strong>Interview answer for "Why 31?":</strong> "31 is prime, which reduces hash collisions. Also, multiplying by 31 is optimized by the JVM as a bit shift operation <code>(x&lt;&lt;5)-x</code>, making it very fast. And because String is immutable, the computed hash is cached and reused — so subsequent hashCode() calls are O(1)."</div></div>
+  </div>
+</div>
+
+</div><!-- /hashcode -->
+
+<!-- ════════════════════════════════════════
+     UNICODE
+════════════════════════════════════════ -->
+<div class="sec" id="sec-unicode">
+
+<div class="card open">
+  <div class="ch" onclick="tog(this)"><span class="qn">UNI 01</span><h2>Why does <code>"😊".length()</code> return 2 instead of 1?</h2><span class="tag tr">MIND-BLOWING TRAP</span></div>
+  <div class="cb">
+    <div class="begin-box"><div class="bb-head">🟢 BEGINNER FIRST — How Java stores characters</div>
+    In Java, every <code>char</code> is 16 bits (2 bytes). That means it can store about 65,536 different characters (A-Z, a-z, digits, symbols, etc.).<br><br>
+    Early Unicode had fewer than 65,536 characters, so 1 Java char = 1 visible character. Simple.<br><br>
+    But then Unicode added <strong>emojis, rare symbols, ancient scripts</strong> — more than 65,536! Java couldn't fit these into a single 16-bit char. So they use <strong>two chars</strong> to represent one emoji. This is called a <strong>surrogate pair</strong>.
+    </div>
+
+    <div class="cw"><div class="cbar"><div class="cd r"></div><div class="cd y"></div><div class="cd g"></div><span class="fn2">UnicodeTrap.java</span></div>
+    <pre><span class="ty">String</span> s = <span class="str">"😊"</span>;
+s.<span class="fn">length</span>()                         <span class="bad">→ 2</span>   <span class="cm">// NOT 1 — emoji uses 2 chars!</span>
+s.<span class="fn">codePointCount</span>(<span class="num">0</span>, s.<span class="fn">length</span>())   <span class="ok">→ 1</span>   <span class="cm">// actual visible character count</span>
+
+<span class="ty">String</span> s2 = <span class="str">"A😊B"</span>;
+s2.<span class="fn">length</span>()                        <span class="bad">→ 4</span>   <span class="cm">// A=1, 😊=2, B=1</span>
+s2.<span class="fn">codePointCount</span>(<span class="num">0</span>, s2.<span class="fn">length</span>()) <span class="ok">→ 3</span>   <span class="cm">// A, 😊, B = 3 visible</span>
+
+<span class="ty">String</span> emojis = <span class="str">"😊😊"</span>;
+emojis.<span class="fn">length</span>()                    <span class="bad">→ 4</span>   <span class="cm">// most people guess 2 — WRONG!</span></pre></div>
+
+    <div class="dv">Visual: How "A😊B" is stored in memory</div>
+    <div class="ascii"><span class="hi">What you see:</span>  A  😊  B
+
+<span class="lo">What Java stores internally (UTF-16):</span>
+  [char: A] [char: high surrogate] [char: low surrogate] [char: B]
+     0x41        0xD83D                  0xDE0A              0x42
+
+<span class="hi">length() = 4</span> (counts each 16-bit unit)
+<span class="lo">codePointCount() = 3</span> (counts actual characters)</div>
+
+    <div class="dv">Safe ways to iterate when Unicode matters</div>
+    <div class="t2">
+      <div class="cw"><div class="cbar"><div class="cd r"></div><div class="cd y"></div><div class="cd g"></div><span class="fn2">❌ Unsafe — may split emojis</span></div>
+      <pre><span class="kw">for</span>(<span class="ty">int</span> i=<span class="num">0</span>; i&lt;s.<span class="fn">length</span>(); i++){
+    <span class="ty">char</span> c = s.<span class="fn">charAt</span>(i);
+    <span class="cm">// emoji gets split into 2 weird chars</span>
+}</pre></div>
+      <div class="cw"><div class="cbar"><div class="cd r"></div><div class="cd y"></div><div class="cd g"></div><span class="fn2">✅ Safe — handles full emojis</span></div>
+      <pre>s.<span class="fn">codePoints</span>().<span class="fn">forEach</span>(cp -> {
+    <span class="ty">String</span> ch = <span class="ty">String</span>.<span class="fn">valueOf</span>(
+        <span class="ty">Character</span>.<span class="fn">toChars</span>(cp));
+    System.out.<span class="fn">println</span>(ch);
+});</pre></div>
+    </div>
+
+    <div class="tw"><table>
+      <thead><tr><th>Method</th><th>What it counts</th><th>For emojis</th></tr></thead>
+      <tbody>
+        <tr><td><code>length()</code></td><td>Number of 16-bit UTF-16 units</td><td class="cn">Returns 2 per emoji</td></tr>
+        <tr><td><code>charAt(i)</code></td><td>One 16-bit char at position i</td><td class="cn">May return half of emoji</td></tr>
+        <tr><td><code>codePointCount(0, len)</code></td><td>Actual Unicode character count</td><td class="cy">Returns 1 per emoji ✓</td></tr>
+      </tbody>
+    </table></div>
+    <div class="cal cred"><span class="ci">🎯</span><div class="cbody"><strong>Classic interview trick question:</strong> <code>String s = "😊😊"; s.length()</code> — most people say 2, correct answer is <strong>4</strong>. Even many senior Java developers get this wrong.</div></div>
+  </div>
+</div>
+
+</div><!-- /unicode -->
+
+<!-- ════════════════════════════════════════
+     SUBSTRING MEMORY
+════════════════════════════════════════ -->
+<div class="sec" id="sec-substring">
+
+<div class="card open">
+  <div class="ch" onclick="tog(this)"><span class="qn">SUB 01</span><h2>The <code>substring()</code> memory leak — before Java 7u6</h2><span class="tag tpk">JVM INTERNALS</span></div>
+  <div class="cb">
+    <div class="begin-box"><div class="bb-head">🟢 BEGINNER FIRST — What is offset and count?</div>
+    Internally, old Java String had 3 things:<br><br>
+    <strong>value</strong> — the actual character array. e.g. <code>[H,e,l,l,o,W,o,r,l,d]</code><br>
+    <strong>offset</strong> — where in that array to start reading. e.g. <code>5</code> means start from index 5<br>
+    <strong>count</strong> — how many characters to read. e.g. <code>5</code> means read 5 characters<br><br>
+    So a substring didn't need a new array — it just said "use the same array, start at offset, read count chars."
+    </div>
+
+    <div class="dv">How substring() worked BEFORE Java 7u6</div>
+    <div class="cw"><div class="cbar"><div class="cd r"></div><div class="cd y"></div><div class="cd g"></div><span class="fn2">Before Java 7u6</span></div>
+    <pre><span class="ty">String</span> s   = <span class="str">"HelloWorld"</span>;       <span class="cm">// value=[H,e,l,l,o,W,o,r,l,d], offset=0, count=10</span>
+<span class="ty">String</span> sub = s.<span class="fn">substring</span>(<span class="num">0</span>,<span class="num">5</span>);   <span class="cm">// value=SAME ARRAY!, offset=0, count=5</span>
+<span class="cm">// sub is just a "view" into s's array — no new array created!</span></pre></div>
+
+    <div class="ascii"><span class="hi">Original string "HelloWorld":</span>
+  value = [H][e][l][l][o][W][o][r][l][d]   ← 10 chars in memory
+           0   1   2   3   4   5   6   7   8   9
+
+<span class="lo">substring "Hello" (old behavior):</span>
+  value = <span class="rd">SAME ARRAY</span> [H][e][l][l][o][W][o][r][l][d]
+  offset = 0
+  count = 5
+  <span class="cm">(only reads first 5, but holds reference to entire array)</span></div>
+
+    <div class="dv">The Memory Leak Problem</div>
+    <div class="cw"><div class="cbar"><div class="cd r"></div><div class="cd y"></div><div class="cd g"></div><span class="fn2">Memory Leak — old Java</span></div>
+    <pre><span class="ty">String</span> bigFile = <span class="fn">loadFile</span>();         <span class="cm">// 100 MB string loaded into memory</span>
+<span class="ty">String</span> tiny    = bigFile.<span class="fn">substring</span>(<span class="num">0</span>,<span class="num">5</span>); <span class="cm">// just "Hello"</span>
+
+bigFile = <span class="kw">null</span>;  <span class="cm">// try to free the 100MB...</span>
+<span class="cm">// ❌ STILL 100MB in memory!</span>
+<span class="cm">// Because tiny holds a reference to the SAME 100MB char array</span>
+<span class="cm">// Garbage collector cannot collect it</span></pre></div>
+
+    <div class="t2">
+      <div class="ascii"><span class="rd">OLD JAVA — Memory Leak:</span>
+
+  100MB char[] array
+  ├── bigFile string → null
+  └── tiny string → still alive!
+      (holds ref to 100MB array)
+
+  100MB NEVER FREED ❌</div>
+      <div class="ascii"><span class="lo">NEW JAVA — Fixed:</span>
+
+  100MB char[] array
+  └── bigFile string
+
+  5 char[] array (copy)
+  └── tiny string
+
+  bigFile = null →
+  100MB gets GC'd ✅</div>
+    </div>
+
+    <div class="dv">How it's fixed in modern Java (after Java 7u6)</div>
+    <div class="cw"><div class="cbar"><div class="cd r"></div><div class="cd y"></div><div class="cd g"></div><span class="fn2">Modern Java — substring copies</span></div>
+    <pre><span class="ty">String</span> s   = <span class="str">"HelloWorld"</span>;
+<span class="ty">String</span> sub = s.<span class="fn">substring</span>(<span class="num">0</span>,<span class="num">5</span>);
+<span class="cm">// NOW: Java creates a NEW char[] = [H,e,l,l,o]</span>
+<span class="cm">// sub has its OWN independent array</span>
+<span class="cm">// s can be garbage collected freely ✓</span>
+
+<span class="cm">// Modern String has NO offset or count fields</span>
+<span class="cm">// Just: private final char[] value (or byte[] in Java 9+)</span></pre></div>
+
+    <div class="cal cgreen"><span class="ci">🎯</span><div class="cbody"><strong>Perfect interview answer:</strong> "Before Java 7u6, substring() shared the original char[] using offset and count fields — a small substring could prevent a huge string from being garbage collected. After Java 7u6, substring() copies only the needed characters into a new array, fixing the memory leak."</div></div>
+
+    <div class="dv">Bonus: Java 9 changed char[] to byte[]</div>
+    <div class="cal cpur"><span class="ci">🚀</span><div class="cbody"><strong>Java 9 Compact Strings:</strong> Java 9 changed String's internal storage from <code>char[]</code> (2 bytes per char) to <code>byte[]</code> (1 byte per char for Latin-1 characters). Since most real-world text is ASCII (English letters, numbers, symbols), this cut String memory usage by ~50% for typical apps. Unicode characters still use 2 bytes when needed.</div></div>
+  </div>
+</div>
+
+</div><!-- /substring -->
+
+<!-- ════════════════════════════════════════
+     REFLECTION
+════════════════════════════════════════ -->
+<div class="sec" id="sec-reflection">
+
+<div class="card open">
+  <div class="ch" onclick="tog(this)"><span class="qn">REF 01</span><h2>Can we modify a String using Java Reflection?</h2><span class="tag tr">MIND-BENDING — Advanced</span></div>
+  <div class="cb">
+    <div class="begin-box"><div class="bb-head">🟢 BEGINNER FIRST — What is Reflection?</div>
+    Normally in Java, private variables inside a class are hidden — you can't access them from outside.<br><br>
+    <strong>Reflection</strong> is like having a master key that can unlock private fields. It lets you inspect and modify the internal state of any object at runtime, even private variables.<br><br>
+    It's mostly used in frameworks (Spring, Hibernate) for things like dependency injection. But it can be abused.
+    </div>
+
+    <div class="dv">Technical answer — Yes, it's possible (but NEVER do this)</div>
+    <div class="cw"><div class="cbar"><div class="cd r"></div><div class="cd y"></div><div class="cd g"></div><span class="fn2">ReflectionHack.java — DO NOT USE IN REAL CODE</span></div>
+    <pre><span class="kw">import</span> java.lang.reflect.*;
+
+<span class="kw">public class</span> <span class="ty">Test</span> {
+    <span class="kw">public static void</span> <span class="fn">main</span>(<span class="ty">String</span>[] args) <span class="kw">throws</span> Exception {
+
+        <span class="ty">String</span> s = <span class="str">"hello"</span>;
+        System.out.<span class="fn">println</span>(s);   <span class="cm">// hello</span>
+
+        Field field = <span class="ty">String</span>.class.<span class="fn">getDeclaredField</span>(<span class="str">"value"</span>);
+        field.<span class="fn">setAccessible</span>(<span class="kw">true</span>);   <span class="cm">// bypass private!</span>
+
+        <span class="ty">char</span>[] value = (<span class="ty">char</span>[]) field.<span class="fn">get</span>(s);
+        value[<span class="num">0</span>] = <span class="str">'H'</span>;              <span class="cm">// change 'h' to 'H'</span>
+
+        System.out.<span class="fn">println</span>(s);   <span class="bad">// "Hello" — IT CHANGED!</span>
+    }
+}</pre></div>
+
+    <div class="dv">Why this is DANGEROUS — The Pool Corruption Problem</div>
+    <div class="begin-box"><div class="bb-head">⚠ THE MOST MIND-BLOWING CONSEQUENCE</div>
+    Because of the String Pool, multiple variables can share the same String object. If you use Reflection to modify that object, <strong>you change ALL variables pointing to it simultaneously</strong> — without touching them at all!
+    </div>
+    <div class="cw"><div class="cbar"><div class="cd r"></div><div class="cd y"></div><div class="cd g"></div><span class="fn2">Pool Corruption — Nightmare scenario</span></div>
+    <pre><span class="ty">String</span> a = <span class="str">"hello"</span>;   <span class="cm">// → pool object</span>
+<span class="ty">String</span> b = <span class="str">"hello"</span>;   <span class="cm">// → SAME pool object as a</span>
+
+<span class="cm">// ... use Reflection to change pool object's first char to 'H' ...</span>
+
+System.out.<span class="fn">println</span>(a);   <span class="bad">→ "Hello"</span>  <span class="cm">// a changed!</span>
+System.out.<span class="fn">println</span>(b);   <span class="bad">→ "Hello"</span>  <span class="cm">// b changed too! You never touched b!</span>
+System.out.<span class="fn">println</span>(<span class="str">"hello"</span>);  <span class="bad">→ "Hello"</span> <span class="cm">// even the literal changed!</span></pre></div>
+
+    <div class="ascii"><span class="rd">String Pool — corrupted:</span>
+
+  "hello" object  →  modified to "Hello"
+       ↑
+   a, b, "hello" literal — ALL pointing to same corrupted object!
+
+<span class="rd">You broke the entire JVM's concept of "hello"</span></div>
+
+    <ul class="bul">
+      <li><strong>HashMap breaks</strong> — String keys' hashCodes change → map can't find entries. Entries are "lost" forever.</li>
+      <li><strong>Security breaks</strong> — Passwords, URLs, security tokens stored as Strings can be silently altered.</li>
+      <li><strong>String Pool gets corrupted</strong> — Every future use of that literal in the entire JVM gets the wrong value.</li>
+      <li><strong>JVM optimizations break</strong> — Cached hashCodes, String Pool reuse, compiler optimizations all assume Strings don't change.</li>
+    </ul>
+
+    <div class="dv">Why Java 9+ makes this harder</div>
+    <div class="cal cpur"><span class="ci">🔒</span><div class="cbody"><strong>Java 9 Module System:</strong> Java 9 added the module system which restricts illegal reflective access to core JVM classes. Trying to access String's private fields now generates warnings like <code>WARNING: An illegal reflective access operation has occurred</code>. Java 17+ makes these errors fatal with <code>--add-opens</code> required.</div></div>
+
+    <div class="cal cred"><span class="ci">🎯</span><div class="cbody"><strong>Interview takeaway:</strong> "Technically yes, Reflection can bypass String's private final fields and modify its char array. But this is extremely dangerous and undefined behavior — it corrupts the String Pool, breaks HashMap, and violates the JVM contract. Java 9+ makes this increasingly difficult through the module system."</div></div>
+  </div>
+</div>
+
+</div><!-- /reflection -->
+
+<!-- ════════════════════════════════════════
+     TRAPS
+════════════════════════════════════════ -->
+<div class="sec" id="sec-traps">
+
+<div class="dv">CLASSIC INTERVIEW TRAPS</div>
+
+<div class="card trap-card">
+  <div class="ch" onclick="tog(this)"><span class="qn" style="color:#f87171">T-01</span><h2>switch() on null String → NullPointerException</h2><span class="tag tr">VERY COMMON</span></div>
+  <div class="cb">
+    <div class="cw"><div class="cbar"><div class="cd r"></div><div class="cd y"></div><div class="cd g"></div><span class="fn2">NullSwitch.java</span></div>
+    <pre><span class="ty">String</span> s = <span class="kw">null</span>;
+<span class="kw">switch</span>(s) {               <span class="bad">→ NullPointerException!</span>
+    <span class="kw">case</span> <span class="str">"a"</span>: ...
+}
+<span class="cm">// switch on String internally calls s.equals() → NPE on null</span>
+<span class="cm">// ✓ Fix: always null-check first</span>
+<span class="kw">if</span> (s != <span class="kw">null</span>) { <span class="kw">switch</span>(s) { ... } }</pre></div>
+  </div>
+</div>
+
+<div class="card trap-card">
+  <div class="ch" onclick="tog(this)"><span class="qn" style="color:#f87171">T-02</span><h2>How many objects does <code>new String("hello")</code> create?</h2><span class="tag tr">CLASSIC</span></div>
+  <div class="cb">
+    <div class="cw"><div class="cbar"><div class="cd r"></div><div class="cd y"></div><div class="cd g"></div><span class="fn2">ObjectCount.java</span></div>
+    <pre><span class="ty">String</span> s = <span class="kw">new</span> <span class="ty">String</span>(<span class="str">"hello"</span>);
+<span class="cm">// Answer: UP TO 2 objects</span>
+<span class="cm">// 1. "hello" literal → String Pool (if not already there)</span>
+<span class="cm">// 2. new String()    → always creates fresh Heap object</span>
+<span class="cm">// If pool already had "hello" → only 1 new object (the heap one)</span></pre></div>
+  </div>
+</div>
+
+<div class="card trap-card">
+  <div class="ch" onclick="tog(this)"><span class="qn" style="color:#f87171">T-03</span><h2>Compile-time vs runtime concatenation</h2><span class="tag tr">POOL TRAP</span></div>
+  <div class="cb">
+    <div class="cw"><div class="cbar"><div class="cd r"></div><div class="cd y"></div><div class="cd g"></div><span class="fn2">ConcatTrap.java</span></div>
+    <pre><span class="ty">String</span> a = <span class="str">"hello"</span>;
+<span class="ty">String</span> b = <span class="str">"hel"</span> + <span class="str">"lo"</span>;    <span class="cm">// compile-time → compiler folds to "hello" → pool</span>
+<span class="ty">String</span> c = <span class="str">"hel"</span>;
+<span class="ty">String</span> d = c + <span class="str">"lo"</span>;      <span class="cm">// runtime → new heap object (uses StringBuilder)</span>
+
+a == b    <span class="ok">→ true</span>    <span class="cm">// both in pool</span>
+a == d    <span class="bad">→ false</span>   <span class="cm">// d is on heap, different address</span>
+a.<span class="fn">equals</span>(d) <span class="ok">→ true</span>  <span class="cm">// same content</span></pre></div>
+  </div>
+</div>
+
+<div class="card trap-card">
+  <div class="ch" onclick="tog(this)"><span class="qn" style="color:#f87171">T-04</span><h2><code>String.valueOf(null)</code> vs <code>null.toString()</code></h2><span class="tag tr">NULL TRAP</span></div>
+  <div class="cb">
+    <div class="cw"><div class="cbar"><div class="cd r"></div><div class="cd y"></div><div class="cd g"></div><span class="fn2">NullString.java</span></div>
+    <pre><span class="ty">String</span>.<span class="fn">valueOf</span>(<span class="kw">null</span>)   <span class="ok">→ "null"</span>    <span class="cm">// static method, safe, returns 4-char "null"</span>
+(<span class="ty">String</span>) <span class="kw">null</span>          <span class="ok">→ null</span>     <span class="cm">// valid cast, still null reference</span>
+<span class="kw">null</span>.<span class="fn">toString</span>()        <span class="bad">→ NPE!</span>     <span class="cm">// calling instance method on null = crash</span>
+
+<span class="cm">// ✓ Safe null-proof comparison pattern:</span>
+<span class="str">"expected"</span>.<span class="fn">equals</span>(variable)   <span class="cm">// won't NPE even if variable is null</span>
+variable.<span class="fn">equals</span>(<span class="str">"expected"</span>)   <span class="bad">// NPE if variable is null!</span></pre></div>
+  </div>
+</div>
+
+<div class="card trap-card">
+  <div class="ch" onclick="tog(this)"><span class="qn" style="color:#f87171">T-05</span><h2><code>charAt(0)</code> on empty string</h2><span class="tag tr">DSA TRAP</span></div>
+  <div class="cb">
+    <div class="cw"><div class="cbar"><div class="cd r"></div><div class="cd y"></div><div class="cd g"></div><span class="fn2">EmptyString.java</span></div>
+    <pre><span class="ty">String</span> s = <span class="str">""</span>;
+s.<span class="fn">charAt</span>(<span class="num">0</span>)   <span class="bad">→ StringIndexOutOfBoundsException</span>
+s.<span class="fn">length</span>()   <span class="ok">→ 0</span>   <span class="cm">// length() is always safe</span>
+
+<span class="cm">// ✓ Always guard before charAt:</span>
+<span class="kw">if</span> (!s.<span class="fn">isEmpty</span>()) { s.<span class="fn">charAt</span>(<span class="num">0</span>); }
+<span class="kw">if</span> (s != <span class="kw">null</span> && s.<span class="fn">length</span>() > <span class="num">0</span>) { ... }</pre></div>
+  </div>
+</div>
+
+<div class="card trap-card">
+  <div class="ch" onclick="tog(this)"><span class="qn" style="color:#f87171">T-06</span><h2>deleteCharAt() when indexOf() returns -1</h2><span class="tag tr">DSA TRAP</span></div>
+  <div class="cb">
+    <div class="cw"><div class="cbar"><div class="cd r"></div><div class="cd y"></div><div class="cd g"></div><span class="fn2">DeleteTrap.java</span></div>
+    <pre><span class="ty">StringBuffer</span> sb = <span class="kw">new</span> <span class="ty">StringBuffer</span>(<span class="str">"shivraj"</span>);
+
+<span class="ty">int</span> index = sb.<span class="fn">indexOf</span>(<span class="str">"x"</span>);  <span class="cm">// "x" not found → returns -1</span>
+sb.<span class="fn">deleteCharAt</span>(index);       <span class="bad">→ StringIndexOutOfBoundsException!</span>
+<span class="cm">// -1 is not a valid index — Java throws exception</span>
+
+<span class="cm">// ✓ Always check before deleting:</span>
+<span class="kw">if</span>(index != -<span class="num">1</span>) {
+    sb.<span class="fn">deleteCharAt</span>(index);
+}</pre></div>
+  </div>
+</div>
+
+<div class="card trap-card">
+  <div class="ch" onclick="tog(this)"><span class="qn" style="color:#f87171">T-07</span><h2><code>replace()</code> vs <code>replaceAll()</code> — regex trap</h2><span class="tag tr">REGEX TRAP</span></div>
+  <div class="cb">
+    <div class="cw"><div class="cbar"><div class="cd r"></div><div class="cd y"></div><div class="cd g"></div><span class="fn2">ReplaceTrap.java</span></div>
+    <pre><span class="ty">String</span> s = <span class="str">"abc123"</span>;
+
+s.<span class="fn">replace</span>(<span class="str">"a"</span>, <span class="str">"x"</span>)        <span class="ok">→ "xbc123"</span>  <span class="cm">// literal replace — safe</span>
+s.<span class="fn">replaceAll</span>(<span class="str">"[0-9]"</span>,<span class="str">"#"</span>) <span class="ok">→ "abc###"</span>  <span class="cm">// regex — replaces digits</span>
+
+<span class="cm">// ⚠ DANGEROUS: '.' is regex wildcard (matches ANY char)</span>
+s.<span class="fn">replaceAll</span>(<span class="str">"."</span>, <span class="str">"x"</span>)    <span class="bad">→ "xxxxxxx"</span> <span class="cm">// replaced EVERYTHING!</span>
+s.<span class="fn">replace</span>(<span class="str">"."</span>, <span class="str">"x"</span>)       <span class="ok">→ "abc123"</span>  <span class="cm">// literal dot, nothing found</span></pre></div>
+    <div class="cal cred"><span class="ci">🚨</span><div class="cbody"><strong>Rule:</strong> Use <code>replace()</code> for literal text. Use <code>replaceAll()</code> only when you actually need regex. Special regex chars <code>. * + ? [ ] { } ^ $ | \ ( )</code> will be interpreted as regex patterns in replaceAll().</div></div>
+  </div>
+</div>
+
+<div class="card trap-card">
+  <div class="ch" onclick="tog(this)"><span class="qn" style="color:#f87171">T-08</span><h2>String concatenation in loop — O(n²) trap</h2><span class="tag tr">PERF TRAP</span></div>
+  <div class="cb">
+    <div class="t2">
+      <div class="cw"><div class="cbar"><div class="cd r"></div><div class="cd y"></div><div class="cd g"></div><span class="fn2">❌ O(n²) — String loop</span></div>
+      <pre><span class="ty">String</span> result = <span class="str">""</span>;
+<span class="kw">for</span>(<span class="ty">String</span> s : list) {
+    result += s;
+    <span class="cm">// Each iteration:</span>
+    <span class="cm">// 1. Create new StringBuilder</span>
+    <span class="cm">// 2. Copy all previous content</span>
+    <span class="cm">// 3. Append new string</span>
+    <span class="cm">// 4. Convert to String</span>
+    <span class="cm">// → new object every time!</span>
+}
+<span class="cm">// O(n²) total — 1000 items = 1M ops</span></pre></div>
+      <div class="cw"><div class="cbar"><div class="cd r"></div><div class="cd y"></div><div class="cd g"></div><span class="fn2">✅ O(n) — StringBuilder</span></div>
+      <pre><span class="ty">StringBuilder</span> sb = <span class="kw">new</span> <span class="ty">StringBuilder</span>();
+<span class="kw">for</span>(<span class="ty">String</span> s : list) {
+    sb.<span class="fn">append</span>(s);
+    <span class="cm">// Each iteration:</span>
+    <span class="cm">// 1. Write to end of buffer</span>
+    <span class="cm">// → same object modified</span>
+    <span class="cm">// → no copy of old content</span>
+}
+<span class="ty">String</span> result = sb.<span class="fn">toString</span>();
+<span class="cm">// O(n) total ✓</span></pre></div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /traps -->
+
+<!-- ════════════════════════════════════════
+     DSA
+════════════════════════════════════════ -->
+<div class="sec" id="sec-coding">
+
+<div class="dv">TOP 10 STRING DSA PROBLEMS</div>
+<div class="prob-grid">
+  <div class="prob"><div class="prob-num">PROB 01</div><div class="prob-name">Valid Anagram</div><div class="prob-tags"><span class="diff easy">EASY</span></div></div>
+  <div class="prob"><div class="prob-num">PROB 02</div><div class="prob-name">Reverse String</div><div class="prob-tags"><span class="diff easy">EASY</span></div></div>
+  <div class="prob"><div class="prob-num">PROB 03</div><div class="prob-name">Valid Palindrome</div><div class="prob-tags"><span class="diff easy">EASY</span></div></div>
+  <div class="prob"><div class="prob-num">PROB 04</div><div class="prob-name">First Non-Repeating Char</div><div class="prob-tags"><span class="diff easy">EASY</span></div></div>
+  <div class="prob"><div class="prob-num">PROB 05</div><div class="prob-name">Longest Substring Without Repeating</div><div class="prob-tags"><span class="diff med">MEDIUM</span></div></div>
+  <div class="prob"><div class="prob-num">PROB 06</div><div class="prob-name">Group Anagrams</div><div class="prob-tags"><span class="diff med">MEDIUM</span></div></div>
+  <div class="prob"><div class="prob-num">PROB 07</div><div class="prob-name">String Compression</div><div class="prob-tags"><span class="diff med">MEDIUM</span></div></div>
+  <div class="prob"><div class="prob-num">PROB 08</div><div class="prob-name">Longest Common Prefix</div><div class="prob-tags"><span class="diff easy">EASY</span></div></div>
+  <div class="prob"><div class="prob-num">PROB 09</div><div class="prob-name">Remove Duplicate Characters</div><div class="prob-tags"><span class="diff med">MEDIUM</span></div></div>
+  <div class="prob"><div class="prob-num">PROB 10</div><div class="prob-name">Minimum Window Substring</div><div class="prob-tags"><span class="diff hard">HARD</span></div></div>
+</div>
+
+<div class="dv">ANAGRAM — 3 APPROACHES EXPLAINED</div>
+
+<div class="card open">
+  <div class="ch" onclick="tog(this)"><span class="qn">P 01</span><h2>Valid Anagram — all 3 approaches with explanation</h2><span class="tag tg">MUST KNOW</span></div>
+  <div class="cb">
+    <div class="begin-box"><div class="bb-head">🟢 BEGINNER FIRST — What is an anagram?</div>
+    Two strings are anagrams if they have the exact same characters, just in different order.<br><br>
+    "anagram" and "nagaram" → both have: a×3, n×1, g×1, r×1, m×1 → ✅ Anagram<br>
+    "rat" and "car" → rat has t, car has c → ❌ Not anagram
+    </div>
+    <div class="t3">
+      <div class="cw"><div class="cbar"><div class="cd r"></div><div class="cd y"></div><div class="cd g"></div><span class="fn2">Approach 1 — O(n²) Brute</span></div>
+      <pre><span class="cm">// StringBuffer + deleteCharAt</span>
+<span class="ty">StringBuffer</span> sb = <span class="kw">new</span> <span class="ty">StringBuffer</span>(s);
+<span class="kw">for</span>(<span class="ty">int</span> i=<span class="num">0</span>; i&lt;t.<span class="fn">length</span>(); i++){
+  <span class="ty">char</span> ch = t.<span class="fn">charAt</span>(i);
+  <span class="ty">int</span> n = sb.<span class="fn">indexOf</span>(<span class="ty">String</span>.<span class="fn">valueOf</span>(ch));
+  <span class="kw">if</span>(n==-<span class="num">1</span>) <span class="kw">return false</span>;
+  sb.<span class="fn">deleteCharAt</span>(n);
+}
+<span class="kw">return true</span>;</pre></div>
+      <div class="cw"><div class="cbar"><div class="cd r"></div><div class="cd y"></div><div class="cd g"></div><span class="fn2">Approach 2 — O(n log n)</span></div>
+      <pre><span class="cm">// Sort both and compare</span>
+<span class="ty">char</span>[] a = s.<span class="fn">toCharArray</span>();
+<span class="ty">char</span>[] b = t.<span class="fn">toCharArray</span>();
+Arrays.<span class="fn">sort</span>(a);
+Arrays.<span class="fn">sort</span>(b);
+<span class="kw">return</span> Arrays.<span class="fn">equals</span>(a, b);</pre></div>
+      <div class="cw"><div class="cbar"><div class="cd r"></div><div class="cd y"></div><div class="cd g"></div><span class="fn2">Approach 3 — O(n) ⭐ BEST</span></div>
+      <pre><span class="cm">// Frequency array</span>
+<span class="ty">int</span>[] freq = <span class="kw">new</span> <span class="ty">int</span>[<span class="num">26</span>];
+<span class="kw">for</span>(<span class="ty">int</span> i=<span class="num">0</span>; i&lt;s.<span class="fn">length</span>(); i++){
+  freq[s.<span class="fn">charAt</span>(i)-<span class="str">'a'</span>]++;
+  freq[t.<span class="fn">charAt</span>(i)-<span class="str">'a'</span>]--;
+}
+<span class="kw">for</span>(<span class="ty">int</span> n : freq)
+  <span class="kw">if</span>(n!=<span class="num">0</span>) <span class="kw">return false</span>;
+<span class="kw">return true</span>;</pre></div>
+    </div>
+    <div class="tw"><table>
+      <thead><tr><th>Approach</th><th>Time</th><th>Space</th><th>Verdict</th></tr></thead>
+      <tbody>
+        <tr><td>StringBuffer delete</td><td class="cs">O(n²)</td><td>O(n)</td><td>❌ Brute force</td></tr>
+        <tr><td>Sort &amp; Compare</td><td class="cm3">O(n log n)</td><td>O(n)</td><td>✅ Acceptable</td></tr>
+        <tr><td>Frequency Array</td><td class="cy">O(n)</td><td class="cy">O(1)*</td><td>⭐ Optimal</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="ch" onclick="tog(this)"><span class="qn">P 05</span><h2>Longest Substring Without Repeating — Sliding Window</h2><span class="tag ta">MEDIUM — MUST KNOW</span></div>
+  <div class="cb">
+    <div class="begin-box"><div class="bb-head">🟢 BEGINNER FIRST — What is sliding window?</div>
+    Imagine a window sliding across the string. The window expands to the right by adding new characters. When a duplicate character is found, the window shrinks from the left until the duplicate is removed.
+    </div>
+    <div class="cw"><div class="cbar"><div class="cd r"></div><div class="cd y"></div><div class="cd g"></div><span class="fn2">LongestSubstring.java — O(n)</span></div>
+    <pre><span class="kw">public int</span> <span class="fn">lengthOfLongestSubstring</span>(<span class="ty">String</span> s) {
+    Set&lt;<span class="ty">Character</span>&gt; set = <span class="kw">new</span> HashSet&lt;&gt;();
+    <span class="ty">int</span> left = <span class="num">0</span>, max = <span class="num">0</span>;
+
+    <span class="kw">for</span>(<span class="ty">int</span> right=<span class="num">0</span>; right&lt;s.<span class="fn">length</span>(); right++){
+        <span class="cm">// if duplicate found, shrink window from left</span>
+        <span class="kw">while</span>(set.<span class="fn">contains</span>(s.<span class="fn">charAt</span>(right))){
+            set.<span class="fn">remove</span>(s.<span class="fn">charAt</span>(left++));
+        }
+        set.<span class="fn">add</span>(s.<span class="fn">charAt</span>(right));
+        max = Math.<span class="fn">max</span>(max, right - left + <span class="num">1</span>);
+    }
+    <span class="kw">return</span> max;  <span class="cm">// O(n) time, O(n) space</span>
+}</pre></div>
+  </div>
+</div>
+
+</div><!-- /coding -->
+
+<!-- ════════════════════════════════════════
+     CHEAT REF
+════════════════════════════════════════ -->
+<div class="sec" id="sec-ref">
+<div class="dv">QUICK REFERENCE</div>
+
+<div class="card open">
+  <div class="ch" onclick="tog(this)"><span class="qn">REF</span><h2>Complete complexity reference</h2><span class="tag tg">PRINT THIS</span></div>
+  <div class="cb">
+    <div class="t2">
+      <div>
+        <p style="font-family:var(--mono);font-size:.6rem;color:var(--mut);letter-spacing:1.5px;margin-bottom:8px;">STRING METHODS</p>
+        <div class="tw"><table>
+          <thead><tr><th>Method</th><th>Time</th></tr></thead>
+          <tbody>
+            <tr><td>charAt(i)</td><td class="co1">O(1)</td></tr>
+            <tr><td>length()</td><td class="co1">O(1)</td></tr>
+            <tr><td>indexOf()</td><td class="con">O(n)</td></tr>
+            <tr><td>substring()</td><td class="con">O(n)</td></tr>
+            <tr><td>equals()</td><td class="con">O(n)</td></tr>
+            <tr><td>toCharArray()</td><td class="con">O(n)</td></tr>
+            <tr><td>concat / +</td><td class="con">O(n)</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+      <div>
+        <p style="font-family:var(--mono);font-size:.6rem;color:var(--mut);letter-spacing:1.5px;margin-bottom:8px;">STRINGBUFFER / BUILDER</p>
+        <div class="tw"><table>
+          <thead><tr><th>Method</th><th>Time</th></tr></thead>
+          <tbody>
+            <tr><td>charAt()</td><td class="co1">O(1)</td></tr>
+            <tr><td>length()</td><td class="co1">O(1)</td></tr>
+            <tr><td>append()</td><td class="co1">O(1) amort.</td></tr>
+            <tr><td>deleteCharAt()</td><td class="con">O(n)</td></tr>
+            <tr><td>delete(s,e)</td><td class="con">O(n)</td></tr>
+            <tr><td>insert()</td><td class="con">O(n)</td></tr>
+            <tr><td>indexOf()</td><td class="con">O(n)</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+    </div>
+    <div class="cxg" style="margin-top:14px;">
+      <div class="cxi"><span class="cfn">Read char</span><span class="co1">O(1)</span></div>
+      <div class="cxi"><span class="cfn">Find char</span><span class="con">O(n)</span></div>
+      <div class="cxi"><span class="cfn">Delete/Insert</span><span class="con">O(n)</span></div>
+      <div class="cxi"><span class="cfn">Copy string</span><span class="con">O(n)</span></div>
+      <div class="cxi"><span class="cfn">Sort</span><span class="conl">O(n log n)</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="ch" onclick="tog(this)"><span class="qn">REF</span><h2>When to use String vs StringBuilder vs StringBuffer</h2><span class="tag tc">DECISION GUIDE</span></div>
+  <div class="cb">
+    <div class="tw"><table>
+      <thead><tr><th>Situation</th><th>Use</th><th>Reason</th></tr></thead>
+      <tbody>
+        <tr><td>Fixed value / constant</td><td style="color:var(--cyan);font-family:var(--mono)">String</td><td>Immutable, pooled, safe</td></tr>
+        <tr><td>HashMap / HashSet key</td><td style="color:var(--cyan);font-family:var(--mono)">String</td><td>Stable hashCode</td></tr>
+        <tr><td>Building string in loop</td><td style="color:var(--green);font-family:var(--mono)">StringBuilder</td><td>O(1) append, one object</td></tr>
+        <tr><td>Multi-threaded string building</td><td style="color:var(--amb);font-family:var(--mono)">StringBuffer</td><td>Synchronized</td></tr>
+        <tr><td>DSA char operations</td><td style="color:var(--pur);font-family:var(--mono)">char[]</td><td>Mutable, O(1) swap</td></tr>
+        <tr><td>SQL / JSON query building</td><td style="color:var(--green);font-family:var(--mono)">StringBuilder</td><td>Efficient concat</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="ch" onclick="tog(this)"><span class="qn">REF</span><h2>All common String methods quick reference</h2><span class="tag tp">API CHEAT</span></div>
+  <div class="cb">
+    <div class="cw"><div class="cbar"><div class="cd r"></div><div class="cd y"></div><div class="cd g"></div><span class="fn2">CommonMethods.java</span></div>
+    <pre><span class="ty">String</span> s = <span class="str">"Hello World"</span>;
+s.<span class="fn">length</span>()                        <span class="ok">→ 11</span>
+s.<span class="fn">charAt</span>(<span class="num">0</span>)                        <span class="ok">→ 'H'</span>
+s.<span class="fn">indexOf</span>(<span class="str">"World"</span>)                  <span class="ok">→ 6</span>
+s.<span class="fn">substring</span>(<span class="num">6</span>)                      <span class="ok">→ "World"</span>
+s.<span class="fn">substring</span>(<span class="num">0</span>,<span class="num">5</span>)                    <span class="ok">→ "Hello"</span>
+s.<span class="fn">toLowerCase</span>()                    <span class="ok">→ "hello world"</span>
+s.<span class="fn">toUpperCase</span>()                    <span class="ok">→ "HELLO WORLD"</span>
+s.<span class="fn">trim</span>()                           <span class="ok">→ "Hello World"</span>
+s.<span class="fn">strip</span>()                          <span class="ok">→ "Hello World"</span> <span class="cm">(Java 11, unicode-aware)</span>
+s.<span class="fn">replace</span>(<span class="str">"World"</span>,<span class="str">"Java"</span>)          <span class="ok">→ "Hello Java"</span>
+s.<span class="fn">contains</span>(<span class="str">"World"</span>)                <span class="ok">→ true</span>
+s.<span class="fn">startsWith</span>(<span class="str">"Hello"</span>)              <span class="ok">→ true</span>
+s.<span class="fn">endsWith</span>(<span class="str">"World"</span>)                <span class="ok">→ true</span>
+s.<span class="fn">split</span>(<span class="str">" "</span>)                        <span class="ok">→ ["Hello","World"]</span>
+s.<span class="fn">toCharArray</span>()                    <span class="ok">→ ['H','e','l','l','o',...]</span>
+s.<span class="fn">isEmpty</span>()                        <span class="ok">→ false</span>
+s.<span class="fn">isBlank</span>()                        <span class="ok">→ false</span> <span class="cm">(Java 11)</span>
+s.<span class="fn">equals</span>(<span class="str">"Hello World"</span>)             <span class="ok">→ true</span>
+s.<span class="fn">equalsIgnoreCase</span>(<span class="str">"hello world"</span>)  <span class="ok">→ true</span>
+<span class="ty">String</span>.<span class="fn">valueOf</span>(<span class="num">42</span>)                   <span class="ok">→ "42"</span>
+<span class="ty">Integer</span>.<span class="fn">parseInt</span>(<span class="str">"42"</span>)               <span class="ok">→ 42</span>
+s.<span class="fn">intern</span>()                         <span class="ok">→ pool reference</span></pre></div>
+  </div>
+</div>
+
+</div><!-- /ref -->
+
+</main>
+
+<footer><span>java.lang.String</span> · Complete Beginner → Expert Guide · 25+ Concepts · 12 Traps · 10 DSA · Target ~10 LPA</footer>
+
+<script>
+function tog(el){el.closest('.card').classList.toggle('open');}
+
+function sw(name, btn) {
+  document.querySelectorAll('.sec').forEach(s => s.classList.remove('show'));
+  document.getElementById('sec-'+name).classList.add('show');
+  document.querySelectorAll('.tab, .ntab').forEach(b => b.classList.remove('act'));
+  document.querySelectorAll(`[onclick*="'${name}'"]`).forEach(b => b.classList.add('act'));
+  window.scrollTo({top: document.querySelector('.tab-bar').offsetTop - 60, behavior:'smooth'});
+}
+
+document.querySelectorAll('.ch').forEach(h => {
+  h.setAttribute('tabindex','0');
+  h.addEventListener('keydown', e => { if(e.key==='Enter'||e.key===' ') tog(h); });
+});
+</script>
+</body>
+</html>
