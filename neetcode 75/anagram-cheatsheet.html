@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anagram – DSA Cheat Sheet</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0f14;
+    --card: #13161e;
+    --border: #1f2535;
+    --accent1: #00e5ff;
+    --accent2: #ff6b6b;
+    --accent3: #a8ff78;
+    --accent4: #ffd166;
+    --text: #e8eaf0;
+    --muted: #6b7280;
+    --tag-bg: #1a1f2e;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    padding: 32px 20px 60px;
+    min-height: 100vh;
+  }
+
+  /* ── Header ── */
+  .header {
+    text-align: center;
+    margin-bottom: 48px;
+    position: relative;
+  }
+  .header h1 {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 800;
+    letter-spacing: -1px;
+    background: linear-gradient(120deg, var(--accent1), var(--accent3));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .header p {
+    color: var(--muted);
+    font-size: .95rem;
+    margin-top: 6px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .badge {
+    display: inline-block;
+    background: var(--tag-bg);
+    border: 1px solid var(--border);
+    color: var(--accent4);
+    font-size: .7rem;
+    font-family: 'JetBrains Mono', monospace;
+    padding: 3px 10px;
+    border-radius: 99px;
+    margin-bottom: 12px;
+    letter-spacing: 1px;
+  }
+
+  /* ── Grid ── */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  /* ── Card ── */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 24px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color .2s, transform .2s;
+  }
+  .card:hover { border-color: #2e3650; transform: translateY(-2px); }
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    border-radius: 14px 14px 0 0;
+  }
+  .card.c1::before { background: linear-gradient(90deg, var(--accent2), #ff9f43); }
+  .card.c2::before { background: linear-gradient(90deg, var(--accent4), var(--accent3)); }
+  .card.c3::before { background: linear-gradient(90deg, var(--accent1), #7b2ff7); }
+  .card.cx::before { background: linear-gradient(90deg, #a8ff78, #43e97b); }
+
+  .card-num {
+    font-size: .7rem;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--muted);
+    letter-spacing: 2px;
+    margin-bottom: 6px;
+  }
+  .card-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .pill {
+    font-size: .65rem;
+    font-family: 'JetBrains Mono', monospace;
+    padding: 2px 8px;
+    border-radius: 99px;
+    font-weight: 400;
+  }
+  .pill-red   { background: #3a1a1a; color: var(--accent2); }
+  .pill-yellow{ background: #2e2510; color: var(--accent4); }
+  .pill-green { background: #162213; color: var(--accent3); }
+  .pill-blue  { background: #0e2030; color: var(--accent1); }
+
+  /* ── Complexity row ── */
+  .row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 10px;
+    border-radius: 8px;
+    font-size: .85rem;
+    margin-bottom: 6px;
+    background: #0d1018;
+    border: 1px solid var(--border);
+  }
+  .row-label { font-family: 'JetBrains Mono', monospace; font-size: .8rem; color: var(--muted); }
+  .row-val   { font-family: 'JetBrains Mono', monospace; font-weight: 700; }
+  .on1  { color: var(--accent3); }
+  .on   { color: var(--accent4); }
+  .onlogn { color: #fc8c03; }
+
+  /* ── Code block ── */
+  pre {
+    background: #080a0f;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .75rem;
+    line-height: 1.7;
+    overflow-x: auto;
+    margin-top: 14px;
+    position: relative;
+  }
+  .kw  { color: #7b93ff; }
+  .ty  { color: #43d9ad; }
+  .cm  { color: #4a5568; font-style: italic; }
+  .str { color: var(--accent4); }
+  .num { color: var(--accent2); }
+  .fn  { color: var(--accent1); }
+
+  /* ── Idea box ── */
+  .idea {
+    background: #080a0f;
+    border-left: 3px solid var(--accent4);
+    border-radius: 0 8px 8px 0;
+    padding: 10px 14px;
+    font-size: .82rem;
+    color: #c5c9d6;
+    margin-top: 12px;
+    line-height: 1.6;
+  }
+  .idea strong { color: var(--accent4); }
+
+  /* ── Visual delete shift ── */
+  .shift-demo {
+    display: flex;
+    gap: 0;
+    margin: 12px 0 6px;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+  .ch-box {
+    width: 36px; height: 36px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .8rem;
+    background: #0d1018;
+    transition: all .3s;
+  }
+  .ch-box .ch-idx { font-size: .55rem; color: var(--muted); }
+  .ch-box.del { background: #3a1a1a; border-color: var(--accent2); color: var(--accent2); text-decoration: line-through; }
+  .ch-box.shifted { background: #0e1c0f; border-color: var(--accent3); color: var(--accent3); }
+  .arrow { color: var(--muted); font-size: 1.2rem; align-self: center; margin: 0 4px; }
+
+  /* ── Full-width card ── */
+  .full { grid-column: 1 / -1; }
+
+  /* ── Table ── */
+  table { width: 100%; border-collapse: collapse; font-size: .82rem; margin-top: 10px; }
+  th {
+    background: #0d1018;
+    color: var(--muted);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .7rem;
+    letter-spacing: 1px;
+    text-align: left;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  td { padding: 8px 12px; border-bottom: 1px solid #141720; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: #0d1018; }
+  td:last-child { font-family: 'JetBrains Mono', monospace; }
+
+  /* ── Summary compare ── */
+  .compare-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin-top: 14px;
+  }
+  .cmp {
+    background: #0d1018;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px;
+    text-align: center;
+  }
+  .cmp .cmp-num { font-size: .65rem; letter-spacing: 2px; color: var(--muted); font-family: 'JetBrains Mono', monospace; }
+  .cmp .cmp-label { font-size: .85rem; font-weight: 700; margin: 6px 0 8px; }
+  .cmp .cmp-tc, .cmp .cmp-sc { font-family: 'JetBrains Mono', monospace; font-size: .75rem; }
+  .cmp .cmp-tc { color: var(--accent3); }
+  .cmp .cmp-sc { color: var(--accent1); margin-top: 2px; }
+  .cmp-winner { border-color: var(--accent3); }
+
+  @media (max-width: 600px) {
+    .compare-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="badge">LEETCODE 242 · EASY</div>
+  <h1>Valid Anagram</h1>
+  <p>// 3 approaches · complexity tables · visual intuition</p>
+</div>
+
+<div class="grid">
+
+  <!-- ══ APPROACH 1 ══ -->
+  <div class="card c1">
+    <div class="card-num">APPROACH 01</div>
+    <div class="card-title">StringBuffer Delete <span class="pill pill-red">O(n²) T</span> <span class="pill pill-red">O(n) S</span></div>
+
+    <div class="idea">
+      <strong>Idea:</strong> Copy <code>s</code> into a StringBuffer. For each char in <code>t</code>, find &amp; delete it. If any char is missing → not anagram.
+    </div>
+
+    <pre><span class="kw">if</span> (s.<span class="fn">length</span>() != t.<span class="fn">length</span>()) <span class="kw">return false</span>;
+
+StringBuffer sb = <span class="kw">new</span> <span class="ty">StringBuffer</span>(s);   <span class="cm">// O(n)</span>
+
+<span class="kw">for</span> (<span class="ty">int</span> i = <span class="num">0</span>; i &lt; t.<span class="fn">length</span>(); i++) {
+    <span class="ty">char</span> ch = t.<span class="fn">charAt</span>(i);             <span class="cm">// O(1)</span>
+    <span class="ty">int</span>  n  = sb.<span class="fn">indexOf</span>(<span class="ty">String</span>.<span class="fn">valueOf</span>(ch)); <span class="cm">// O(n) ←bottleneck</span>
+    <span class="kw">if</span> (n == -<span class="num">1</span>) <span class="kw">return false</span>;
+    sb.<span class="fn">deleteCharAt</span>(n);               <span class="cm">// O(n) shift!</span>
+}
+<span class="kw">return true</span>;</pre>
+
+    <div style="margin-top:14px; font-size:.78rem; color:var(--muted); font-family:'JetBrains Mono',monospace;">Why O(n) shift happens:</div>
+    <div class="shift-demo">
+      <div class="ch-box"><span>s</span><span class="ch-idx">0</span></div>
+      <div class="ch-box"><span>h</span><span class="ch-idx">1</span></div>
+      <div class="ch-box del"><span>i</span><span class="ch-idx">2</span></div>
+      <div class="ch-box"><span>v</span><span class="ch-idx">3</span></div>
+      <div class="ch-box"><span>r</span><span class="ch-idx">4</span></div>
+      <div class="ch-box"><span>a</span><span class="ch-idx">5</span></div>
+      <div class="ch-box"><span>j</span><span class="ch-idx">6</span></div>
+    </div>
+    <div class="shift-demo">
+      <div class="ch-box"><span>s</span><span class="ch-idx">0</span></div>
+      <div class="ch-box"><span>h</span><span class="ch-idx">1</span></div>
+      <div class="ch-box shifted"><span>v</span><span class="ch-idx">2</span></div>
+      <div class="ch-box shifted"><span>r</span><span class="ch-idx">3</span></div>
+      <div class="ch-box shifted"><span>a</span><span class="ch-idx">4</span></div>
+      <div class="ch-box shifted"><span>j</span><span class="ch-idx">5</span></div>
+    </div>
+    <div style="font-size:.72rem; color:var(--muted); margin-top:4px;">All chars after deleted index shift left → O(n) per deletion</div>
+  </div>
+
+  <!-- ══ APPROACH 2 ══ -->
+  <div class="card c2">
+    <div class="card-num">APPROACH 02</div>
+    <div class="card-title">Sort &amp; Compare <span class="pill pill-yellow">O(n log n) T</span> <span class="pill pill-yellow">O(n) S</span></div>
+
+    <div class="idea">
+      <strong>Idea:</strong> Convert both strings to char arrays, sort them. Equal sorted arrays = anagram.
+    </div>
+
+    <pre><span class="kw">if</span> (s.<span class="fn">length</span>() != t.<span class="fn">length</span>()) <span class="kw">return false</span>;
+
+<span class="ty">char</span>[] ch = s.<span class="fn">toCharArray</span>();   <span class="cm">// O(n)</span>
+<span class="ty">char</span>[] jk = t.<span class="fn">toCharArray</span>();   <span class="cm">// O(n)</span>
+
+Arrays.<span class="fn">sort</span>(ch);               <span class="cm">// O(n log n)</span>
+Arrays.<span class="fn">sort</span>(jk);               <span class="cm">// O(n log n)</span>
+
+<span class="kw">return</span> Arrays.<span class="fn">equals</span>(ch, jk);  <span class="cm">// O(n)</span></pre>
+
+    <div class="idea" style="border-color: var(--accent4); margin-top: 16px;">
+      <strong>Visual:</strong><br>
+      <code style="font-size:.75rem">s = "anagram"  → sorted → a a a g m n r</code><br>
+      <code style="font-size:.75rem">t = "nagaram"  → sorted → a a a g m n r ✓</code>
+    </div>
+
+    <div style="margin-top:14px;">
+      <div class="row"><span>toCharArray()</span><span class="row-val on">O(n)</span></div>
+      <div class="row"><span>Arrays.sort()</span><span class="row-val onlogn">O(n log n)</span></div>
+      <div class="row"><span>Arrays.equals()</span><span class="row-val on">O(n)</span></div>
+      <div class="row"><span><strong>Total</strong></span><span class="row-val onlogn">O(n log n)</span></div>
+    </div>
+  </div>
+
+  <!-- ══ APPROACH 3 ══ -->
+  <div class="card c3">
+    <div class="card-num">APPROACH 03 ⭐ OPTIMAL</div>
+    <div class="card-title">Frequency Array <span class="pill pill-green">O(n) T</span> <span class="pill pill-blue">O(1) S</span></div>
+
+    <div class="idea">
+      <strong>Idea:</strong> One int[256] array. Increment for chars in <code>s</code>, decrement for chars in <code>t</code>. If all zeros → anagram.
+    </div>
+
+    <pre><span class="kw">if</span> (s.<span class="fn">length</span>() != t.<span class="fn">length</span>()) <span class="kw">return false</span>;
+
+<span class="ty">int</span>[] ch = <span class="kw">new</span> <span class="ty">int</span>[<span class="num">256</span>];      <span class="cm">// O(1) space (fixed size)</span>
+
+<span class="kw">for</span> (<span class="ty">int</span> i = <span class="num">0</span>; i &lt; s.<span class="fn">length</span>(); i++) {
+    ch[s.<span class="fn">charAt</span>(i) - <span class="str">'a'</span>]++;   <span class="cm">// count s chars</span>
+    ch[t.<span class="fn">charAt</span>(i) - <span class="str">'a'</span>]--;   <span class="cm">// cancel t chars</span>
+}
+
+<span class="kw">for</span> (<span class="ty">int</span> y : ch)
+    <span class="kw">if</span> (y != <span class="num">0</span>) <span class="kw">return false</span>; <span class="cm">// leftover → mismatch</span>
+
+<span class="kw">return true</span>;</pre>
+
+    <div class="idea" style="border-color: var(--accent1); margin-top:14px;">
+      <strong>Visual for "rat" vs "tar":</strong><br><br>
+      <code style="font-size:.73rem">
+      s='r' → ch['r'-'a']++ → ch[17]=1<br>
+      t='t' → ch['t'-'a']-- → ch[19]=-1<br>
+      s='a' → ch['a'-'a']++ → ch[0]=1<br>
+      t='a' → ch['a'-'a']-- → ch[0]=0 ✓<br>
+      s='t' → ch['t'-'a']++ → ch[19]=0 ✓<br>
+      t='r' → ch['r'-'a']-- → ch[17]=0 ✓<br>
+      <span style="color:var(--accent3)">All zeros → true ✓</span>
+      </code>
+    </div>
+  </div>
+
+  <!-- ══ COMPLEXITY TABLES ══ -->
+  <div class="card cx full">
+    <div class="card-num">REFERENCE</div>
+    <div class="card-title">String &amp; StringBuffer Complexity</div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; flex-wrap:wrap;">
+      <div>
+        <div style="font-size:.78rem; color:var(--accent4); font-family:'JetBrains Mono',monospace; margin-bottom:8px; letter-spacing:1px;">STRING METHODS</div>
+        <table>
+          <tr><th>Method</th><th>Complexity</th></tr>
+          <tr><td>length()</td><td class="on1">O(1)</td></tr>
+          <tr><td>charAt(i)</td><td class="on1">O(1)</td></tr>
+          <tr><td>indexOf()</td><td class="on">O(n)</td></tr>
+          <tr><td>substring()</td><td class="on">O(n)</td></tr>
+          <tr><td>toCharArray()</td><td class="on">O(n)</td></tr>
+          <tr><td>equals()</td><td class="on">O(n)</td></tr>
+        </table>
+      </div>
+      <div>
+        <div style="font-size:.78rem; color:var(--accent1); font-family:'JetBrains Mono',monospace; margin-bottom:8px; letter-spacing:1px;">STRINGBUFFER METHODS</div>
+        <table>
+          <tr><th>Method</th><th>Complexity</th></tr>
+          <tr><td>length()</td><td class="on1">O(1)</td></tr>
+          <tr><td>charAt()</td><td class="on1">O(1)</td></tr>
+          <tr><td>append()</td><td class="on1">O(1) amortized</td></tr>
+          <tr><td>deleteCharAt()</td><td class="on">O(n)</td></tr>
+          <tr><td>insert()</td><td class="on">O(n)</td></tr>
+          <tr><td>indexOf()</td><td class="on">O(n)</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div style="margin-top:20px; padding:14px; background:#0d1018; border-radius:10px; border:1px solid var(--border);">
+      <div style="font-size:.78rem; color:var(--accent3); font-family:'JetBrains Mono',monospace; letter-spacing:1px; margin-bottom:10px;">SIMPLE RULE FOR INTERVIEWS</div>
+      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:10px;">
+        <div class="row"><span>Reading a char</span><span class="row-val on1">O(1)</span></div>
+        <div class="row"><span>Finding a char</span><span class="row-val on">O(n)</span></div>
+        <div class="row"><span>Deleting / inserting</span><span class="row-val on">O(n)</span></div>
+        <div class="row"><span>Copying a string</span><span class="row-val on">O(n)</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ COMPARISON SUMMARY ══ -->
+  <div class="card full" style="border-color:#1f2a40;">
+    <div class="card-num">COMPARISON</div>
+    <div class="card-title">Which approach to use when?</div>
+    <div class="compare-grid">
+      <div class="cmp">
+        <div class="cmp-num">APPROACH 01</div>
+        <div class="cmp-label" style="color:var(--accent2)">StringBuffer</div>
+        <div class="cmp-tc">Time: O(n²)</div>
+        <div class="cmp-sc">Space: O(n)</div>
+        <div style="font-size:.72rem; color:var(--muted); margin-top:8px;">Good for understanding<br>Not for interviews</div>
+      </div>
+      <div class="cmp">
+        <div class="cmp-num">APPROACH 02</div>
+        <div class="cmp-label" style="color:var(--accent4)">Sort &amp; Compare</div>
+        <div class="cmp-tc">Time: O(n log n)</div>
+        <div class="cmp-sc">Space: O(n)</div>
+        <div style="font-size:.72rem; color:var(--muted); margin-top:8px;">Clean &amp; readable<br>Safe backup answer</div>
+      </div>
+      <div class="cmp cmp-winner">
+        <div class="cmp-num">APPROACH 03 ⭐</div>
+        <div class="cmp-label" style="color:var(--accent3)">Freq Array</div>
+        <div class="cmp-tc">Time: O(n)</div>
+        <div class="cmp-sc">Space: O(1)*</div>
+        <div style="font-size:.72rem; color:var(--muted); margin-top:8px;">*fixed 256 array<br>Always aim for this</div>
+      </div>
+    </div>
+
+    <div class="idea" style="margin-top:16px; border-color:var(--accent1);">
+      <strong>💡 Bonus interview Q:</strong> Why is <code>String</code> immutable but <code>StringBuilder</code>/<code>StringBuffer</code> mutable?<br>
+      → <code>String</code> is stored in the <strong>String Pool</strong>; JVM reuses identical literals for memory efficiency &amp; thread safety. <code>StringBuilder</code> uses a mutable <code>char[]</code> internally — no pool, no reuse, direct mutation. <code>StringBuffer</code> adds <code>synchronized</code> = thread-safe but slower.
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
