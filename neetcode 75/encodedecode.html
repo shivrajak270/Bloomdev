@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>String Encode/Decode - Interview Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            font-size: 1.8em;
+            color: #667eea;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .code-block {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95em;
+        }
+
+        .highlight {
+            background: #fff3cd;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+
+        .warning {
+            background: #f8d7da;
+            border-left: 4px solid #dc3545;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 15px 0;
+        }
+
+        .success {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 15px 0;
+        }
+
+        .info {
+            background: #d1ecf1;
+            border-left: 4px solid #17a2b8;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 15px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        th {
+            background: #667eea;
+            color: white;
+            padding: 15px;
+            text-align: left;
+        }
+
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        tr:hover {
+            background: #f8f9fa;
+        }
+
+        .question-card {
+            background: #f8f9fa;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .question-card h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .difficulty {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .easy { background: #d4edda; color: #155724; }
+        .medium { background: #fff3cd; color: #856404; }
+        .hard { background: #f8d7da; color: #721c24; }
+
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .comparison-item {
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .wrong {
+            background: #f8d7da;
+            border: 2px solid #dc3545;
+        }
+
+        .correct {
+            background: #d4edda;
+            border: 2px solid #28a745;
+        }
+
+        .comparison-item h4 {
+            margin-bottom: 10px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 3px 10px;
+            background: #667eea;
+            color: white;
+            border-radius: 4px;
+            font-size: 0.85em;
+            margin-right: 5px;
+        }
+
+        .example {
+            background: linear-gradient(to right, #f8f9fa, #e9ecef);
+            padding: 15px;
+            border-radius: 6px;
+            margin: 15px 0;
+            border-left: 4px solid #17a2b8;
+        }
+
+        ul, ol {
+            margin-left: 30px;
+            margin-top: 10px;
+        }
+
+        li {
+            margin: 8px 0;
+        }
+
+        .key-point {
+            font-weight: bold;
+            color: #667eea;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔐 String Encode/Decode Algorithm</h1>
+            <p>Complete Interview Guide for 10 LPA+ Roles</p>
+        </div>
+
+        <div class="content">
+            <!-- Solution Overview -->
+            <div class="section">
+                <h2 class="section-title">💡 The Solution</h2>
+                
+                <div class="success">
+                    <strong>Key Insight:</strong> Use <span class="highlight">length + "#" + string</span> format to avoid ambiguity with delimiters
+                </div>
+
+                <h3 style="margin-top: 20px;">Complete Java Implementation:</h3>
+                <div class="code-block">
+class Solution {
+    public String encode(List&lt;String&gt; strs) {
+        StringBuilder sb = new StringBuilder();
+        for(String hj : strs) {
+            sb.append(hj.length()).append("#").append(hj);
+        }
+        return sb.toString();
+    }
+    
+    public List&lt;String&gt; decode(String str) {
+        List&lt;String&gt; gh = new ArrayList&lt;&gt;();
+        int i = 0;
+        int j = 0;
+        
+        while(i &lt; str.length()) {
+            // Find the delimiter '#'
+            while(str.charAt(j) != '#') {
+                j++;
+            }
+            
+            // Parse the length (handles multi-digit numbers)
+            int num = Integer.parseInt(str.substring(i, j));
+            
+            // Extract the string of that length
+            gh.add(str.substring(j + 1, j + num + 1));
+            
+            // Move to next encoded string
+            i = j + num + 1;
+            j = i;
+        }
+        return gh; 
+    }
+}
+                </div>
+
+                <div class="example">
+                    <strong>Example:</strong><br>
+                    Input: <code>["cat", "dog", "bird"]</code><br>
+                    Encoded: <code>3#cat3#dog4#bird</code><br>
+                    Decoded: <code>["cat", "dog", "bird"]</code>
+                </div>
+            </div>
+
+            <!-- Why Brute Force Failed -->
+            <div class="section">
+                <h2 class="section-title">❌ Why Simple Delimiter Fails</h2>
+                
+                <div class="warning">
+                    <strong>Problem with Brute Force Approach:</strong> Using delimiters like <code>,</code> or <code>#</code> directly fails when strings contain those characters!
+                </div>
+
+                <div class="comparison">
+                    <div class="comparison-item wrong">
+                        <h4>❌ WRONG Approach</h4>
+                        <div class="code-block" style="background: white;">
+// Just use '#' as delimiter
+encode: "hello#world#test"
+
+// But what if input is:
+["he#llo", "wor#ld"]
+// Encoded: "he#llo#wor#ld"
+// On decode: splits incorrectly!
+                        </div>
+                    </div>
+                    
+                    <div class="comparison-item correct">
+                        <h4>✅ CORRECT Approach</h4>
+                        <div class="code-block" style="background: white;">
+// Use length + '#' + string
+["he#llo", "wor#ld"]
+
+// Encoded: "6#he#llo5#wor#ld"
+// Decode knows:
+// - Read 6 chars after first '#'
+// - Read 5 chars after second '#'
+// Works perfectly!
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Critical Edge Cases -->
+            <div class="section">
+                <h2 class="section-title">🎯 Critical Interview Questions (10 LPA Level)</h2>
+                
+                <div class="question-card">
+                    <span class="difficulty hard">HARD</span>
+                    <h3>Q1: What if the string length is very large (multi-digit)?</h3>
+                    
+                    <div class="example">
+                        <strong>Example:</strong> Encoded string: <code>12#helloworld!!</code>
+                    </div>
+
+                    <div class="info">
+                        <strong>Your decode logic must correctly read ALL digits before '#'</strong>
+                    </div>
+
+                    <div class="comparison">
+                        <div class="comparison-item correct">
+                            <h4>✅ CORRECT</h4>
+                            <div class="code-block" style="background: white;">
+while(str.charAt(j) != '#') {
+    j++;
+}
+int length = Integer.parseInt(
+    str.substring(i, j)
+);
+// Handles: 1, 10, 100, 1000+
+                            </div>
+                        </div>
+                        
+                        <div class="comparison-item wrong">
+                            <h4>❌ WRONG</h4>
+                            <div class="code-block" style="background: white;">
+char ch = str.charAt(j-1);
+int length = ch - '0';
+
+// For "10#abcdefghij"
+// Gets only '0', not 10!
+// Fails for numbers > 9
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question-card">
+                    <span class="difficulty medium">MEDIUM</span>
+                    <h3>Q2: Why is this solution O(n)? Prove it.</h3>
+                    
+                    <p><strong>Interviewers ask this to check complexity understanding.</strong></p>
+
+                    <table>
+                        <tr>
+                            <th>Operation</th>
+                            <th>Time Complexity</th>
+                            <th>Explanation</th>
+                        </tr>
+                        <tr>
+                            <td>Encode</td>
+                            <td><strong>O(n)</strong></td>
+                            <td>Iterate over every character once</td>
+                        </tr>
+                        <tr>
+                            <td>Decode</td>
+                            <td><strong>O(n)</strong></td>
+                            <td>Scan each character once while moving pointers</td>
+                        </tr>
+                        <tr>
+                            <td>Space</td>
+                            <td><strong>O(n)</strong></td>
+                            <td>Store the encoded/decoded result</td>
+                        </tr>
+                    </table>
+
+                    <div class="success">
+                        <strong>Why it's optimal:</strong> We MUST read every character at least once, so O(n) is the best possible complexity.
+                    </div>
+                </div>
+
+                <div class="question-card">
+                    <span class="difficulty medium">MEDIUM</span>
+                    <h3>Q3: Why use StringBuilder instead of String concatenation?</h3>
+                    
+                    <div class="comparison">
+                        <div class="comparison-item wrong">
+                            <h4>❌ Bad Code (O(n²))</h4>
+                            <div class="code-block" style="background: white;">
+String result = "";
+for(String word : strs) {
+    result += word;  // Creates new object!
+}
+
+// Each += creates new String object
+// Time: O(n²)
+                            </div>
+                        </div>
+                        
+                        <div class="comparison-item correct">
+                            <h4>✅ Good Code (O(n))</h4>
+                            <div class="code-block" style="background: white;">
+StringBuilder sb = new StringBuilder();
+for(String word : strs) {
+    sb.append(word);  // Modifies existing
+}
+
+// StringBuilder is mutable
+// Time: O(n)
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="info">
+                        <strong>Interview Answer:</strong> StringBuilder is mutable and avoids creating multiple intermediate string objects, making concatenation efficient from O(n²) to O(n).
+                    </div>
+                </div>
+
+                <div class="question-card">
+                    <span class="difficulty easy">EASY</span>
+                    <h3>Q4: What happens if input contains an empty string?</h3>
+                    
+                    <div class="example">
+                        <strong>Test Case:</strong><br>
+                        Input: <code>["", "hello", ""]</code><br>
+                        Encoded: <code>0#5#hello0#</code><br>
+                        Decoded: <code>["", "hello", ""]</code>
+                    </div>
+
+                    <div class="success">
+                        <strong>Why it works:</strong><br>
+                        • Length = 0<br>
+                        • <code>substring(j+1, j+0+1)</code> = <code>substring(start, start)</code><br>
+                        • Returns empty string correctly!
+                    </div>
+                </div>
+
+                <div class="question-card">
+                    <span class="difficulty hard">HARD</span>
+                    <h3>Q5: Can you handle strings with special characters or Unicode?</h3>
+                    
+                    <div class="example">
+                        <strong>Test Case:</strong><br>
+                        Input: <code>["hello🎉", "नमस्ते", "test#123"]</code><br>
+                        Encoded: <code>8#hello🎉18#नमस्ते8#test#123</code>
+                    </div>
+
+                    <div class="warning">
+                        <strong>Watch Out:</strong> <code>String.length()</code> in Java counts UTF-16 code units, not actual characters!<br>
+                        Emoji like 🎉 might count as 2 units.
+                    </div>
+
+                    <div class="code-block">
+// For production code, consider:
+str.codePointCount(0, str.length())  // Actual character count
+                    </div>
+                </div>
+
+                <div class="question-card">
+                    <span class="difficulty medium">MEDIUM</span>
+                    <h3>Q6: How would you modify this to handle null strings?</h3>
+                    
+                    <div class="code-block">
+public String encode(List&lt;String&gt; strs) {
+    if(strs == null) return "";
+    
+    StringBuilder sb = new StringBuilder();
+    for(String str : strs) {
+        if(str == null) {
+            sb.append("-1#");  // Special marker for null
+        } else {
+            sb.append(str.length()).append("#").append(str);
+        }
+    }
+    return sb.toString();
+}
+
+public List&lt;String&gt; decode(String str) {
+    if(str == null || str.isEmpty()) return new ArrayList&lt;&gt;();
+    
+    List&lt;String&gt; result = new ArrayList&lt;&gt;();
+    int i = 0, j = 0;
+    
+    while(i &lt; str.length()) {
+        while(str.charAt(j) != '#') j++;
+        
+        int len = Integer.parseInt(str.substring(i, j));
+        
+        if(len == -1) {
+            result.add(null);  // Restore null
+        } else {
+            result.add(str.substring(j+1, j+len+1));
+        }
+        
+        i = j + len + 1;
+        j = i;
+    }
+    return result;
+}
+                    </div>
+                </div>
+
+                <div class="question-card">
+                    <span class="difficulty hard">HARD</span>
+                    <h3>Q7: What if you need to encode/decode in a distributed system?</h3>
+                    
+                    <p><strong>Follow-up considerations for senior roles:</strong></p>
+                    <ul>
+                        <li><span class="key-point">Thread Safety:</span> StringBuilder is NOT thread-safe. Use StringBuffer or synchronization.</li>
+                        <li><span class="key-point">Memory:</span> For very large strings, consider streaming approaches.</li>
+                        <li><span class="key-point">Compression:</span> Add compression layer for network efficiency.</li>
+                        <li><span class="key-point">Error Handling:</span> What if encoded string is corrupted?</li>
+                    </ul>
+
+                    <div class="code-block">
+// Add validation
+public List&lt;String&gt; decode(String str) {
+    try {
+        // existing decode logic
+    } catch(StringIndexOutOfBoundsException | 
+            NumberFormatException e) {
+        throw new IllegalArgumentException(
+            "Corrupted encoded string", e
+        );
+    }
+}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Reference -->
+            <div class="section">
+                <h2 class="section-title">📋 Mini Cheat Sheet for Interviews</h2>
+                
+                <div class="info">
+                    <h3>Key Idea:</h3>
+                    <p style="font-size: 1.2em; text-align: center; margin: 15px 0;">
+                        <span class="highlight">length + "#" + string</span>
+                    </p>
+                </div>
+
+                <div class="example">
+                    <strong>Example Walkthrough:</strong><br><br>
+                    Input: <code>["cat", "dog"]</code><br><br>
+                    
+                    <strong>Encoding Steps:</strong>
+                    <ol>
+                        <li>"cat" has length 3 → append "3#cat"</li>
+                        <li>"dog" has length 3 → append "3#dog"</li>
+                        <li>Result: <code>"3#cat3#dog"</code></li>
+                    </ol>
+                    <br>
+                    <strong>Decoding Steps:</strong>
+                    <ol>
+                        <li>Find '#' at position 1</li>
+                        <li>Read number before '#' → 3</li>
+                        <li>Extract 3 characters after '#' → "cat"</li>
+                        <li>Move pointer to position 5</li>
+                        <li>Repeat for next string → "dog"</li>
+                    </ol>
+                </div>
+
+                <div class="code-block">
+<strong>Pointer Movement Visualization:</strong>
+
+String: "3#cat3#dog"
+         ↑ ↑   ↑ ↑
+         i j   i j
+
+Step 1: i=0, j=0
+        Find '#' → j=1
+        Length = "3"
+        Extract: "cat"
+        Move: i=5, j=5
+
+Step 2: i=5, j=5
+        Find '#' → j=6
+        Length = "3"
+        Extract: "dog"
+        Done!
+                </div>
+            </div>
+
+            <!-- Complexity Analysis -->
+            <div class="section">
+                <h2 class="section-title">⚡ Complexity Analysis</h2>
+                
+                <table>
+                    <tr>
+                        <th>Aspect</th>
+                        <th>Complexity</th>
+                        <th>Reason</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Encode - Time</strong></td>
+                        <td>O(n)</td>
+                        <td>Single pass through all characters</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Encode - Space</strong></td>
+                        <td>O(n)</td>
+                        <td>StringBuilder stores result</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Decode - Time</strong></td>
+                        <td>O(n)</td>
+                        <td>Single pass with two pointers</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Decode - Space</strong></td>
+                        <td>O(n)</td>
+                        <td>ArrayList stores result</td>
+                    </tr>
+                </table>
+
+                <div class="success">
+                    <strong>Where n =</strong> total number of characters in encoded string<br>
+                    <strong>This is optimal</strong> because we must read every character at least once.
+                </div>
+            </div>
+
+            <!-- Interview Tips -->
+            <div class="section">
+                <h2 class="section-title">🎓 Interview Tips for 10 LPA Roles</h2>
+                
+                <div class="question-card">
+                    <h3>What to Say During Interview:</h3>
+                    <ol>
+                        <li><strong>Start with brute force:</strong> "First thought is to use a delimiter like comma, but that fails when strings contain that character."</li>
+                        <li><strong>Present the solution:</strong> "Better approach is to prefix each string with its length, so we know exactly how many characters to read."</li>
+                        <li><strong>Handle edge cases:</strong> "This works even for empty strings, multi-digit lengths, and special characters."</li>
+                        <li><strong>Discuss complexity:</strong> "Both encode and decode are O(n) time and space, which is optimal."</li>
+                        <li><strong>Mention optimizations:</strong> "I used StringBuilder for O(n) concatenation instead of String which would be O(n²)."</li>
+                    </ol>
+                </div>
+
+                <div class="warning">
+                    <h3>Common Mistakes to Avoid:</h3>
+                    <ul>
+                        <li>❌ Using <code>ch - '0'</code> for multi-digit lengths</li>
+                        <li>❌ Using String concatenation instead of StringBuilder</li>
+                        <li>❌ Not handling empty strings</li>
+                        <li>❌ Forgetting to update both pointers (i and j)</li>
+                        <li>❌ Not testing with strings containing '#' character</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Practice Problems -->
+            <div class="section">
+                <h2 class="section-title">🏋️ Related Practice Problems</h2>
+                
+                <div class="question-card">
+                    <span class="difficulty medium">MEDIUM</span>
+                    <h3>1. Design Compressed String Iterator</h3>
+                    <p>Given "a3b2c1", implement next() and hasNext()</p>
+                </div>
+
+                <div class="question-card">
+                    <span class="difficulty hard">HARD</span>
+                    <h3>2. Serialize and Deserialize Binary Tree</h3>
+                    <p>Use similar encoding technique for tree structures</p>
+                </div>
+
+                <div class="question-card">
+                    <span class="difficulty medium">MEDIUM</span>
+                    <h3>3. Run Length Encoding</h3>
+                    <p>Compress "aaabbcccc" to "a3b2c4"</p>
+                </div>
+
+                <div class="question-card">
+                    <span class="difficulty easy">EASY</span>
+                    <h3>4. Valid Parentheses with Encoding</h3>
+                    <p>Encode and decode bracket sequences</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>
