@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sliding Window — Cheat Sheet</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --panel: #12121a;
+    --border: #1e1e2e;
+    --accent: #00f5a0;
+    --accent2: #ff6b6b;
+    --accent3: #ffd93d;
+    --accent4: #6bcaff;
+    --text: #e0e0f0;
+    --muted: #555577;
+    --ptr-i: #ff6b6b;
+    --ptr-j: #00f5a0;
+    --active: #ffd93d;
+    --dup: #ff3a3a;
+    --window: rgba(0,245,160,0.08);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    min-height: 100vh;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    padding: 48px 40px 24px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: flex-end;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
+  .hero-title { font-size: clamp(28px, 4vw, 52px); font-weight: 800; line-height: 1; }
+  .hero-title span { color: var(--accent); }
+  .hero-sub { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--muted); margin-top: 10px; }
+  .badge { background: var(--accent); color: #000; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 20px; margin-left: 12px; letter-spacing: 1px; }
+  .badge.med { background: var(--accent3); }
+
+  /* ── LAYOUT ── */
+  .layout { display: grid; grid-template-columns: 1fr 1fr; gap: 0; }
+  @media (max-width: 900px) { .layout { grid-template-columns: 1fr; } }
+
+  .section {
+    padding: 32px 40px;
+    border-right: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .section:nth-child(even) { border-right: none; }
+
+  .section-title {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+
+  /* ── PATTERN DETECTOR ── */
+  .pattern-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 14px;
+  }
+  .pattern-card h3 { font-size: 15px; color: var(--accent); margin-bottom: 8px; }
+  .pattern-card p { font-size: 13px; color: #aaa; line-height: 1.7; }
+  .kw { display: inline-block; background: rgba(0,245,160,0.1); border: 1px solid rgba(0,245,160,0.3); color: var(--accent); font-family: 'JetBrains Mono', monospace; font-size: 11px; padding: 2px 8px; border-radius: 4px; margin: 2px; }
+  .kw.r { background: rgba(255,107,107,0.1); border-color: rgba(255,107,107,0.3); color: var(--accent2); }
+  .kw.y { background: rgba(255,217,61,0.1); border-color: rgba(255,217,61,0.3); color: var(--accent3); }
+
+  /* ── VISUALIZER ── */
+  .viz-wrapper { grid-column: 1 / -1; padding: 32px 40px; border-bottom: 1px solid var(--border); }
+
+  .algo-tabs { display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap; }
+  .algo-tab {
+    font-family: 'JetBrains Mono', monospace; font-size: 12px; padding: 8px 18px;
+    border: 1px solid var(--border); border-radius: 4px; cursor: pointer;
+    background: transparent; color: var(--muted); transition: all 0.2s;
+  }
+  .algo-tab.active { background: var(--accent); color: #000; border-color: var(--accent); font-weight: 700; }
+
+  .string-display { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 28px; align-items: center; }
+  .char-box {
+    width: 46px; height: 52px;
+    border: 2px solid var(--border);
+    border-radius: 6px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    font-family: 'JetBrains Mono', monospace; font-size: 22px; font-weight: 700;
+    position: relative; transition: all 0.25s;
+    cursor: default;
+  }
+  .char-box .idx {
+    position: absolute; bottom: -22px;
+    font-size: 10px; color: var(--muted); font-family: 'JetBrains Mono', monospace;
+  }
+  .char-box.in-window { background: var(--window); border-color: var(--ptr-j); }
+  .char-box.ptr-i { border-color: var(--ptr-i); box-shadow: 0 0 12px rgba(255,107,107,0.4); }
+  .char-box.ptr-j { border-color: var(--ptr-j); box-shadow: 0 0 12px rgba(0,245,160,0.4); }
+  .char-box.dup { background: rgba(255,58,58,0.2); border-color: var(--dup); animation: shake 0.3s; }
+  .char-box.removed { opacity: 0.3; }
+
+  @keyframes shake {
+    0%,100% { transform: translateX(0); }
+    25% { transform: translateX(-4px); }
+    75% { transform: translateX(4px); }
+  }
+
+  .ptr-label {
+    position: absolute; top: -26px;
+    font-size: 10px; font-family: 'JetBrains Mono', monospace; font-weight: 700;
+    padding: 2px 6px; border-radius: 3px;
+  }
+  .ptr-label.i { background: var(--ptr-i); color: #000; }
+  .ptr-label.j { background: var(--ptr-j); color: #000; }
+
+  .info-row { display: flex; gap: 24px; flex-wrap: wrap; margin-bottom: 20px; }
+  .info-pill {
+    font-family: 'JetBrains Mono', monospace; font-size: 13px;
+    padding: 8px 16px; border-radius: 6px; border: 1px solid var(--border);
+    background: var(--panel);
+  }
+  .info-pill span { color: var(--accent); font-weight: 700; margin-left: 6px; }
+
+  .set-display {
+    background: var(--panel); border: 1px solid var(--border);
+    border-radius: 8px; padding: 14px 20px; margin-bottom: 20px;
+    font-family: 'JetBrains Mono', monospace; font-size: 13px;
+  }
+  .set-display .label { color: var(--muted); font-size: 11px; letter-spacing: 2px; margin-bottom: 8px; }
+  .set-item {
+    display: inline-block; background: rgba(0,245,160,0.15);
+    border: 1px solid rgba(0,245,160,0.4); color: var(--accent);
+    padding: 4px 12px; border-radius: 4px; margin: 3px; font-size: 14px;
+    transition: all 0.2s;
+  }
+
+  .log-box {
+    background: var(--panel); border: 1px solid var(--border);
+    border-radius: 8px; padding: 14px 20px; min-height: 50px;
+    font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #aaa;
+  }
+
+  /* ── CONTROLS ── */
+  .controls { display: flex; gap: 10px; margin-bottom: 28px; flex-wrap: wrap; align-items: center; }
+  .btn {
+    font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 700;
+    padding: 10px 20px; border-radius: 6px; border: none; cursor: pointer;
+    transition: all 0.15s; letter-spacing: 1px; text-transform: uppercase;
+  }
+  .btn-primary { background: var(--accent); color: #000; }
+  .btn-primary:hover { filter: brightness(1.1); }
+  .btn-secondary { background: transparent; border: 1px solid var(--border); color: var(--muted); }
+  .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+  .btn-danger { background: transparent; border: 1px solid var(--accent2); color: var(--accent2); }
+  .btn-danger:hover { background: var(--accent2); color: #000; }
+  .btn-yellow { background: transparent; border: 1px solid var(--accent3); color: var(--accent3); }
+  .btn-yellow:hover { background: var(--accent3); color: #000; }
+  .btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+  .speed-wrap { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--muted); }
+  input[type=range] { accent-color: var(--accent); width: 80px; }
+
+  .input-wrap { display: flex; gap: 10px; margin-bottom: 28px; align-items: center; flex-wrap: wrap; }
+  .str-input {
+    font-family: 'JetBrains Mono', monospace; font-size: 14px;
+    background: var(--panel); border: 1px solid var(--border);
+    color: var(--text); padding: 10px 14px; border-radius: 6px; width: 220px;
+  }
+  .str-input:focus { outline: none; border-color: var(--accent); }
+
+  /* ── CODE PANEL ── */
+  .code-block {
+    background: var(--panel); border: 1px solid var(--border);
+    border-radius: 8px; overflow: hidden; font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; line-height: 1.8;
+  }
+  .code-line { padding: 2px 20px; display: flex; gap: 16px; transition: background 0.2s; }
+  .code-line.highlight { background: rgba(0,245,160,0.1); border-left: 3px solid var(--accent); }
+  .code-line.highlight2 { background: rgba(255,107,107,0.1); border-left: 3px solid var(--accent2); }
+  .ln { color: var(--muted); user-select: none; min-width: 20px; text-align: right; }
+  .lc { color: #ccc; white-space: pre; }
+  .kwd { color: #c792ea; } .typ { color: var(--accent4); } .str { color: var(--accent3); }
+  .cmt { color: #546e7a; font-style: italic; }
+
+  /* ── 10 LPA QUESTIONS ── */
+  .questions-section { grid-column: 1 / -1; padding: 32px 40px; border-bottom: 1px solid var(--border); }
+  .q-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 16px; }
+  .q-card {
+    background: var(--panel); border: 1px solid var(--border);
+    border-radius: 10px; padding: 20px; cursor: pointer;
+    transition: all 0.2s; position: relative; overflow: hidden;
+  }
+  .q-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, var(--accent), var(--accent4));
+  }
+  .q-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .q-card.hard::before { background: linear-gradient(90deg, var(--accent2), #ff9a9a); }
+  .q-card.med::before { background: linear-gradient(90deg, var(--accent3), #ffb347); }
+  .q-num { font-size: 10px; color: var(--muted); font-family: 'JetBrains Mono', monospace; margin-bottom: 8px; }
+  .q-title { font-size: 15px; font-weight: 700; margin-bottom: 8px; }
+  .q-desc { font-size: 12px; color: #888; line-height: 1.6; margin-bottom: 12px; }
+  .q-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+  .tag { font-size: 10px; background: rgba(255,255,255,0.05); border: 1px solid var(--border); padding: 2px 8px; border-radius: 10px; color: var(--muted); }
+  .diff { font-size: 10px; font-weight: 700; padding: 3px 10px; border-radius: 10px; position: absolute; top: 16px; right: 16px; }
+  .diff.easy { background: rgba(0,245,160,0.15); color: var(--accent); }
+  .diff.med { background: rgba(255,217,61,0.15); color: var(--accent3); }
+  .diff.hard { background: rgba(255,107,107,0.15); color: var(--accent2); }
+
+  /* ── MODAL ── */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.85); z-index: 1000;
+    align-items: center; justify-content: center; padding: 20px;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--panel); border: 1px solid var(--border);
+    border-radius: 12px; width: 100%; max-width: 720px; max-height: 90vh;
+    overflow-y: auto; padding: 32px;
+  }
+  .modal-close { float: right; cursor: pointer; color: var(--muted); font-size: 20px; background: none; border: none; }
+  .modal h2 { font-size: 22px; margin-bottom: 6px; }
+  .modal .m-desc { color: #888; font-size: 14px; line-height: 1.7; margin-bottom: 20px; }
+  .modal .m-example {
+    background: var(--bg); border: 1px solid var(--border);
+    border-radius: 8px; padding: 16px 20px; font-family: 'JetBrains Mono', monospace;
+    font-size: 13px; margin-bottom: 20px; line-height: 2;
+  }
+  .modal .m-idea { font-size: 13px; color: #aaa; }
+  .modal .m-idea strong { color: var(--accent); }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<header class="hero">
+  <div>
+    <div class="hero-title">Sliding Window<span>.</span>
+      <span class="badge med">MEDIUM</span>
+    </div>
+    <div class="hero-sub">Longest Substring Without Repeating Characters — 3 Approaches · Pattern Recognition · 10 LPA Interview Set</div>
+  </div>
+</header>
+
+<!-- VISUALIZER (full width) -->
+<div class="viz-wrapper">
+  <div class="section-title">▶ Interactive Visualizer</div>
+
+  <div class="input-wrap">
+    <input class="str-input" id="strInput" value="abcabcbb" maxlength="20" placeholder="Enter string…">
+    <button class="btn btn-primary" onclick="initViz()">Load</button>
+    <div style="font-size:12px;color:var(--muted);font-family:'JetBrains Mono',monospace">Try: "pwwkew" · "dvdf" · "abba"</div>
+  </div>
+
+  <div class="algo-tabs">
+    <button class="algo-tab active" onclick="setAlgo(0,this)">HashSet Sliding Window</button>
+    <button class="algo-tab" onclick="setAlgo(1,this)">HashMap Optimized</button>
+    <button class="algo-tab" onclick="setAlgo(2,this)">Brute Force O(n²)</button>
+  </div>
+
+  <div class="controls">
+    <button class="btn btn-secondary" id="btnPrev" onclick="stepDown()">◀ Step Back</button>
+    <button class="btn btn-primary" id="btnNext" onclick="stepForward()">Step Forward ▶</button>
+    <button class="btn btn-yellow" id="btnPlay" onclick="togglePlay()">▶ Auto Play</button>
+    <button class="btn btn-danger" onclick="runFull()">⚡ Run Full</button>
+    <button class="btn btn-secondary" onclick="resetViz()">↺ Reset</button>
+    <div class="speed-wrap">Speed <input type="range" id="speedSlider" min="100" max="1500" value="700" step="100"> </div>
+  </div>
+
+  <div class="string-display" id="stringDisplay"></div>
+  <br><br>
+
+  <div class="info-row">
+    <div class="info-pill">pointer i <span id="iVal">0</span></div>
+    <div class="info-pill">pointer j <span id="jVal">0</span></div>
+    <div class="info-pill">window size <span id="wSize">0</span></div>
+    <div class="info-pill" style="border-color:var(--accent);color:var(--accent)">max <span id="maxVal">0</span></div>
+  </div>
+
+  <div class="set-display">
+    <div class="label">HASHSET / HASHMAP STATE</div>
+    <div id="setContent">—</div>
+  </div>
+
+  <div class="log-box" id="logBox">Ready — press Step Forward or Auto Play.</div>
+
+  <!-- CODE PANEL -->
+  <div id="codePanel" style="margin-top:24px;"></div>
+</div>
+
+<!-- PATTERN RECOGNITION -->
+<div class="layout">
+  <div class="section">
+    <div class="section-title">🧠 How to Identify This Pattern</div>
+    <div class="pattern-card">
+      <h3>🪟 Sliding Window Trigger Words</h3>
+      <p>When you see these in a problem statement, think Sliding Window immediately:</p>
+      <br>
+      <span class="kw">longest subarray/substring</span>
+      <span class="kw">shortest subarray</span>
+      <span class="kw">contiguous</span>
+      <span class="kw">at most K distinct</span>
+      <span class="kw">no repeating</span>
+      <span class="kw r">sum ≥ target</span>
+      <span class="kw y">max sum of size k</span>
+    </div>
+    <div class="pattern-card">
+      <h3>📐 3-Question Checklist</h3>
+      <p><b style="color:var(--accent)">1.</b> Is the answer a contiguous subarray/substring?<br>
+      <b style="color:var(--accent)">2.</b> Can you define a "valid window" condition?<br>
+      <b style="color:var(--accent)">3.</b> Does expanding/shrinking one end make sense?</p>
+      <br><p>If all 3 are YES → Sliding Window.</p>
+    </div>
+    <div class="pattern-card">
+      <h3>⚡ Complexity Cheat</h3>
+      <p>
+        Brute Force: <span style="color:var(--accent2)">O(n²) or O(n³)</span><br>
+        HashSet Window: <span style="color:var(--accent3)">O(n) — each char added/removed once</span><br>
+        HashMap Optimized: <span style="color:var(--accent)">O(n) — j jumps directly, no inner loop</span>
+      </p>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">📊 Approach Comparison</div>
+    <div class="pattern-card">
+      <h3>① HashSet + Two Pointers</h3>
+      <p>Move <code style="color:var(--ptr-i)">i</code> forward always. When duplicate found, shrink from <code style="color:var(--ptr-j)">j</code> until clean. Set stores current window chars. Simple and intuitive.</p>
+    </div>
+    <div class="pattern-card">
+      <h3>② HashMap (Last Index)</h3>
+      <p>Store last seen index of each char. When duplicate found, jump <code style="color:var(--ptr-j)">j</code> directly past the old occurrence — no inner loop needed. Fastest in practice.</p>
+    </div>
+    <div class="pattern-card">
+      <h3>③ Brute Force</h3>
+      <p>Try every possible start index <code style="color:var(--ptr-i)">i</code>. For each, expand <code style="color:var(--ptr-j)">j</code> until duplicate found. O(n²) — fails for n > 10⁴ in interviews. Shows you understand it but never submit this.</p>
+    </div>
+    <div class="pattern-card" style="border-color:rgba(0,245,160,0.3)">
+      <h3 style="color:var(--accent3)">🎯 Interview Tip</h3>
+      <p>Always start with brute force (shows thinking), then say <i>"We can optimize this to O(n) using a sliding window…"</i> — that's the 10 LPA move.</p>
+    </div>
+  </div>
+</div>
+
+<!-- 10 LPA QUESTIONS -->
+<div class="questions-section">
+  <div class="section-title">💼 10 LPA Interview Questions — Sliding Window Family</div>
+  <div class="q-grid" id="qGrid"></div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <div class="modal" id="modalBox">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div id="modalContent"></div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════════════════
+const questions = [
+  {
+    id:"LC3", title:"Longest Substring Without Repeating Characters",
+    diff:"med", desc:"The base problem. Given string s, find length of longest substring without repeating characters.",
+    example:`Input:  "abcabcbb"\nOutput: 3  (window "abc")`,
+    idea:"HashMap/HashSet + two pointers. Key insight: shrink left when duplicate found.",
+    tags:["String","HashSet","Two Pointers"],
+  },
+  {
+    id:"LC159", title:"Longest Substring with At Most 2 Distinct Characters",
+    diff:"med", desc:"Extend the window as long as it has ≤ 2 distinct characters. Classic 'at most K distinct' variant.",
+    example:`Input:  "eceba"\nOutput: 3  (window "ece")`,
+    idea:"HashMap counting freq. Shrink window when map.size() > 2.",
+    tags:["String","HashMap","Sliding Window"],
+  },
+  {
+    id:"LC340", title:"Longest Substring with At Most K Distinct Characters",
+    diff:"hard", desc:"Generalization of LC159. Exact same pattern but with variable K.",
+    example:`Input:  s="aa", k=1\nOutput: 2`,
+    idea:"HashMap<Char,Integer>. Shrink left while map.size() > k. O(n).",
+    tags:["String","HashMap","Sliding Window"],
+  },
+  {
+    id:"LC424", title:"Longest Repeating Character Replacement",
+    diff:"med", desc:"You can replace at most K characters. Find longest substring of same character.",
+    example:`Input:  s="AABABBA", k=1\nOutput: 4`,
+    idea:"Window valid when (windowLen - maxFreq) ≤ k. Track maxFreq of any char in window.",
+    tags:["String","Sliding Window","Freq Map"],
+  },
+  {
+    id:"LC567", title:"Permutation in String",
+    diff:"med", desc:"Check if any permutation of s1 exists as a substring of s2.",
+    example:`Input:  s1="ab", s2="eidbaooo"\nOutput: true  ("ba" is at index 3)`,
+    idea:"Fixed window of size s1.length(). Compare freq maps. Slide one char at a time.",
+    tags:["String","Fixed Window","Freq Array"],
+  },
+  {
+    id:"LC76", title:"Minimum Window Substring",
+    diff:"hard", desc:"Find smallest substring of s containing all chars of t.",
+    example:`Input:  s="ADOBECODEBANC", t="ABC"\nOutput: "BANC"`,
+    idea:"Two freq maps. Expand right, shrink left when all chars covered. Track 'formed' count.",
+    tags:["String","HashMap","Variable Window"],
+  },
+  {
+    id:"LC438", title:"Find All Anagrams in a String",
+    diff:"med", desc:"Return all start indices of anagrams of p in s.",
+    example:`Input:  s="cbaebabacd", p="abc"\nOutput: [0,6]`,
+    idea:"Fixed window = p.length(). Compare freq arrays (size 26). Slide and compare.",
+    tags:["String","Fixed Window","Freq Array"],
+  },
+  {
+    id:"LC1004", title:"Max Consecutive Ones III",
+    diff:"med", desc:"Flip at most K zeros. Find max consecutive ones.",
+    example:`Input:  nums=[1,1,1,0,0,0,1,1,1,1,0], k=2\nOutput: 6`,
+    idea:"Window valid when zeroCount ≤ k. Shrink from left when over budget.",
+    tags:["Array","Sliding Window"],
+  },
+  {
+    id:"LC713", title:"Subarray Product Less Than K",
+    diff:"med", desc:"Count contiguous subarrays where product of all elements is less than k.",
+    example:`Input:  nums=[10,5,2,6], k=100\nOutput: 8`,
+    idea:"Expand i; if product≥k, divide by nums[j] and j++. Count += i-j+1 per step.",
+    tags:["Array","Sliding Window","Math"],
+  },
+  {
+    id:"LC209", title:"Minimum Size Subarray Sum",
+    diff:"med", desc:"Find minimal length subarray whose sum ≥ target.",
+    example:`Input:  target=7, nums=[2,3,1,2,4,3]\nOutput: 2  (subarray [4,3])`,
+    idea:"Expand right, shrink left while sum≥target, track min length. O(n).",
+    tags:["Array","Two Pointers","Sliding Window"],
+  },
+];
+
+// ═══════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════
+let S = "abcabcbb";
+let algo = 0;
+let steps = [];
+let stepIdx = -1;
+let playing = false;
+let playTimer = null;
+
+// ═══════════════════════════════════════════════════
+// STEP GENERATORS
+// ═══════════════════════════════════════════════════
+function genHashSetSteps(s){
+  const n = s.length;
+  let i=0,j=0,max=0;
+  const set = new Set();
+  const out = [];
+  out.push({i,j,max,set:new Set(set),log:"Start: i=0, j=0, set={}, max=0",highlights:[0],dupIdx:-1});
+  while(i<n){
+    const sh = s[i];
+    out.push({i,j,max,set:new Set(set),log:`i=${i}: Checking char '${sh}'`,highlights:[4],dupIdx:-1});
+    while(set.has(sh) && j<i){
+      out.push({i,j,max,set:new Set(set),log:`'${sh}' is DUPLICATE in set → remove s[${j}]='${s[j]}', j++`,highlights:[5,6,7],dupIdx:i});
+      set.delete(s[j]);
+      j++;
+      out.push({i,j,max,set:new Set(set),log:`Removed. j is now ${j}. Set: {${[...set].join(',')}}`,highlights:[6,7],dupIdx:-1});
+    }
+    set.add(sh);
+    const w = i-j+1;
+    if(w>max) max=w;
+    out.push({i,j,max,set:new Set(set),log:`Add '${sh}' → window [${j}..${i}] size=${w}, max=${max}`,highlights:[9,10,11],dupIdx:-1});
+    i++;
+  }
+  out.push({i:n,j,max,set:new Set(set),log:`Done! Answer = ${max}`,highlights:[13],dupIdx:-1});
+  return out;
+}
+
+function genHashMapSteps(s){
+  const n = s.length;
+  let j=0,max=0;
+  const map = new Map();
+  const out=[];
+  out.push({i:0,j,max,map:new Map(map),log:"HashMap approach: store last index of each char",highlights:[0],dupIdx:-1});
+  for(let i=0;i<n;i++){
+    const sh = s[i];
+    out.push({i,j,max,map:new Map(map),log:`i=${i}: char='${sh}'`,highlights:[4],dupIdx:-1});
+    if(map.has(sh)){
+      const old = map.get(sh);
+      const newJ = Math.max(j, old+1);
+      out.push({i,j:newJ,max,map:new Map(map),log:`'${sh}' seen before at idx ${old} → jump j to max(${j}, ${old+1}) = ${newJ}`,highlights:[5,6],dupIdx:old});
+      j = newJ;
+    }
+    map.set(sh,i);
+    const w = i-j+1;
+    if(w>max) max=w;
+    out.push({i,j,max,map:new Map(map),log:`Update map[${sh}]=${i}. Window [${j}..${i}] size=${w}, max=${max}`,highlights:[8,9,10],dupIdx:-1});
+  }
+  out.push({i:n,j,max,map:new Map(map),log:`Done! Answer = ${max}`,highlights:[12],dupIdx:-1});
+  return out;
+}
+
+function genBruteSteps(s){
+  const n=s.length;
+  let max=0;
+  const out=[];
+  out.push({i:0,j:0,max,set:new Set(),log:"Brute force: try every start index",highlights:[0],dupIdx:-1});
+  for(let i=0;i<n;i++){
+    const gh = new Set();
+    out.push({i,j:i,max,set:new Set(gh),log:`Outer loop: i=${i}, fresh set`,highlights:[3,4],dupIdx:-1});
+    for(let j2=i;j2<n;j2++){
+      const g = s[j2];
+      if(gh.has(g)){
+        out.push({i,j:j2,max,set:new Set(gh),log:`'${g}' is duplicate → break inner loop`,highlights:[6,7],dupIdx:j2});
+        break;
+      }
+      gh.add(g);
+      const w = gh.size;
+      if(w>max) max=w;
+      out.push({i,j:j2,max,set:new Set(gh),log:`Add '${g}' → size=${w}, max=${max}`,highlights:[9,10,11],dupIdx:-1});
+    }
+  }
+  out.push({i:n,j:0,max,set:new Set(),log:`Done! Answer = ${max}`,highlights:[13],dupIdx:-1});
+  return out;
+}
+
+// ═══════════════════════════════════════════════════
+// CODE TEMPLATES
+// ═══════════════════════════════════════════════════
+const codes = [
+  [ // HashSet
+    {t:'kwd',c:'// Approach 1: HashSet + Two Pointers  O(n)'},
+    {t:'kwd',c:'int '},{t:'',c:'max=0, n=s.length(), j=0, i=0;'},
+    {t:'typ',c:'Set<Character> '},{t:'',c:'hj = new HashSet<>();'},
+    {t:'kwd',c:'while'},{t:'',c:'(i < n) {'},
+    {t:'',c:'  char sh = s.charAt(i);'},
+    {t:'kwd',c:'  while'},{t:'',c:'(hj.contains(sh) && j<i) {'},
+    {t:'',c:'    hj.remove(s.charAt(j));'},
+    {t:'',c:'    j++;'},
+    {t:'',c:'  }'},
+    {t:'',c:'  hj.add(sh);'},
+    {t:'',c:'  max = Math.max(max, i-j+1);'},
+    {t:'',c:'  i++;'},
+    {t:'',c:'}'},
+    {t:'kwd',c:'return '},{t:'',c:'max;'},
+  ],
+  [ // HashMap
+    {t:'kwd',c:'// Approach 2: HashMap (Last Index)  O(n)'},
+    {t:'kwd',c:'int '},{t:'',c:'max=0, n=s.length(), j=0;'},
+    {t:'typ',c:'Map<Character,Integer> '},{t:'',c:'gh = new HashMap<>();'},
+    {t:'kwd',c:'for'},{t:'',c:'(int i=0; i<n; i++) {'},
+    {t:'',c:'  char sh = s.charAt(i);'},
+    {t:'kwd',c:'  if'},{t:'',c:'(gh.containsKey(sh)) {'},
+    {t:'',c:'    j = Math.max(j, gh.get(sh)+1);'},
+    {t:'',c:'  }'},
+    {t:'',c:'  gh.put(sh, i);'},
+    {t:'',c:'  max = Math.max(i-j+1, max);'},
+    {t:'',c:'}'},
+    {t:'kwd',c:'return '},{t:'',c:'max;'},
+  ],
+  [ // Brute
+    {t:'kwd',c:'// Approach 3: Brute Force  O(n²)'},
+    {t:'kwd',c:'int '},{t:'',c:'max=0, n=s.length();'},
+    {t:'',c:''},
+    {t:'kwd',c:'for'},{t:'',c:'(int i=0; i<n; i++) {'},
+    {t:'typ',c:'  HashSet<Character> '},{t:'',c:'gh = new HashSet<>();'},
+    {t:'kwd',c:'  for'},{t:'',c:'(int j=i; j<n; j++) {'},
+    {t:'',c:'    char g = s.charAt(j);'},
+    {t:'kwd',c:'    if'},{t:'',c:'(gh.contains(g)) break;'},
+    {t:'',c:'    gh.add(g);'},
+    {t:'',c:'    max = Math.max(max, gh.size());'},
+    {t:'',c:'  }'},
+    {t:'',c:'}'},
+    {t:'kwd',c:'return '},{t:'',c:'max;'},
+  ]
+];
+
+// ═══════════════════════════════════════════════════
+// RENDER
+// ═══════════════════════════════════════════════════
+function renderCode(highlights){
+  const lines = codes[algo];
+  let html = '<div class="code-block">';
+  lines.forEach((l,idx)=>{
+    const hl = highlights.includes(idx) ? (idx<=3?'highlight2':'highlight') : '';
+    const cls = l.t==='kwd'?'kwd':l.t==='typ'?'typ':l.t==='str'?'str':l.t==='cmt'?'cmt':'';
+    html += `<div class="code-line ${hl}"><span class="ln">${idx+1}</span><span class="lc ${cls}">${l.c}</span></div>`;
+  });
+  html += '</div>';
+  document.getElementById('codePanel').innerHTML = html;
+}
+
+function renderState(step){
+  const n = S.length;
+  // String
+  let html='';
+  for(let k=0;k<n;k++){
+    let cls='char-box';
+    if(k>=step.j && k<=step.i && k<n) cls+=' in-window';
+    if(k===step.i && step.i<n) cls+=' ptr-i';
+    if(k===step.j && algo!==2) cls+=' ptr-j';
+    if(k===step.dupIdx) cls+=' dup';
+    let ptrs='';
+    if(k===step.i && step.i<n) ptrs+=`<span class="ptr-label i">i</span>`;
+    if(k===step.j && algo!==2) ptrs+=`<span class="ptr-label j" style="top:${k===step.i?'-42px':'-26px'}">j</span>`;
+    html+=`<div class="${cls}">${ptrs}${S[k]}<span class="idx">${k}</span></div>`;
+  }
+  document.getElementById('stringDisplay').innerHTML=html;
+
+  // Info
+  document.getElementById('iVal').textContent = step.i<n?step.i:'done';
+  document.getElementById('jVal').textContent = step.j;
+  document.getElementById('wSize').textContent = step.i<n?step.i-step.j+1:'-';
+  document.getElementById('maxVal').textContent = step.max;
+
+  // Set/Map
+  let sc='';
+  if(step.set){
+    [...step.set].forEach(c=>{ sc+=`<span class="set-item">'${c}'</span>`; });
+  } else if(step.map){
+    step.map.forEach((v,k)=>{ sc+=`<span class="set-item">'${k}':${v}</span>`; });
+  }
+  document.getElementById('setContent').innerHTML = sc||'<span style="color:var(--muted)">empty</span>';
+
+  // Log
+  document.getElementById('logBox').textContent = step.log;
+
+  // Code
+  renderCode(step.highlights||[]);
+}
+
+// ═══════════════════════════════════════════════════
+// CONTROLS
+// ═══════════════════════════════════════════════════
+function initViz(){
+  S = document.getElementById('strInput').value || 'abcabcbb';
+  if(algo===0) steps=genHashSetSteps(S);
+  else if(algo===1) steps=genHashMapSteps(S);
+  else steps=genBruteSteps(S);
+  stepIdx=0;
+  renderState(steps[0]);
+  updateBtns();
+}
+
+function stepForward(){
+  if(stepIdx<steps.length-1){ stepIdx++; renderState(steps[stepIdx]); updateBtns(); }
+}
+function stepDown(){
+  if(stepIdx>0){ stepIdx--; renderState(steps[stepIdx]); updateBtns(); }
+}
+function resetViz(){ stopPlay(); initViz(); }
+
+function togglePlay(){
+  if(playing){ stopPlay(); }
+  else { startPlay(); }
+}
+function startPlay(){
+  playing=true;
+  document.getElementById('btnPlay').textContent='⏸ Pause';
+  document.getElementById('btnPlay').className='btn btn-danger';
+  tick();
+}
+function stopPlay(){
+  playing=false;
+  clearTimeout(playTimer);
+  document.getElementById('btnPlay').textContent='▶ Auto Play';
+  document.getElementById('btnPlay').className='btn btn-yellow';
+}
+function tick(){
+  if(!playing) return;
+  if(stepIdx>=steps.length-1){ stopPlay(); return; }
+  stepForward();
+  const spd = 1600 - parseInt(document.getElementById('speedSlider').value);
+  playTimer=setTimeout(tick,spd);
+}
+function runFull(){
+  stopPlay();
+  stepIdx=steps.length-1;
+  renderState(steps[stepIdx]);
+  updateBtns();
+}
+function updateBtns(){
+  document.getElementById('btnPrev').disabled = stepIdx<=0;
+  document.getElementById('btnNext').disabled = stepIdx>=steps.length-1;
+}
+function setAlgo(n,el){
+  algo=n;
+  document.querySelectorAll('.algo-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  initViz();
+}
+
+// ═══════════════════════════════════════════════════
+// QUESTIONS
+// ═══════════════════════════════════════════════════
+function renderQuestions(){
+  const grid = document.getElementById('qGrid');
+  grid.innerHTML = questions.map((q,i)=>`
+    <div class="q-card ${q.diff}" onclick="openModal(${i})">
+      <span class="diff ${q.diff}">${q.diff.toUpperCase()}</span>
+      <div class="q-num">${q.id}</div>
+      <div class="q-title">${q.title}</div>
+      <div class="q-desc">${q.desc}</div>
+      <div class="q-tags">${q.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div>
+    </div>
+  `).join('');
+}
+
+function openModal(i){
+  const q=questions[i];
+  document.getElementById('modalContent').innerHTML=`
+    <h2>${q.id} — ${q.title}</h2>
+    <span class="diff ${q.diff}" style="display:inline-block;margin-bottom:16px">${q.diff.toUpperCase()}</span>
+    <p class="m-desc">${q.desc}</p>
+    <div class="m-example">${q.example.replace(/\n/g,'<br>')}</div>
+    <div class="m-idea"><strong>💡 Pattern Idea:</strong><br>${q.idea}</div>
+    <br>
+    <div class="q-tags">${q.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div>
+  `;
+  document.getElementById('modalOverlay').classList.add('open');
+}
+function closeModal(e){
+  if(!e || e.target===document.getElementById('modalOverlay')||e.target.classList.contains('modal-close'))
+    document.getElementById('modalOverlay').classList.remove('open');
+}
+
+// ═══════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════
+renderQuestions();
+initViz();
+</script>
+</body>
+</html>

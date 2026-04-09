@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Valid Parentheses — All 3 Approaches</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&family=Fira+Code:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #060608;
+  --surface: #0e0e14;
+  --card: #13131c;
+  --border: #1f1f30;
+  --border2: #2a2a40;
+  --text: #dde0f0;
+  --muted: #4a4a6a;
+  --muted2: #6a6a8a;
+  --a1: #7ee8a2;   /* green */
+  --a2: #f7b731;   /* yellow */
+  --a3: #ff6b9d;   /* pink */
+  --a4: #5eb8ff;   /* blue */
+  --a5: #c678dd;   /* purple */
+  --invalid: #ff4757;
+  --valid: #7ee8a2;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Outfit',sans-serif;
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+/* ── NOISE OVERLAY ── */
+body::before{
+  content:'';position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:0;opacity:0.4;
+}
+
+/* ── HEADER ── */
+.header{
+  padding:52px 48px 36px;
+  position:relative;
+  border-bottom:1px solid var(--border);
+}
+.header::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--a1),var(--a4),transparent);
+}
+.h-eyebrow{
+  font-family:'Fira Code',monospace;font-size:11px;
+  color:var(--a1);letter-spacing:3px;text-transform:uppercase;margin-bottom:12px;
+}
+.h-title{
+  font-size:clamp(32px,5vw,64px);font-weight:900;line-height:1;
+  background:linear-gradient(135deg,#fff 30%,var(--a4));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.h-sub{
+  margin-top:12px;font-size:14px;color:var(--muted2);font-family:'Fira Code',monospace;
+  max-width:600px;line-height:1.7;
+}
+.h-badges{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap;}
+.badge{
+  font-size:11px;font-weight:700;letter-spacing:1px;padding:5px 14px;border-radius:20px;
+  font-family:'Fira Code',monospace;
+}
+.b-med{background:rgba(247,183,49,0.15);border:1px solid rgba(247,183,49,0.4);color:var(--a2);}
+.b-stack{background:rgba(94,184,255,0.12);border:1px solid rgba(94,184,255,0.3);color:var(--a4);}
+.b-on2{background:rgba(255,107,157,0.12);border:1px solid rgba(255,107,157,0.3);color:var(--a3);}
+.b-on{background:rgba(126,232,162,0.12);border:1px solid rgba(126,232,162,0.3);color:var(--a1);}
+
+/* ── INPUT ROW ── */
+.input-row{
+  display:flex;gap:12px;padding:28px 48px;
+  border-bottom:1px solid var(--border);align-items:center;flex-wrap:wrap;
+}
+.str-label{font-size:12px;color:var(--muted2);font-family:'Fira Code',monospace;letter-spacing:1px;}
+.str-inp{
+  font-family:'Fira Code',monospace;font-size:16px;font-weight:700;
+  background:var(--card);border:1px solid var(--border2);color:var(--text);
+  padding:10px 18px;border-radius:8px;width:220px;letter-spacing:3px;
+  transition:border-color 0.2s;
+}
+.str-inp:focus{outline:none;border-color:var(--a1);}
+.btn{
+  font-family:'Fira Code',monospace;font-size:12px;font-weight:700;letter-spacing:1px;
+  padding:10px 22px;border-radius:8px;border:none;cursor:pointer;
+  text-transform:uppercase;transition:all 0.15s;
+}
+.btn-g{background:var(--a1);color:#000;}
+.btn-g:hover{filter:brightness(1.1);transform:translateY(-1px);}
+.btn-ghost{background:transparent;border:1px solid var(--border2);color:var(--muted2);}
+.btn-ghost:hover{border-color:var(--a4);color:var(--a4);}
+.presets{display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
+.preset-lbl{font-size:11px;color:var(--muted);font-family:'Fira Code',monospace;}
+.preset-btn{
+  font-family:'Fira Code',monospace;font-size:13px;font-weight:700;
+  background:var(--surface);border:1px solid var(--border2);color:var(--muted2);
+  padding:6px 14px;border-radius:6px;cursor:pointer;transition:all 0.15s;letter-spacing:2px;
+}
+.preset-btn:hover{border-color:var(--a1);color:var(--a1);}
+
+/* ── MAIN GRID ── */
+.approaches{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:0;
+}
+@media(max-width:1100px){.approaches{grid-template-columns:1fr;}}
+
+.approach{
+  border-right:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+  display:flex;flex-direction:column;
+  position:relative;overflow:hidden;
+}
+.approach:last-child{border-right:none;}
+
+.approach-header{
+  padding:24px 28px 20px;
+  border-bottom:1px solid var(--border);
+  position:relative;
+}
+.approach-num{
+  font-size:10px;color:var(--muted);font-family:'Fira Code',monospace;
+  letter-spacing:2px;margin-bottom:6px;
+}
+.approach-title{font-size:18px;font-weight:700;margin-bottom:4px;}
+.approach-complexity{
+  font-family:'Fira Code',monospace;font-size:12px;
+  display:flex;gap:10px;flex-wrap:wrap;
+}
+.cx-badge{
+  padding:3px 10px;border-radius:4px;font-size:11px;font-weight:700;
+}
+.cx-bad{background:rgba(255,71,87,0.15);border:1px solid rgba(255,71,87,0.3);color:#ff6b6b;}
+.cx-ok{background:rgba(126,232,162,0.12);border:1px solid rgba(126,232,162,0.3);color:var(--a1);}
+.cx-med{background:rgba(247,183,49,0.12);border:1px solid rgba(247,183,49,0.3);color:var(--a2);}
+
+/* ── VIZ AREA ── */
+.viz-area{padding:24px 28px;flex:1;display:flex;flex-direction:column;gap:18px;}
+
+/* String display */
+.str-display{
+  display:flex;gap:5px;flex-wrap:wrap;min-height:64px;align-items:center;
+}
+.ch{
+  width:42px;height:48px;border:2px solid var(--border2);border-radius:8px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  font-family:'Fira Code',monospace;font-size:20px;font-weight:700;
+  position:relative;transition:all 0.2s;
+  color:var(--muted2);
+}
+.ch .cidx{position:absolute;bottom:-20px;font-size:9px;color:var(--muted);font-family:'Fira Code',monospace;}
+.ch.cur{border-color:var(--a2);color:var(--a2);box-shadow:0 0 14px rgba(247,183,49,0.3);transform:translateY(-3px);}
+.ch.matched{border-color:var(--a1);color:var(--a1);background:rgba(126,232,162,0.08);}
+.ch.removed{border-color:var(--a1);color:var(--a1);background:rgba(126,232,162,0.15);text-decoration:line-through;opacity:0.5;}
+.ch.bad{border-color:var(--invalid);color:var(--invalid);animation:shake .3s;box-shadow:0 0 14px rgba(255,71,87,0.3);}
+.ch.open-b{border-color:var(--a4);color:var(--a4);background:rgba(94,184,255,0.08);}
+.ch.close-b{border-color:var(--a5);color:var(--a5);}
+.ch.processed{opacity:0.4;}
+
+.cur-ptr{
+  position:absolute;top:-22px;left:50%;transform:translateX(-50%);
+  font-size:9px;font-family:'Fira Code',monospace;font-weight:700;
+  background:var(--a2);color:#000;padding:2px 6px;border-radius:3px;white-space:nowrap;
+}
+
+@keyframes shake{0%,100%{transform:translateX(0) translateY(-3px);}25%{transform:translateX(-4px);}75%{transform:translateX(4px);}}
+
+/* Stack viz */
+.stack-wrap{
+  background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:14px 18px;
+}
+.stack-lbl{font-size:10px;color:var(--muted);font-family:'Fira Code',monospace;letter-spacing:2px;margin-bottom:10px;}
+.stack-cells{display:flex;gap:6px;align-items:flex-end;min-height:44px;flex-wrap:wrap;}
+.stack-cell{
+  width:40px;height:40px;border:2px solid var(--a4);border-radius:6px;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Fira Code',monospace;font-size:18px;font-weight:700;color:var(--a4);
+  background:rgba(94,184,255,0.08);transition:all 0.25s;
+  animation:popIn .2s ease;
+}
+@keyframes popIn{from{transform:scale(0.6);opacity:0;}to{transform:scale(1);opacity:1;}}
+.stack-empty{color:var(--muted);font-size:11px;font-family:'Fira Code',monospace;align-self:center;}
+
+/* Brute string state */
+.brute-str{
+  background:var(--surface);border:1px solid var(--border);border-radius:8px;
+  padding:12px 18px;font-family:'Fira Code',monospace;font-size:14px;
+  min-height:44px;display:flex;align-items:center;gap:4px;flex-wrap:wrap;
+}
+.brute-lbl{font-size:10px;color:var(--muted);letter-spacing:2px;margin-bottom:8px;}
+.b-removed{text-decoration:line-through;color:var(--a3);opacity:0.5;}
+.b-cur-pair{color:var(--a1);font-weight:700;}
+
+/* Info pills */
+.info-row{display:flex;gap:10px;flex-wrap:wrap;}
+.pill{
+  font-family:'Fira Code',monospace;font-size:11px;
+  background:var(--card);border:1px solid var(--border2);
+  padding:6px 14px;border-radius:6px;color:var(--muted2);
+}
+.pill b{color:var(--a2);}
+
+/* Result */
+.result-box{
+  padding:12px 18px;border-radius:8px;font-family:'Fira Code',monospace;
+  font-size:13px;font-weight:700;text-align:center;letter-spacing:1px;
+  transition:all 0.3s;opacity:0;
+}
+.result-box.show{opacity:1;}
+.result-valid{background:rgba(126,232,162,0.12);border:1px solid var(--a1);color:var(--a1);}
+.result-invalid{background:rgba(255,71,87,0.12);border:1px solid var(--invalid);color:var(--invalid);}
+
+/* Log */
+.log{
+  background:var(--card);border:1px solid var(--border);border-radius:8px;
+  padding:10px 16px;font-family:'Fira Code',monospace;font-size:11px;
+  color:var(--muted2);min-height:40px;line-height:1.6;
+}
+.log .ev-ok{color:var(--a1);}
+.log .ev-bad{color:var(--invalid);}
+.log .ev-push{color:var(--a4);}
+.log .ev-pop{color:var(--a5);}
+.log .ev-info{color:var(--a2);}
+
+/* Code */
+.code-wrap{
+  border-top:1px solid var(--border);
+  padding:20px 28px;
+}
+.code-lbl{font-size:10px;color:var(--muted);font-family:'Fira Code',monospace;letter-spacing:2px;margin-bottom:10px;}
+.code-block{
+  background:var(--surface);border:1px solid var(--border);border-radius:8px;
+  overflow:hidden;font-family:'Fira Code',monospace;font-size:11px;line-height:2;
+  max-height:280px;overflow-y:auto;
+}
+.cl{display:flex;gap:12px;padding:1px 16px;transition:background 0.15s;}
+.cl.hl{background:rgba(126,232,162,0.08);border-left:2px solid var(--a1);}
+.cl.hl2{background:rgba(255,71,87,0.08);border-left:2px solid var(--invalid);}
+.cl.hl3{background:rgba(94,184,255,0.08);border-left:2px solid var(--a4);}
+.ln2{color:var(--muted);min-width:18px;text-align:right;user-select:none;font-size:10px;}
+.lc2{color:#abb2bf;white-space:pre;}
+.kw{color:#c678dd;}.tp{color:#e5c07b;}.cm{color:#546e7a;font-style:italic;}
+.st{color:#98c379;}.fn{color:#61afef;}.nm{color:#d19a66;}
+
+/* Controls */
+.ctrl-bar{
+  display:flex;gap:8px;padding:20px 28px;
+  border-top:1px solid var(--border);flex-wrap:wrap;align-items:center;
+}
+.btn-sm{
+  font-family:'Fira Code',monospace;font-size:11px;font-weight:700;letter-spacing:1px;
+  padding:8px 16px;border-radius:6px;border:none;cursor:pointer;
+  text-transform:uppercase;transition:all 0.15s;
+}
+.btn-fwd{background:var(--a1);color:#000;}
+.btn-fwd:hover{filter:brightness(1.1);}
+.btn-bwd{background:transparent;border:1px solid var(--border2);color:var(--muted2);}
+.btn-bwd:hover{border-color:var(--a4);color:var(--a4);}
+.btn-play{background:transparent;border:1px solid var(--a2);color:var(--a2);}
+.btn-play:hover{background:var(--a2);color:#000;}
+.btn-play.playing{border-color:var(--invalid);color:var(--invalid);}
+.btn-play.playing:hover{background:var(--invalid);color:#fff;}
+.btn-full{background:transparent;border:1px solid var(--a3);color:var(--a3);}
+.btn-full:hover{background:var(--a3);color:#fff;}
+.btn-rst{background:transparent;border:1px solid var(--border2);color:var(--muted);}
+.btn-rst:hover{border-color:var(--muted2);color:var(--text);}
+.btn-sm:disabled{opacity:0.25;cursor:not-allowed;}
+.spd{display:flex;align-items:center;gap:6px;font-size:10px;color:var(--muted);font-family:'Fira Code',monospace;margin-left:4px;}
+input[type=range]{accent-color:var(--a1);width:70px;}
+
+/* Step counter */
+.step-ctr{
+  font-family:'Fira Code',monospace;font-size:10px;color:var(--muted);
+  margin-left:auto;
+}
+
+/* Progress bar */
+.prog-wrap{height:2px;background:var(--border);}
+.prog-bar{height:2px;background:linear-gradient(90deg,var(--a1),var(--a4));transition:width 0.2s;}
+
+/* Global controls */
+.global-ctrl{
+  display:flex;gap:12px;padding:20px 48px;border-bottom:1px solid var(--border);
+  align-items:center;flex-wrap:wrap;
+}
+.gc-label{font-size:12px;color:var(--muted2);font-family:'Fira Code',monospace;}
+.btn-sync{background:var(--a4);color:#000;}
+.btn-sync:hover{filter:brightness(1.1);}
+
+/* Scrollbar */
+::-webkit-scrollbar{width:4px;height:4px;}
+::-webkit-scrollbar-track{background:var(--bg);}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}
+
+/* Section divider accent lines */
+.approach:nth-child(1) .approach-header::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--a3),transparent);}
+.approach:nth-child(2) .approach-header::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--a4),transparent);}
+.approach:nth-child(3) .approach-header::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--a1),transparent);}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="h-eyebrow">// LC 20 · Data Structures</div>
+  <h1 class="h-title">Valid Parentheses</h1>
+  <p class="h-sub">Three approaches visualized side-by-side — Brute Force O(n²), Stack O(n), Stack+HashMap O(n)</p>
+  <div class="h-badges">
+    <span class="badge b-med">Medium</span>
+    <span class="badge b-on2">O(n²) Brute</span>
+    <span class="badge b-stack">Stack</span>
+    <span class="badge b-on">O(n) Optimal</span>
+  </div>
+</header>
+
+<!-- INPUT -->
+<div class="input-row">
+  <span class="str-label">INPUT →</span>
+  <input class="str-inp" id="mainInput" value="({[]})" maxlength="16" placeholder="e.g. ({[]})">
+  <button class="btn btn-g" onclick="loadAll()">Load All</button>
+  <div class="presets">
+    <span class="preset-lbl">try:</span>
+    <button class="preset-btn" onclick="setPreset('({[]})')">({[]})</button>
+    <button class="preset-btn" onclick="setPreset('([)]')">([)]</button>
+    <button class="preset-btn" onclick="setPreset('{[]}()')"> {[]}()</button>
+    <button class="preset-btn" onclick="setPreset('(((')">(((</button>
+    <button class="preset-btn" onclick="setPreset('()')">() </button>
+  </div>
+</div>
+
+<!-- GLOBAL CONTROLS -->
+<div class="global-ctrl">
+  <span class="gc-label">SYNC ALL →</span>
+  <button class="btn btn-sm btn-bwd" onclick="allStep(-1)">◀ All Back</button>
+  <button class="btn btn-sm btn-fwd" onclick="allStep(1)">All Forward ▶</button>
+  <button class="btn btn-sm btn-play" id="syncPlayBtn" onclick="toggleSyncPlay()">▶ Play All</button>
+  <button class="btn btn-sm btn-full" onclick="allFull()">⚡ All Full</button>
+  <button class="btn btn-sm btn-rst" onclick="loadAll()">↺ Reset All</button>
+  <div class="spd">Speed <input type="range" id="globalSpeed" min="100" max="1400" value="700"></div>
+</div>
+
+<!-- 3 APPROACH COLUMNS -->
+<div class="approaches">
+
+  <!-- ── APPROACH 1: BRUTE FORCE ── -->
+  <div class="approach" id="ap0">
+    <div class="approach-header">
+      <div class="approach-num">APPROACH 01</div>
+      <div class="approach-title">Brute Force — String Replace</div>
+      <div class="approach-complexity">
+        <span class="cx-badge cx-bad">Time O(n²)</span>
+        <span class="cx-badge cx-med">Space O(n)</span>
+      </div>
+    </div>
+    <div class="prog-wrap"><div class="prog-bar" id="prog0" style="width:0%"></div></div>
+
+    <div class="viz-area">
+      <!-- current string state -->
+      <div>
+        <div class="brute-lbl">CURRENT STRING STATE</div>
+        <div class="brute-str" id="bruteStr0">—</div>
+      </div>
+      <!-- pass info -->
+      <div class="info-row">
+        <div class="pill">pass <b id="b0pass">0</b></div>
+        <div class="pill">removed <b id="b0rem">0</b></div>
+        <div class="pill">length <b id="b0len">—</b></div>
+      </div>
+      <div class="result-box" id="res0">—</div>
+      <div class="log" id="log0">Ready.</div>
+    </div>
+
+    <div class="code-wrap">
+      <div class="code-lbl">JAVA CODE</div>
+      <div class="code-block" id="code0"></div>
+    </div>
+    <div class="ctrl-bar">
+      <button class="btn-sm btn-bwd" id="bk0" onclick="step(0,-1)">◀ Back</button>
+      <button class="btn-sm btn-fwd" id="fw0" onclick="step(0,1)">Fwd ▶</button>
+      <button class="btn-sm btn-play" id="play0" onclick="togglePlay(0)">▶ Play</button>
+      <button class="btn-sm btn-full" onclick="goFull(0)">⚡ Full</button>
+      <button class="btn-sm btn-rst" onclick="resetOne(0)">↺</button>
+      <span class="step-ctr" id="sc0">0 / 0</span>
+    </div>
+  </div>
+
+  <!-- ── APPROACH 2: STACK ── -->
+  <div class="approach" id="ap1">
+    <div class="approach-header">
+      <div class="approach-num">APPROACH 02</div>
+      <div class="approach-title">Stack — Two Pointers</div>
+      <div class="approach-complexity">
+        <span class="cx-badge cx-ok">Time O(n)</span>
+        <span class="cx-badge cx-ok">Space O(n)</span>
+      </div>
+    </div>
+    <div class="prog-wrap"><div class="prog-bar" id="prog1" style="width:0%"></div></div>
+
+    <div class="viz-area">
+      <div class="str-display" id="strDisp1"></div>
+      <div style="margin-top:18px;">
+        <div class="stack-wrap">
+          <div class="stack-lbl">STACK (LIFO)</div>
+          <div class="stack-cells" id="stack1"><span class="stack-empty">empty</span></div>
+        </div>
+      </div>
+      <div class="info-row">
+        <div class="pill">index <b id="idx1">—</b></div>
+        <div class="pill">char <b id="char1">—</b></div>
+        <div class="pill">stack size <b id="sz1">0</b></div>
+      </div>
+      <div class="result-box" id="res1">—</div>
+      <div class="log" id="log1">Ready.</div>
+    </div>
+
+    <div class="code-wrap">
+      <div class="code-lbl">JAVA CODE</div>
+      <div class="code-block" id="code1"></div>
+    </div>
+    <div class="ctrl-bar">
+      <button class="btn-sm btn-bwd" id="bk1" onclick="step(1,-1)">◀ Back</button>
+      <button class="btn-sm btn-fwd" id="fw1" onclick="step(1,1)">Fwd ▶</button>
+      <button class="btn-sm btn-play" id="play1" onclick="togglePlay(1)">▶ Play</button>
+      <button class="btn-sm btn-full" onclick="goFull(1)">⚡ Full</button>
+      <button class="btn-sm btn-rst" onclick="resetOne(1)">↺</button>
+      <span class="step-ctr" id="sc1">0 / 0</span>
+    </div>
+  </div>
+
+  <!-- ── APPROACH 3: STACK + HASHMAP ── -->
+  <div class="approach" id="ap2">
+    <div class="approach-header">
+      <div class="approach-num">APPROACH 03</div>
+      <div class="approach-title">Stack + HashMap</div>
+      <div class="approach-complexity">
+        <span class="cx-badge cx-ok">Time O(n)</span>
+        <span class="cx-badge cx-ok">Space O(n)</span>
+      </div>
+    </div>
+    <div class="prog-wrap"><div class="prog-bar" id="prog2" style="width:0%"></div></div>
+
+    <div class="viz-area">
+      <div class="str-display" id="strDisp2"></div>
+      <!-- HashMap display -->
+      <div class="stack-wrap">
+        <div class="stack-lbl">HASHMAP (closer → opener)</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;font-family:'Fira Code',monospace;font-size:13px;">
+          <span style="background:rgba(198,120,221,0.12);border:1px solid rgba(198,120,221,0.3);color:var(--a5);padding:4px 12px;border-radius:5px;">)→(</span>
+          <span style="background:rgba(198,120,221,0.12);border:1px solid rgba(198,120,221,0.3);color:var(--a5);padding:4px 12px;border-radius:5px;">]→[</span>
+          <span style="background:rgba(198,120,221,0.12);border:1px solid rgba(198,120,221,0.3);color:var(--a5);padding:4px 12px;border-radius:5px;">}→{</span>
+        </div>
+      </div>
+      <div class="stack-wrap" style="margin-top:0;">
+        <div class="stack-lbl">STACK (LIFO)</div>
+        <div class="stack-cells" id="stack2"><span class="stack-empty">empty</span></div>
+      </div>
+      <div class="info-row">
+        <div class="pill">index <b id="idx2">—</b></div>
+        <div class="pill">char <b id="char2">—</b></div>
+        <div class="pill">is opener? <b id="isop2">—</b></div>
+      </div>
+      <div class="result-box" id="res2">—</div>
+      <div class="log" id="log2">Ready.</div>
+    </div>
+
+    <div class="code-wrap">
+      <div class="code-lbl">JAVA CODE</div>
+      <div class="code-block" id="code2"></div>
+    </div>
+    <div class="ctrl-bar">
+      <button class="btn-sm btn-bwd" id="bk2" onclick="step(2,-1)">◀ Back</button>
+      <button class="btn-sm btn-fwd" id="fw2" onclick="step(2,1)">Fwd ▶</button>
+      <button class="btn-sm btn-play" id="play2" onclick="togglePlay(2)">▶ Play</button>
+      <button class="btn-sm btn-full" onclick="goFull(2)">⚡ Full</button>
+      <button class="btn-sm btn-rst" onclick="resetOne(2)">↺</button>
+      <span class="step-ctr" id="sc2">0 / 0</span>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ═══════════════════════════════════
+// CODE DEFINITIONS
+// ═══════════════════════════════════
+const CODE_DEFS = [
+  // Brute Force
+  [
+    {c:'// Approach 1: Brute Force — String Replace',t:'cm'},
+    {c:'boolean isValid(String s) {',t:''},
+    {c:'  while (s.contains("()") ||',t:'kw'},
+    {c:'         s.contains("[]") ||',t:''},
+    {c:'         s.contains("{}")) {',t:''},
+    {c:'    s = s.replace("()", "");',t:'st'},
+    {c:'    s = s.replace("[]", "");',t:''},
+    {c:'    s = s.replace("{}", "");',t:''},
+    {c:'  }',t:''},
+    {c:'  return s.isEmpty();',t:'kw'},
+    {c:'}',t:''},
+  ],
+  // Stack
+  [
+    {c:'// Approach 2: Stack O(n)',t:'cm'},
+    {c:'boolean isValid(String s) {',t:''},
+    {c:'  Stack<Character> st = new Stack<>();',t:'tp'},
+    {c:'  for (int i=0; i<s.length(); i++) {',t:'kw'},
+    {c:'    char c = s.charAt(i);',t:''},
+    {c:'    if (c==\'(\'||c==\'[\'||c==\'{\') {',t:'kw'},
+    {c:'      st.push(c);',t:'fn'},
+    {c:'    } else {',t:'kw'},
+    {c:'      if (st.isEmpty()) return false;',t:''},
+    {c:'      char top = st.pop();',t:'fn'},
+    {c:'      if (c==\')\'&&top!=\'(\') return false;',t:''},
+    {c:'      if (c==\']\'&&top!=\'[\') return false;',t:''},
+    {c:'      if (c==\'}\'&&top!=\'{\') return false;',t:''},
+    {c:'    }',t:''},
+    {c:'  }',t:''},
+    {c:'  return st.isEmpty();',t:'kw'},
+    {c:'}',t:''},
+  ],
+  // HashMap
+  [
+    {c:'// Approach 3: Stack + HashMap O(n)',t:'cm'},
+    {c:'boolean isValid(String s) {',t:''},
+    {c:'  Stack<Character> st = new Stack<>();',t:'tp'},
+    {c:'  Map<Character,Character> map = new HashMap<>();',t:'tp'},
+    {c:'  map.put(\')\',\'(\'); map.put(\']\',\'[\'); map.put(\'}\',\'{\');',t:'fn'},
+    {c:'  for (char c : s.toCharArray()) {',t:'kw'},
+    {c:'    if (!map.containsKey(c)) {',t:'kw'},
+    {c:'      st.push(c); // opener',t:'fn'},
+    {c:'    } else {',t:'kw'},
+    {c:'      if (st.isEmpty()||st.pop()!=map.get(c))',t:''},
+    {c:'        return false;',t:''},
+    {c:'    }',t:''},
+    {c:'  }',t:''},
+    {c:'  return st.isEmpty();',t:'kw'},
+    {c:'}',t:''},
+  ]
+];
+
+// ═══════════════════════════════════
+// STEP GENERATORS
+// ═══════════════════════════════════
+function genBruteSteps(s){
+  const steps=[];
+  let cur=s;
+  let pass=0,removed=0;
+  steps.push({str:cur,pass,removed,log:'Start. Will keep replacing innermost pairs.',hl:[0,1],done:false,result:null});
+  const pairs=['()','[]','{}'];
+  let changed=true;
+  while(changed){
+    changed=false;
+    for(const p of pairs){
+      while(cur.includes(p)){
+        const idx=cur.indexOf(p);
+        steps.push({str:cur,pass,removed,log:`Found pair "${p}" at index ${idx}`,hl:[2,3,4],done:false,result:null,highlight:p});
+        cur=cur.replace(p,'');
+        removed++;
+        changed=true;
+        steps.push({str:cur,pass:++pass,removed,log:`Removed "${p}" → string is now "${cur||'(empty)'}"`,hl:[5,6,7],done:false,result:null});
+      }
+    }
+  }
+  const valid=cur.length===0;
+  steps.push({str:cur,pass,removed,log:valid?'String is empty → VALID ✓':`String "${cur}" remains → INVALID ✗`,hl:[9],done:true,result:valid});
+  return steps;
+}
+
+function genStackSteps(s){
+  const steps=[];
+  const st=[];
+  steps.push({str:s,idx:-1,ch:'',stack:[],log:'Initialize stack. Start scanning.',hl:[2],done:false,result:null,charState:Array(s.length).fill('idle')});
+  const state=Array(s.length).fill('idle');
+  for(let i=0;i<s.length;i++){
+    const c=s[i];
+    const isOpen='([{'.includes(c);
+    if(isOpen){
+      state[i]='open-b';
+      steps.push({str:s,idx:i,ch:c,stack:[...st],log:`i=${i}: '${c}' is OPENER → push to stack`,hl:[5,6],done:false,result:null,charState:[...state]});
+      st.push(c);
+      state[i]='open-b';
+      steps.push({str:s,idx:i,ch:c,stack:[...st],log:`Pushed '${c}'. Stack: [${st.join(',')}]`,hl:[6],done:false,result:null,charState:[...state]});
+    } else {
+      steps.push({str:s,idx:i,ch:c,stack:[...st],log:`i=${i}: '${c}' is CLOSER → check stack top`,hl:[7,8],done:false,result:null,charState:[...state]});
+      if(st.length===0){
+        state[i]='bad';
+        steps.push({str:s,idx:i,ch:c,stack:[...st],log:`Stack EMPTY! No opener for '${c}' → INVALID ✗`,hl:[8],done:true,result:false,charState:[...state]});
+        return steps;
+      }
+      const top=st[st.length-1];
+      const match=(c===')'&&top==='(')||(c===']'&&top==='[')||(c==='}'&&top==='{');
+      const popped=st.pop();
+      if(match){
+        // find matching opener index
+        let oi=-1;
+        for(let x=i-1;x>=0;x--){if(state[x]==='open-b'&&s[x]===top){oi=x;break;}}
+        if(oi>=0) state[oi]='matched';
+        state[i]='matched';
+        steps.push({str:s,idx:i,ch:c,stack:[...st],log:`Pop '${popped}' matches '${c}' ✓ — pair closed`,hl:[9,10,11,12],done:false,result:null,charState:[...state]});
+      } else {
+        state[i]='bad';
+        steps.push({str:s,idx:i,ch:c,stack:[...st],log:`Pop '${popped}' ≠ '${c}' → MISMATCH → INVALID ✗`,hl:[10,11,12],done:true,result:false,charState:[...state]});
+        return steps;
+      }
+    }
+  }
+  const valid=st.length===0;
+  steps.push({str:s,idx:s.length,ch:'',stack:[...st],log:valid?`Stack empty → all brackets matched → VALID ✓`:`Stack has ${st.join(',')} remaining → INVALID ✗`,hl:[15],done:true,result:valid,charState:[...state]});
+  return steps;
+}
+
+function genHashMapSteps(s){
+  const steps=[];
+  const map={')':'(', ']':'[', '}':'{'};
+  const st=[];
+  steps.push({str:s,idx:-1,ch:'',stack:[],isOp:null,log:'HashMap: ) → (, ] → [, } → {. Push openers, validate closers.',hl:[2,3,4],done:false,result:null,charState:Array(s.length).fill('idle')});
+  const state=Array(s.length).fill('idle');
+  for(let i=0;i<s.length;i++){
+    const c=s[i];
+    const isOpen=!map[c];
+    if(isOpen){
+      state[i]='open-b';
+      steps.push({str:s,idx:i,ch:c,stack:[...st],isOp:true,log:`i=${i}: '${c}' NOT in map → it's an OPENER → push`,hl:[5,6,7],done:false,result:null,charState:[...state]});
+      st.push(c);
+      steps.push({str:s,idx:i,ch:c,stack:[...st],isOp:true,log:`Pushed '${c}'. Stack: [${st.join(',')}]`,hl:[7],done:false,result:null,charState:[...state]});
+    } else {
+      const expected=map[c];
+      steps.push({str:s,idx:i,ch:c,stack:[...st],isOp:false,log:`i=${i}: '${c}' IN map → closer. Expected top = '${expected}'`,hl:[8,9],done:false,result:null,charState:[...state]});
+      if(st.length===0||st[st.length-1]!==expected){
+        state[i]='bad';
+        const reason=st.length===0?'stack empty':'top=\''+st[st.length-1]+'\' ≠ \''+expected+'\'';
+        steps.push({str:s,idx:i,ch:c,stack:[...st],isOp:false,log:`MISMATCH (${reason}) → INVALID ✗`,hl:[9,10],done:true,result:false,charState:[...state]});
+        return steps;
+      }
+      const popped=st.pop();
+      let oi=-1;
+      for(let x=i-1;x>=0;x--){if(state[x]==='open-b'&&s[x]===popped){oi=x;break;}}
+      if(oi>=0) state[oi]='matched';
+      state[i]='matched';
+      steps.push({str:s,idx:i,ch:c,stack:[...st],isOp:false,log:`Pop '${popped}' = map['${c}'] ✓ — matched!`,hl:[9],done:false,result:null,charState:[...state]});
+    }
+  }
+  const valid=st.length===0;
+  steps.push({str:s,idx:s.length,ch:'',stack:[...st],isOp:null,log:valid?'Stack empty → VALID ✓':`Leftover: [${st.join(',')}] → INVALID ✗`,hl:[13],done:true,result:valid,charState:[...state]});
+  return steps;
+}
+
+// ═══════════════════════════════════
+// STATE
+// ═══════════════════════════════════
+let allSteps=[[],[],[]];
+let allIdx=[0,0,0];
+let timers=[null,null,null];
+let syncTimer=null;
+let syncPlaying=false;
+
+// ═══════════════════════════════════
+// RENDER CODE
+// ═══════════════════════════════════
+function renderCode(ap,hls){
+  const lines=CODE_DEFS[ap];
+  let h='';
+  lines.forEach((l,i)=>{
+    const hlCls=hls.includes(i)?'hl':'';
+    const tCls=l.t==='cm'?'cm':l.t==='kw'?'kw':l.t==='tp'?'tp':l.t==='fn'?'fn':l.t==='st'?'st':l.t==='nm'?'nm':'';
+    h+=`<div class="cl ${hlCls}"><span class="ln2">${i+1}</span><span class="lc2 ${tCls}">${l.c}</span></div>`;
+  });
+  document.getElementById('code'+ap).innerHTML=h;
+}
+
+// ═══════════════════════════════════
+// RENDER STEP
+// ═══════════════════════════════════
+function renderStep(ap, st){
+  if(!st) return;
+  const total=allSteps[ap].length;
+  const cur=allIdx[ap];
+  // progress
+  document.getElementById('prog'+ap).style.width=(total>1?(cur/(total-1)*100):0)+'%';
+  document.getElementById('sc'+ap).textContent=`${cur+1} / ${total}`;
+  renderCode(ap, st.hl||[]);
+
+  // result
+  const rb=document.getElementById('res'+ap);
+  if(st.done&&st.result!==null){
+    rb.className='result-box show '+(st.result?'result-valid':'result-invalid');
+    rb.textContent=st.result?'✓ VALID':'✗ INVALID';
+  } else {
+    rb.className='result-box';
+  }
+
+  if(ap===0) renderBrute(st);
+  else if(ap===1) renderStack1(st);
+  else renderStack2(st);
+}
+
+function renderBrute(st){
+  const s=st.str||'';
+  let h='';
+  if(s.length===0){
+    h='<span style="color:var(--a1);font-weight:700">(empty string)</span>';
+  } else {
+    for(let i=0;i<s.length;i++){
+      h+=`<span style="font-family:'Fira Code',monospace;font-size:16px;font-weight:700;color:var(--text);margin:2px 3px;">${s[i]}</span>`;
+    }
+  }
+  document.getElementById('bruteStr0').innerHTML=h;
+  document.getElementById('b0pass').textContent=st.pass||0;
+  document.getElementById('b0rem').textContent=st.removed||0;
+  document.getElementById('b0len').textContent=s.length;
+  document.getElementById('log0').innerHTML=formatLog(st.log);
+}
+
+function renderStack1(st){
+  // string
+  const s=st.str;
+  const cs=st.charState||[];
+  let h='';
+  for(let i=0;i<s.length;i++){
+    let cls='ch';
+    if(cs[i]==='open-b') cls+=' open-b';
+    else if(cs[i]==='matched') cls+=' matched';
+    else if(cs[i]==='bad') cls+=' bad';
+    else if(cs[i]==='processed') cls+=' processed';
+    if(i===st.idx) cls+=' cur';
+    let ptr='';
+    if(i===st.idx) ptr='<span class="cur-ptr">i</span>';
+    h+=`<div class="${cls}">${ptr}${s[i]}<span class="cidx">${i}</span></div>`;
+  }
+  document.getElementById('strDisp1').innerHTML=h;
+  // stack
+  const sc=document.getElementById('stack1');
+  if(!st.stack||st.stack.length===0){
+    sc.innerHTML='<span class="stack-empty">empty</span>';
+  } else {
+    sc.innerHTML=st.stack.map(c=>`<div class="stack-cell">${c}</div>`).join('');
+  }
+  document.getElementById('idx1').textContent=st.idx>=0?st.idx:'—';
+  document.getElementById('char1').textContent=st.ch||'—';
+  document.getElementById('sz1').textContent=st.stack?st.stack.length:0;
+  document.getElementById('log1').innerHTML=formatLog(st.log);
+}
+
+function renderStack2(st){
+  const s=st.str;
+  const cs=st.charState||[];
+  let h='';
+  for(let i=0;i<s.length;i++){
+    let cls='ch';
+    if(cs[i]==='open-b') cls+=' open-b';
+    else if(cs[i]==='matched') cls+=' matched';
+    else if(cs[i]==='bad') cls+=' bad';
+    if(i===st.idx) cls+=' cur';
+    let ptr='';
+    if(i===st.idx) ptr='<span class="cur-ptr">i</span>';
+    h+=`<div class="${cls}">${ptr}${s[i]}<span class="cidx">${i}</span></div>`;
+  }
+  document.getElementById('strDisp2').innerHTML=h;
+  const sc=document.getElementById('stack2');
+  if(!st.stack||st.stack.length===0){
+    sc.innerHTML='<span class="stack-empty">empty</span>';
+  } else {
+    sc.innerHTML=st.stack.map(c=>`<div class="stack-cell">${c}</div>`).join('');
+  }
+  document.getElementById('idx2').textContent=st.idx>=0?st.idx:'—';
+  document.getElementById('char2').textContent=st.ch||'—';
+  document.getElementById('isop2').textContent=st.isOp===null?'—':st.isOp?'YES':'NO';
+  document.getElementById('log2').innerHTML=formatLog(st.log);
+}
+
+function formatLog(txt){
+  if(!txt) return '';
+  return txt
+    .replace(/VALID ✓/g,'<span class="ev-ok">VALID ✓</span>')
+    .replace(/INVALID ✗/g,'<span class="ev-bad">INVALID ✗</span>')
+    .replace(/push/g,'<span class="ev-push">push</span>')
+    .replace(/Push/g,'<span class="ev-push">Push</span>')
+    .replace(/Pushed/g,'<span class="ev-push">Pushed</span>')
+    .replace(/Pop/g,'<span class="ev-pop">Pop</span>')
+    .replace(/pop/g,'<span class="ev-pop">pop</span>')
+    .replace(/MISMATCH/g,'<span class="ev-bad">MISMATCH</span>')
+    .replace(/EMPTY/g,'<span class="ev-bad">EMPTY</span>')
+    .replace(/OPENER/g,'<span class="ev-push">OPENER</span>')
+    .replace(/CLOSER/g,'<span class="ev-pop">CLOSER</span>');
+}
+
+// ═══════════════════════════════════
+// CONTROLS
+// ═══════════════════════════════════
+function loadAll(){
+  stopSyncPlay();
+  const s=document.getElementById('mainInput').value||'({[]})';
+  allSteps[0]=genBruteSteps(s);
+  allSteps[1]=genStackSteps(s);
+  allSteps[2]=genHashMapSteps(s);
+  for(let i=0;i<3;i++){
+    stopPlay(i);
+    allIdx[i]=0;
+    renderStep(i,allSteps[i][0]);
+    updateBtns(i);
+  }
+}
+
+function step(ap,dir){
+  const ni=allIdx[ap]+dir;
+  if(ni<0||ni>=allSteps[ap].length) return;
+  allIdx[ap]=ni;
+  renderStep(ap,allSteps[ap][ni]);
+  updateBtns(ap);
+}
+
+function goFull(ap){
+  stopPlay(ap);
+  allIdx[ap]=allSteps[ap].length-1;
+  renderStep(ap,allSteps[ap][allIdx[ap]]);
+  updateBtns(ap);
+}
+
+function resetOne(ap){
+  stopPlay(ap);
+  allIdx[ap]=0;
+  renderStep(ap,allSteps[ap][0]);
+  updateBtns(ap);
+}
+
+function togglePlay(ap){
+  if(timers[ap]){stopPlay(ap);}else{startPlay(ap);}
+}
+function startPlay(ap){
+  const btn=document.getElementById('play'+ap);
+  btn.textContent='⏸ Pause'; btn.classList.add('playing');
+  tickPlay(ap);
+}
+function stopPlay(ap){
+  clearTimeout(timers[ap]); timers[ap]=null;
+  const btn=document.getElementById('play'+ap);
+  if(btn){btn.textContent='▶ Play'; btn.classList.remove('playing');}
+}
+function tickPlay(ap){
+  if(!timers[ap]&&document.getElementById('play'+ap).classList.contains('playing')){
+    // already stopped
+  }
+  if(allIdx[ap]>=allSteps[ap].length-1){stopPlay(ap);return;}
+  step(ap,1);
+  const spd=1500-parseInt(document.getElementById('globalSpeed').value);
+  timers[ap]=setTimeout(()=>tickPlay(ap),spd);
+}
+
+function updateBtns(ap){
+  document.getElementById('bk'+ap).disabled=allIdx[ap]<=0;
+  document.getElementById('fw'+ap).disabled=allIdx[ap]>=allSteps[ap].length-1;
+}
+
+// SYNC
+function allStep(dir){ for(let i=0;i<3;i++) step(i,dir); }
+function allFull(){ for(let i=0;i<3;i++) goFull(i); }
+function toggleSyncPlay(){
+  if(syncPlaying) stopSyncPlay(); else startSyncPlay();
+}
+function startSyncPlay(){
+  syncPlaying=true;
+  document.getElementById('syncPlayBtn').textContent='⏸ Pause All';
+  document.getElementById('syncPlayBtn').classList.add('playing');
+  tickSync();
+}
+function stopSyncPlay(){
+  syncPlaying=false;
+  clearTimeout(syncTimer);
+  document.getElementById('syncPlayBtn').textContent='▶ Play All';
+  document.getElementById('syncPlayBtn').classList.remove('playing');
+}
+function tickSync(){
+  if(!syncPlaying) return;
+  const done=allIdx.every((v,i)=>v>=allSteps[i].length-1);
+  if(done){stopSyncPlay();return;}
+  allStep(1);
+  const spd=1500-parseInt(document.getElementById('globalSpeed').value);
+  syncTimer=setTimeout(tickSync,spd);
+}
+
+function setPreset(v){
+  document.getElementById('mainInput').value=v;
+  loadAll();
+}
+
+// INIT
+loadAll();
+</script>
+</body>
+</html>

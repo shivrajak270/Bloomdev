@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Longest Consecutive Sequence — Cheat Sheet</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #111118;
+    --surface2: #1a1a24;
+    --border: #2a2a3a;
+    --accent: #7c6aff;
+    --accent2: #ff6a6a;
+    --accent3: #6affb8;
+    --text: #e8e8f0;
+    --muted: #6b6b88;
+    --code-bg: #0d0d16;
+    --brute: #ff6a6a;
+    --sort: #ffaa44;
+    --optimal: #6affb8;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    line-height: 1.6;
+    min-height: 100vh;
+    padding: 2rem;
+  }
+
+  /* Grid noise texture overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: 
+      repeating-linear-gradient(0deg, transparent, transparent 40px, rgba(124,106,255,0.03) 40px, rgba(124,106,255,0.03) 41px),
+      repeating-linear-gradient(90deg, transparent, transparent 40px, rgba(124,106,255,0.03) 40px, rgba(124,106,255,0.03) 41px);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .page { position: relative; z-index: 1; max-width: 960px; margin: 0 auto; }
+
+  /* HEADER */
+  .header {
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 1.5rem;
+    margin-bottom: 2.5rem;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  .header-left .tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    margin-bottom: 0.5rem;
+  }
+  .header-left h1 {
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -1px;
+  }
+  .header-left h1 span { color: var(--accent); }
+  .badges { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-top: 1rem; }
+  .badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-weight: 700;
+  }
+  .badge-medium { background: rgba(255,170,68,0.15); color: #ffaa44; border: 1px solid rgba(255,170,68,0.3); }
+  .badge-array  { background: rgba(124,106,255,0.15); color: var(--accent); border: 1px solid rgba(124,106,255,0.3); }
+  .badge-hash   { background: rgba(106,255,184,0.15); color: var(--accent3); border: 1px solid rgba(106,255,184,0.3); }
+  .lc-link {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    text-decoration: none;
+    border: 1px solid var(--border);
+    padding: 6px 14px;
+    border-radius: 6px;
+    white-space: nowrap;
+    align-self: flex-start;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .lc-link:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* COMPLEXITY LADDER */
+  .ladder {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 2.5rem;
+  }
+  .ladder-card {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.2rem;
+    background: var(--surface);
+    position: relative;
+    overflow: hidden;
+  }
+  .ladder-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+  }
+  .ladder-card.brute::before  { background: var(--brute); }
+  .ladder-card.sort::before   { background: var(--sort); }
+  .ladder-card.optimal::before { background: var(--optimal); }
+  .ladder-num {
+    font-size: 11px;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 6px;
+  }
+  .brute  .ladder-num { color: var(--brute); }
+  .sort   .ladder-num { color: var(--sort); }
+  .optimal .ladder-num { color: var(--optimal); }
+  .ladder-card h3 { font-size: 14px; font-weight: 700; margin-bottom: 10px; }
+  .complexity-row {
+    display: flex;
+    justify-content: space-between;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    margin-top: 6px;
+  }
+  .complexity-row span:first-child { color: var(--muted); }
+  .brute  .complexity-row span:last-child { color: var(--brute); }
+  .sort   .complexity-row span:last-child { color: var(--sort); }
+  .optimal .complexity-row span:last-child { color: var(--optimal); }
+
+  /* SECTION TITLES */
+  .section-title {
+    font-size: 11px;
+    font-family: 'JetBrains Mono', monospace;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: var(--muted);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  /* CODE BLOCKS */
+  .code-tabs { margin-bottom: 2.5rem; }
+  .tab-bar {
+    display: flex;
+    gap: 4px;
+    margin-bottom: -1px;
+    flex-wrap: wrap;
+  }
+  .tab-btn {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    padding: 8px 16px;
+    border: 1px solid var(--border);
+    border-bottom: none;
+    border-radius: 6px 6px 0 0;
+    background: var(--surface2);
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .tab-btn.active { background: var(--code-bg); color: var(--text); border-color: var(--border); }
+  .tab-btn.brute.active  { color: var(--brute); }
+  .tab-btn.sort.active   { color: var(--sort); }
+  .tab-btn.optimal.active { color: var(--optimal); }
+  .code-panel {
+    display: none;
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 0 6px 6px 6px;
+    padding: 1.5rem;
+    overflow-x: auto;
+  }
+  .code-panel.active { display: block; }
+  pre {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12.5px;
+    line-height: 1.8;
+    white-space: pre;
+  }
+  .c-kw    { color: #c792ea; }
+  .c-type  { color: #82aaff; }
+  .c-fn    { color: #82aaff; }
+  .c-str   { color: #c3e88d; }
+  .c-num   { color: #f78c6c; }
+  .c-cmt   { color: #546e7a; font-style: italic; }
+  .c-key   { color: var(--accent3); }
+  .c-anno  { background: rgba(106,255,184,0.08); border-left: 2px solid var(--accent3); padding-left: 8px; display: block; }
+  .c-anno-orange { background: rgba(255,170,68,0.08); border-left: 2px solid var(--sort); padding-left: 8px; display: block; }
+
+  /* KEY INSIGHT BOX */
+  .insight-box {
+    background: rgba(124,106,255,0.08);
+    border: 1px solid rgba(124,106,255,0.25);
+    border-radius: 10px;
+    padding: 1.2rem 1.5rem;
+    margin-bottom: 2.5rem;
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+  .insight-icon {
+    font-size: 20px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .insight-box h4 { font-size: 14px; font-weight: 700; color: var(--accent); margin-bottom: 6px; }
+  .insight-box p { font-size: 13px; color: var(--muted); line-height: 1.7; }
+  .insight-box p strong { color: var(--text); }
+
+  /* VISUAL WALKTHROUGH */
+  .walkthrough { margin-bottom: 2.5rem; }
+  .wt-steps { display: flex; flex-direction: column; gap: 10px; }
+  .wt-step {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1rem;
+    font-size: 13px;
+  }
+  .wt-step-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--accent);
+    background: rgba(124,106,255,0.12);
+    border-radius: 4px;
+    padding: 2px 8px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .wt-step-content h4 { font-size: 13px; font-weight: 700; margin-bottom: 4px; }
+  .wt-step-content p  { font-size: 12px; color: var(--muted); }
+  .num-pills { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+  .pill {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    padding: 3px 10px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    background: var(--surface2);
+  }
+  .pill.start { background: rgba(106,255,184,0.12); border-color: rgba(106,255,184,0.3); color: var(--accent3); }
+  .pill.skip  { background: rgba(107,107,136,0.12); border-color: var(--border); color: var(--muted); }
+  .pill.highlight { background: rgba(124,106,255,0.12); border-color: rgba(124,106,255,0.3); color: var(--accent); }
+
+  /* Q&A */
+  .qa-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 2.5rem; }
+  .qa-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.2rem;
+    font-size: 13px;
+  }
+  .qa-q {
+    font-weight: 700;
+    margin-bottom: 8px;
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+  }
+  .qa-qnum {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--accent);
+    background: rgba(124,106,255,0.12);
+    padding: 2px 6px;
+    border-radius: 3px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .qa-a { color: var(--muted); line-height: 1.65; }
+  .qa-a strong { color: var(--text); }
+  .qa-a code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    background: var(--surface2);
+    padding: 1px 5px;
+    border-radius: 3px;
+    color: var(--accent3);
+  }
+
+  /* EDGE CASES */
+  .edge-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 10px; margin-bottom: 2.5rem; }
+  .edge-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1rem;
+    font-size: 12px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .edge-input { color: var(--muted); margin-bottom: 6px; }
+  .edge-output { color: var(--accent3); font-weight: 700; }
+  .edge-note { color: var(--muted); font-size: 11px; margin-top: 6px; font-family: 'Syne', sans-serif; }
+
+  /* STREAM FOLLOW-UP */
+  .stream-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin-bottom: 2.5rem;
+  }
+  .stream-box h3 { font-size: 14px; font-weight: 700; margin-bottom: 12px; color: var(--accent2); }
+  .stream-box p { font-size: 13px; color: var(--muted); margin-bottom: 10px; }
+  .stream-box code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    padding: 8px 12px;
+    border-radius: 6px;
+    display: block;
+    color: var(--accent3);
+    line-height: 1.7;
+    white-space: pre-wrap;
+  }
+
+  /* FOOTER */
+  .footer {
+    border-top: 1px solid var(--border);
+    padding-top: 1.2rem;
+    font-size: 12px;
+    color: var(--muted);
+    font-family: 'JetBrains Mono', monospace;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  @media (max-width: 640px) {
+    body { padding: 1rem; }
+    .ladder { grid-template-columns: 1fr; }
+    .qa-grid { grid-template-columns: 1fr; }
+    .header { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-left">
+      <div class="tag">LeetCode #128</div>
+      <h1>Longest <span>Consecutive</span><br>Sequence</h1>
+      <div class="badges">
+        <span class="badge badge-medium">Medium</span>
+        <span class="badge badge-array">Array</span>
+        <span class="badge badge-hash">HashSet</span>
+      </div>
+    </div>
+    <a class="lc-link" href="https://leetcode.com/problems/longest-consecutive-sequence/" target="_blank">↗ leetcode.com</a>
+  </div>
+
+  <!-- COMPLEXITY LADDER -->
+  <div class="section-title">Approach Ladder</div>
+  <div class="ladder">
+    <div class="ladder-card brute">
+      <div class="ladder-num">① Brute Force</div>
+      <h3>Nested Search</h3>
+      <p style="font-size:12px;color:var(--muted);">For each num, scan array for num+1, num+2… Linear scan per element.</p>
+      <div class="complexity-row"><span>Time</span><span>O(n²)</span></div>
+      <div class="complexity-row"><span>Space</span><span>O(1)</span></div>
+    </div>
+    <div class="ladder-card sort">
+      <div class="ladder-num">② Sort</div>
+      <h3>Sort + Scan</h3>
+      <p style="font-size:12px;color:var(--muted);">Sort, then walk through counting consecutive diffs of 1, skip duplicates.</p>
+      <div class="complexity-row"><span>Time</span><span>O(n log n)</span></div>
+      <div class="complexity-row"><span>Space</span><span>O(1)</span></div>
+    </div>
+    <div class="ladder-card optimal">
+      <div class="ladder-num">③ Optimal ★</div>
+      <h3>HashSet</h3>
+      <p style="font-size:12px;color:var(--muted);">Insert all into set. Only start sequences where num−1 is absent.</p>
+      <div class="complexity-row"><span>Time</span><span>O(n)</span></div>
+      <div class="complexity-row"><span>Space</span><span>O(n)</span></div>
+    </div>
+  </div>
+
+  <!-- KEY INSIGHT -->
+  <div class="insight-box">
+    <div class="insight-icon">💡</div>
+    <div>
+      <h4>The Core Insight</h4>
+      <p>Only start counting a sequence when <strong>num−1 does NOT exist</strong> in the set. This ensures each sequence is counted exactly once from its true start. The inner <strong>while loop runs O(n) total</strong> across all iterations — each element is visited at most once — so the overall time is O(n) despite the nested loop.</p>
+    </div>
+  </div>
+
+  <!-- CODE TABS -->
+  <div class="section-title">Code</div>
+  <div class="code-tabs">
+    <div class="tab-bar">
+      <button class="tab-btn brute active" onclick="showTab('brute')">① Brute Force</button>
+      <button class="tab-btn sort" onclick="showTab('sort')">② Sorting</button>
+      <button class="tab-btn optimal" onclick="showTab('optimal')">③ HashSet ★</button>
+    </div>
+    <div id="tab-brute" class="code-panel active">
+<pre><span class="c-kw">class</span> <span class="c-type">Solution</span> {
+    <span class="c-kw">public</span> <span class="c-type">int</span> <span class="c-fn">longestConsecutive</span>(<span class="c-type">int</span>[] nums) {
+        <span class="c-type">int</span> longest = <span class="c-num">0</span>;
+        <span class="c-kw">for</span> (<span class="c-type">int</span> i = <span class="c-num">0</span>; i &lt; nums.length; i++) {
+            <span class="c-type">int</span> current = nums[i];
+            <span class="c-type">int</span> count = <span class="c-num">1</span>;
+<span class="c-anno-orange">            <span class="c-cmt">// O(n) scan for each element → O(n²) total</span></span>
+            <span class="c-kw">while</span> (<span class="c-fn">contains</span>(nums, current + <span class="c-num">1</span>)) {
+                current++;
+                count++;
+            }
+            longest = Math.<span class="c-fn">max</span>(longest, count);
+        }
+        <span class="c-kw">return</span> longest;
+    }
+
+    <span class="c-kw">public</span> <span class="c-type">boolean</span> <span class="c-fn">contains</span>(<span class="c-type">int</span>[] nums, <span class="c-type">int</span> target) {
+        <span class="c-kw">for</span> (<span class="c-type">int</span> n : nums)
+            <span class="c-kw">if</span> (n == target) <span class="c-kw">return</span> <span class="c-key">true</span>;
+        <span class="c-kw">return</span> <span class="c-key">false</span>;
+    }
+}</pre>
+    </div>
+    <div id="tab-sort" class="code-panel">
+<pre><span class="c-kw">class</span> <span class="c-type">Solution</span> {
+    <span class="c-kw">public</span> <span class="c-type">int</span> <span class="c-fn">longestConsecutive</span>(<span class="c-type">int</span>[] nums) {
+        <span class="c-kw">if</span> (nums.length == <span class="c-num">0</span>) <span class="c-kw">return</span> <span class="c-num">0</span>;
+        <span class="c-kw">if</span> (nums.length == <span class="c-num">1</span>) <span class="c-kw">return</span> <span class="c-num">1</span>;
+        Arrays.<span class="c-fn">sort</span>(nums); <span class="c-cmt">// O(n log n)</span>
+        <span class="c-type">int</span> max = <span class="c-num">1</span>, sum = <span class="c-num">1</span>;
+        <span class="c-kw">for</span> (<span class="c-type">int</span> i = <span class="c-num">0</span>; i &lt; nums.length - <span class="c-num">1</span>; i++) {
+            <span class="c-type">int</span> diff = nums[i+<span class="c-num">1</span>] - nums[i];
+<span class="c-anno-orange">            <span class="c-cmt">// diff==0 → duplicate, skip</span></span>
+<span class="c-anno-orange">            <span class="c-cmt">// diff==1 → consecutive, grow</span></span>
+<span class="c-anno-orange">            <span class="c-cmt">// else    → gap, reset</span></span>
+            <span class="c-kw">if</span> (diff == <span class="c-num">1</span>)      sum++;
+            <span class="c-kw">else if</span> (diff != <span class="c-num">0</span>) sum = <span class="c-num">1</span>;
+            max = Math.<span class="c-fn">max</span>(max, sum);
+        }
+        <span class="c-kw">return</span> max;
+    }
+}</pre>
+    </div>
+    <div id="tab-optimal" class="code-panel">
+<pre><span class="c-kw">class</span> <span class="c-type">Solution</span> {
+    <span class="c-kw">public</span> <span class="c-type">int</span> <span class="c-fn">longestConsecutive</span>(<span class="c-type">int</span>[] nums) {
+        <span class="c-kw">if</span> (nums.length == <span class="c-num">0</span>) <span class="c-kw">return</span> <span class="c-num">0</span>;
+<span class="c-anno">        <span class="c-cmt">// Step 1: O(n) insert — also deduplicates</span></span>
+        Set&lt;<span class="c-type">Integer</span>&gt; set = <span class="c-kw">new</span> HashSet&lt;&gt;();
+        <span class="c-kw">for</span> (<span class="c-type">int</span> n : nums) set.<span class="c-fn">add</span>(n);
+
+        <span class="c-type">int</span> max = <span class="c-num">0</span>;
+        <span class="c-kw">for</span> (<span class="c-type">int</span> n : set) {
+<span class="c-anno">            <span class="c-cmt">// Step 2: only start from sequence beginning</span></span>
+            <span class="c-kw">if</span> (!set.<span class="c-fn">contains</span>(n - <span class="c-num">1</span>)) {
+                <span class="c-type">int</span> len = <span class="c-num">1</span>;
+<span class="c-anno">                <span class="c-cmt">// Step 3: expand — each element visited once total</span></span>
+                <span class="c-kw">while</span> (set.<span class="c-fn">contains</span>(n + len)) len++;
+                max = Math.<span class="c-fn">max</span>(max, len);
+            }
+        }
+        <span class="c-kw">return</span> max;
+    }
+}</pre>
+    </div>
+  </div>
+
+  <!-- VISUAL WALKTHROUGH -->
+  <div class="section-title">Visual Walkthrough</div>
+  <div class="walkthrough">
+    <p style="font-size:13px;color:var(--muted);margin-bottom:1rem;">Input: <code style="font-family:'JetBrains Mono',monospace;color:var(--accent3)">[100, 4, 200, 1, 3, 2]</code></p>
+    <div class="wt-steps">
+      <div class="wt-step">
+        <div class="wt-step-num">01</div>
+        <div class="wt-step-content">
+          <h4>Build HashSet</h4>
+          <p>All elements inserted → O(1) lookup, duplicates removed</p>
+          <div class="num-pills">
+            <span class="pill">1</span><span class="pill">2</span><span class="pill">3</span><span class="pill">4</span><span class="pill">100</span><span class="pill">200</span>
+          </div>
+        </div>
+      </div>
+      <div class="wt-step">
+        <div class="wt-step-num">02</div>
+        <div class="wt-step-content">
+          <h4>Find sequence starts (num−1 absent)</h4>
+          <p>Green = start of sequence, gray = skipped</p>
+          <div class="num-pills">
+            <span class="pill start">1 ✓ start</span>
+            <span class="pill skip">2 skip (1 exists)</span>
+            <span class="pill skip">3 skip (2 exists)</span>
+            <span class="pill skip">4 skip (3 exists)</span>
+            <span class="pill start">100 ✓ start</span>
+            <span class="pill start">200 ✓ start</span>
+          </div>
+        </div>
+      </div>
+      <div class="wt-step">
+        <div class="wt-step-num">03</div>
+        <div class="wt-step-content">
+          <h4>Expand from each start</h4>
+          <p>From 1: check 2✓ 3✓ 4✓ 5✗ → length <strong>4</strong> &nbsp;|&nbsp; From 100: 101✗ → length 1 &nbsp;|&nbsp; From 200: 201✗ → length 1</p>
+        </div>
+      </div>
+      <div class="wt-step">
+        <div class="wt-step-num">04</div>
+        <div class="wt-step-content">
+          <h4>Return max = <span style="color:var(--accent3)">4</span></h4>
+          <p>Sequence [1, 2, 3, 4]</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q&A -->
+  <div class="section-title">10 Interview Questions</div>
+  <div class="qa-grid">
+    <div class="qa-card">
+      <div class="qa-q"><span class="qa-qnum">Q1</span> Why check <code>num−1</code>?</div>
+      <div class="qa-a">Ensures we only start counting from the <strong>true beginning</strong> of each sequence. Without it, we'd recount the same sequence multiple times — once for each element.</div>
+    </div>
+    <div class="qa-card">
+      <div class="qa-q"><span class="qa-qnum">Q2</span> Why is it O(n) despite the while loop?</div>
+      <div class="qa-a">Each element is expanded <strong>at most once</strong> (only from its sequence start). Total expansions across all starts = n. So it's O(n) amortized, not O(n²).</div>
+    </div>
+    <div class="qa-card">
+      <div class="qa-q"><span class="qa-qnum">Q3</span> What about duplicates like <code>[1,2,2,3]</code>?</div>
+      <div class="qa-a">HashSet <strong>automatically deduplicates</strong>. Set becomes {1,2,3}. Duplicates have no effect on correctness or performance.</div>
+    </div>
+    <div class="qa-card">
+      <div class="qa-q"><span class="qa-qnum">Q4</span> Does it handle negative numbers?</div>
+      <div class="qa-a">Yes. <code>[-3,-2,-1,0]</code> works perfectly. HashSet stores any integer. The <code>num−1</code> check is pure arithmetic, no restrictions.</div>
+    </div>
+    <div class="qa-card">
+      <div class="qa-q"><span class="qa-qnum">Q5</span> Can we reduce space to O(1)?</div>
+      <div class="qa-a"><strong>Sort the array</strong> instead — O(n log n) time, O(1) extra space. Trade space efficiency for time efficiency.</div>
+    </div>
+    <div class="qa-card">
+      <div class="qa-q"><span class="qa-qnum">Q6</span> What are the edge cases?</div>
+      <div class="qa-a">Empty array → <strong>0</strong>. Single element → <strong>1</strong>. All duplicates <code>[5,5,5]</code> → <strong>1</strong>. No consecutive nums → <strong>1</strong>. All consecutive → <strong>n</strong>.</div>
+    </div>
+    <div class="qa-card">
+      <div class="qa-q"><span class="qa-qnum">Q7</span> What if we iterate <code>nums[]</code> vs the set?</div>
+      <div class="qa-a">Iterating <code>set</code> is cleaner — no re-checking duplicates. Iterating <code>nums[]</code> works too, but the <code>!contains(n−1)</code> guard still fires once per distinct value.</div>
+    </div>
+    <div class="qa-card">
+      <div class="qa-q"><span class="qa-qnum">Q8</span> Sort approach trade-offs?</div>
+      <div class="qa-a">✓ O(1) space &nbsp; ✗ O(n log n) time &nbsp; ✗ Must handle duplicates explicitly (skip when diff = 0). Interviewer <strong>prefers HashSet</strong> for O(n).</div>
+    </div>
+    <div class="qa-card">
+      <div class="qa-q"><span class="qa-qnum">Q9</span> Why not use a TreeSet?</div>
+      <div class="qa-a">TreeSet gives sorted order but insert/lookup is <strong>O(log n)</strong>, making total O(n log n). Offers no benefit over sorting + scanning.</div>
+    </div>
+    <div class="qa-card">
+      <div class="qa-q"><span class="qa-qnum">Q10</span> Brute force when is it acceptable?</div>
+      <div class="qa-a">Only for <strong>very small n</strong> (n ≤ 100) or quick validation. In production or interviews, always prefer O(n) HashSet or at minimum O(n log n) sort.</div>
+    </div>
+  </div>
+
+  <!-- EDGE CASES -->
+  <div class="section-title">Edge Cases</div>
+  <div class="edge-grid">
+    <div class="edge-card">
+      <div class="edge-input">[]</div>
+      <div class="edge-output">→ 0</div>
+      <div class="edge-note">empty array</div>
+    </div>
+    <div class="edge-card">
+      <div class="edge-input">[1]</div>
+      <div class="edge-output">→ 1</div>
+      <div class="edge-note">single element</div>
+    </div>
+    <div class="edge-card">
+      <div class="edge-input">[1,1,1]</div>
+      <div class="edge-output">→ 1</div>
+      <div class="edge-note">all duplicates</div>
+    </div>
+    <div class="edge-card">
+      <div class="edge-input">[10,5,100]</div>
+      <div class="edge-output">→ 1</div>
+      <div class="edge-note">no consecutive</div>
+    </div>
+    <div class="edge-card">
+      <div class="edge-input">[100,4,200,<br>1,3,2]</div>
+      <div class="edge-output">→ 4</div>
+      <div class="edge-note">classic example</div>
+    </div>
+    <div class="edge-card">
+      <div class="edge-input">[-3,-2,-1,0]</div>
+      <div class="edge-output">→ 4</div>
+      <div class="edge-note">all negative</div>
+    </div>
+  </div>
+
+  <!-- STREAM FOLLOW-UP -->
+  <div class="section-title">Hard Follow-up: Data Stream</div>
+  <div class="stream-box">
+    <h3>★ Numbers arrive as a stream — maintain longest sequence dynamically</h3>
+    <p>Use a <strong>HashMap mapping each number to its sequence length</strong>. When inserting num:</p>
+    <code>left  = map.getOrDefault(num - 1, 0)   // length of sequence ending at num-1
+right = map.getOrDefault(num + 1, 0)   // length of sequence starting at num+1
+total = left + 1 + right
+
+// Update boundaries (only ends matter for lookups)
+map.put(num, total)
+map.put(num - left,  total)   // update left boundary
+map.put(num + right, total)   // update right boundary
+max   = Math.max(max, total)</code>
+    <p style="margin-top:10px;font-size:12px;">Each insertion is O(1). Space O(n). This is the <strong>senior/L5+ follow-up</strong> question.</p>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <span>LC #128 · Longest Consecutive Sequence</span>
+    <span>Optimal: O(n) time · O(n) space · HashSet</span>
+  </div>
+
+</div>
+
+<script>
+  function showTab(name) {
+    document.querySelectorAll('.code-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('tab-' + name).classList.add('active');
+    document.querySelector('.tab-btn.' + name).classList.add('active');
+  }
+</script>
+</body>
+</html>

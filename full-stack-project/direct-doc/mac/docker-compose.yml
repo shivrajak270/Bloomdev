@@ -1,0 +1,35 @@
+version: "3.8"
+
+services:
+
+  postgres:
+    image: shivrajak47/bloomdev-postgres:18
+    container_name: mediassist_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 8431437824
+      POSTGRES_DB: postgres
+    ports:
+      - "5435:5432"
+
+  backend:
+    image: shivrajak47/bloomdev-backend:1.0
+    container_name: mediassist_backend
+    restart: always
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/postgres
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: 8431437824
+
+  frontend:
+    image: shivrajak47/bloomdev-frontend:1.0
+    container_name: react-app
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
