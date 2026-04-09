@@ -1,0 +1,391 @@
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Fira+Code:wght@400;500&display=swap');
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+.root {
+  font-family: 'JetBrains Mono', monospace;
+  background: #0d1117;
+  min-height: 100vh;
+  padding: 24px 20px 40px;
+  position: relative;
+  overflow: hidden;
+}
+
+.bg-grid {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(48,255,144,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(48,255,144,0.03) 1px, transparent 1px);
+  background-size: 32px 32px;
+  pointer-events: none;
+}
+
+.bg-glow {
+  position: absolute; top: -120px; left: 50%; transform: translateX(-50%);
+  width: 600px; height: 300px;
+  background: radial-gradient(ellipse, rgba(48,255,144,0.06) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.terminal-bar {
+  display: flex; align-items: center; gap: 8px;
+  background: #161b22; border: 1px solid #30363d;
+  border-radius: 10px 10px 0 0; padding: 10px 16px;
+  border-bottom: 1px solid #21262d;
+}
+.dot { width: 12px; height: 12px; border-radius: 50%; }
+.dot-r { background: #ff5f57; }
+.dot-y { background: #ffbd2e; }
+.dot-g { background: #28ca41; }
+.term-title { font-size: 12px; color: #8b949e; margin-left: 8px; }
+.term-body {
+  background: #0d1117; border: 1px solid #30363d; border-top: none;
+  border-radius: 0 0 10px 10px; padding: 20px 24px 24px;
+  margin-bottom: 20px;
+}
+
+.prompt-line { display: flex; align-items: baseline; gap: 8px; margin-bottom: 6px; }
+.prompt-user { color: #30ff90; font-size: 13px; font-weight: 600; }
+.prompt-path { color: #58a6ff; font-size: 13px; }
+.prompt-sym  { color: #f78166; font-size: 13px; }
+.prompt-cmd  { color: #e6edf3; font-size: 13px; }
+.prompt-out  { color: #8b949e; font-size: 12px; padding-left: 24px; line-height: 1.7; }
+.prompt-out span.hi { color: #30ff90; }
+.cursor {
+  display: inline-block; width: 8px; height: 13px;
+  background: #30ff90; margin-left: 2px;
+  animation: blink 1s step-end infinite; vertical-align: middle;
+}
+@keyframes blink { 50% { opacity: 0; } }
+
+.section-head {
+  font-size: 11px; color: #8b949e; letter-spacing: 0.12em;
+  text-transform: uppercase; margin: 24px 0 10px;
+  display: flex; align-items: center; gap: 8px;
+}
+.section-head::after {
+  content: ''; flex: 1; height: 1px; background: #21262d;
+}
+
+.approach-grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 8px; }
+
+.ap-card {
+  background: #161b22; border: 1px solid #30363d;
+  border-radius: 8px; padding: 14px 14px 12px;
+  cursor: pointer; transition: border-color 0.15s, background 0.15s;
+}
+.ap-card:hover { border-color: #58a6ff; background: #1c2128; }
+.ap-card.active { border-color: #30ff90; background: #0f1f13; }
+
+.ap-tag {
+  font-size: 10px; font-weight: 600; letter-spacing: 0.08em;
+  padding: 2px 8px; border-radius: 4px;
+  display: inline-block; margin-bottom: 8px;
+}
+.bad  { background: #3d1f1f; color: #f85149; }
+.warn { background: #2d2208; color: #e3b341; }
+.good { background: #0f2a18; color: #3fb950; }
+
+.ap-name { font-size: 12px; color: #e6edf3; font-weight: 500; margin-bottom: 4px; }
+.ap-cx   { font-size: 11px; color: #8b949e; }
+
+.code-window {
+  background: #010409; border: 1px solid #30363d;
+  border-radius: 8px; overflow: hidden;
+}
+.code-topbar {
+  background: #161b22; border-bottom: 1px solid #21262d;
+  padding: 8px 14px; display: flex; align-items: center; gap: 10px;
+}
+.file-tab {
+  font-size: 11px; color: #8b949e; padding: 4px 10px;
+  border-radius: 4px; cursor: pointer; background: transparent;
+  border: 1px solid transparent;
+}
+.file-tab.active { background: #0d1117; border-color: #30363d; color: #e6edf3; }
+
+.code-body {
+  padding: 16px 20px; overflow-x: auto;
+}
+.code-body pre {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12.5px; line-height: 1.85; color: #e6edf3;
+  white-space: pre;
+}
+.ln { color: #30363d; user-select: none; display: inline-block; width: 22px; text-align: right; margin-right: 16px; }
+.kw { color: #ff7b72; }
+.fn { color: #d2a8ff; }
+.tp { color: #79c0ff; }
+.cm { color: #8b949e; font-style: italic; }
+.nu { color: #79c0ff; }
+.str{ color: #a5d6ff; }
+.op { color: #ff7b72; }
+.ok { color: #3fb950; }
+
+.qa-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 8px; }
+
+.qa-card {
+  background: #161b22; border: 1px solid #30363d;
+  border-radius: 8px; padding: 14px 16px; cursor: pointer;
+  transition: border-color 0.15s;
+}
+.qa-card:hover { border-color: #58a6ff; }
+.qa-card.open  { border-color: #30ff90; background: #0f1f13; }
+
+.qa-q { font-size: 12px; color: #e6edf3; font-weight: 500; margin-bottom: 4px; }
+.qa-a { font-size: 11.5px; color: #8b949e; line-height: 1.7; display: none; margin-top: 8px; border-top: 1px solid #21262d; padding-top: 8px; }
+.qa-card.open .qa-a { display: block; }
+.qa-hint { font-size: 10px; color: #484f58; margin-top: 6px; }
+
+.insight-row { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 8px; }
+.ins-card { background: #161b22; border: 1px solid #21262d; border-radius: 8px; padding: 12px 14px; }
+.ins-label { font-size: 10px; color: #484f58; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 4px; }
+.ins-val   { font-size: 12.5px; color: #e6edf3; font-weight: 500; line-height: 1.5; }
+.ins-val .hi { color: #30ff90; }
+
+.edge-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+.edge-pill {
+  font-size: 11px; padding: 4px 10px; border-radius: 4px;
+  background: #161b22; border: 1px solid #30363d; color: #8b949e;
+}
+
+@media (max-width: 600px) {
+  .approach-grid { grid-template-columns: 1fr; }
+  .qa-grid       { grid-template-columns: 1fr; }
+  .insight-row   { grid-template-columns: 1fr 1fr; }
+}
+</style>
+
+<div class="root">
+  <div class="bg-grid"></div>
+  <div class="bg-glow"></div>
+
+  <div class="terminal-bar">
+    <span class="dot dot-r"></span>
+    <span class="dot dot-y"></span>
+    <span class="dot dot-g"></span>
+    <span class="term-title">stocks.java — ~/dsa/arrays — zsh</span>
+  </div>
+  <div class="term-body">
+    <div class="prompt-line">
+      <span class="prompt-user">dev@macbook</span>
+      <span class="prompt-path">~/dsa/arrays</span>
+      <span class="prompt-sym">$</span>
+      <span class="prompt-cmd">cat problem.md</span>
+    </div>
+    <div class="prompt-out">
+      <span class="hi"># LC 121 · Best Time to Buy &amp; Sell Stock</span><br>
+      Given prices[], find max profit from one buy+sell.<br>
+      Must buy before sell. Return 0 if no profit possible.<br>
+      <br>
+      <span class="hi">Constraints:</span> 1 ≤ n ≤ 10⁵ &nbsp;·&nbsp; 0 ≤ prices[i] ≤ 10⁴
+    </div>
+    <div class="prompt-line" style="margin-top:12px;">
+      <span class="prompt-user">dev@macbook</span>
+      <span class="prompt-path">~/dsa/arrays</span>
+      <span class="prompt-sym">$</span>
+      <span class="prompt-cmd">javac Solution.java<span class="cursor"></span></span>
+    </div>
+  </div>
+
+  <div class="section-head">// approaches — click to load code</div>
+  <div class="approach-grid" id="approachGrid">
+    <div class="ap-card" data-idx="0">
+      <span class="ap-tag bad">TLE risk</span>
+      <p class="ap-name">Brute force</p>
+      <p class="ap-cx">O(n²) · O(1)</p>
+    </div>
+    <div class="ap-card" data-idx="1">
+      <span class="ap-tag warn">Extra space</span>
+      <p class="ap-name">Prefix min + suffix max</p>
+      <p class="ap-cx">O(n) · O(n)</p>
+    </div>
+    <div class="ap-card active" data-idx="2">
+      <span class="ap-tag good">✓ optimal</span>
+      <p class="ap-name">Single pass greedy</p>
+      <p class="ap-cx">O(n) · O(1)</p>
+    </div>
+  </div>
+
+  <div style="margin-top: 10px;">
+    <div class="code-window">
+      <div class="code-topbar">
+        <span class="file-tab active" id="tabLabel">Solution.java</span>
+        <span style="margin-left:auto; font-size:11px; color:#484f58;" id="complexityLabel">O(n) time · O(1) space</span>
+      </div>
+      <div class="code-body">
+        <pre id="codePre"></pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-head">// key insight</div>
+  <div class="insight-row">
+    <div class="ins-card">
+      <div class="ins-label">core idea</div>
+      <div class="ins-val">Track <span class="hi">min price</span> seen so far</div>
+    </div>
+    <div class="ins-card">
+      <div class="ins-label">each iteration</div>
+      <div class="ins-val">profit = price[i] − <span class="hi">min</span></div>
+    </div>
+    <div class="ins-card">
+      <div class="ins-label">why greedy works</div>
+      <div class="ins-val">1 transaction → no lookahead needed</div>
+    </div>
+  </div>
+
+  <div class="section-head">// edge cases</div>
+  <div class="edge-row">
+    <span class="edge-pill">empty array</span>
+    <span class="edge-pill">single element → 0</span>
+    <span class="edge-pill">all decreasing → 0</span>
+    <span class="edge-pill">all same → 0</span>
+    <span class="edge-pill">monotonic increase</span>
+    <span class="edge-pill">prices[0] is max</span>
+  </div>
+
+  <div class="section-head">// interview Q&amp;A — click to reveal</div>
+  <div class="qa-grid" id="qaGrid">
+
+    <div class="qa-card" data-qa="0">
+      <p class="qa-q">Q1 — Why does greedy work here?</p>
+      <p class="qa-a">One transaction means: for any sell day, the best buy is the cheapest day before it. Tracking the running minimum ensures we never miss it — no look-back needed.</p>
+      <span class="qa-hint">▶ expand</span>
+    </div>
+
+    <div class="qa-card" data-qa="1">
+      <p class="qa-q">Q2 — Is this secretly DP?</p>
+      <p class="qa-a">Yes — exactly right to say so. Two DP states: minPrice and maxProfit. Rolling them in-place gives O(1) space without losing the recurrence insight. Say this in interviews.</p>
+      <span class="qa-hint">▶ expand</span>
+    </div>
+
+    <div class="qa-card" data-qa="2">
+      <p class="qa-q">Q3 — Unlimited transactions? (LC 122)</p>
+      <p class="qa-a">Sum every positive consecutive difference. You capture every upward move independently. Equivalent to buying every local min and selling every local max in one pass.</p>
+      <span class="qa-hint">▶ expand</span>
+    </div>
+
+    <div class="qa-card" data-qa="3">
+      <p class="qa-q">Q4 — At most 2 transactions? (LC 123)</p>
+      <p class="qa-a">4 variables: buy1, sell1, buy2, sell2. Process each price updating all four. Or DP with state (hold/not) × (txn count). O(n) time O(1) space.</p>
+      <span class="qa-hint">▶ expand</span>
+    </div>
+
+    <div class="qa-card" data-qa="4">
+      <p class="qa-q">Q5 — At most k transactions? (LC 188)</p>
+      <p class="qa-a">Generalize to 2k variables. When k ≥ n/2, reduce to the unlimited case — you can't use more trades than pairs of days. O(kn) otherwise.</p>
+      <span class="qa-hint">▶ expand</span>
+    </div>
+
+    <div class="qa-card" data-qa="5">
+      <p class="qa-q">Q6 — Cooldown after sell? (LC 309)</p>
+      <p class="qa-a">3 DP states: held, sold, rested. Transitions: rested = max(rested, sold), sold = held + price, held = max(held, rested − price). One pass, O(1) space.</p>
+      <span class="qa-hint">▶ expand</span>
+    </div>
+
+    <div class="qa-card" data-qa="6">
+      <p class="qa-q">Q7 — Transaction fee? (LC 714)</p>
+      <p class="qa-a">Two states: cash (not holding), hold (holding). cash[i] = max(cash, hold + price − fee), hold[i] = max(hold, cash − price). Subtract fee on sell only.</p>
+      <span class="qa-hint">▶ expand</span>
+    </div>
+
+    <div class="qa-card" data-qa="7">
+      <p class="qa-q">Q8 — How do you test this?</p>
+      <p class="qa-a">[7,1,5,3,6,4]→5, [7,6,4,3,1]→0, [1,2,3,4,5]→4, [5]→0, [2,1]→0, [1,2]→1. Cover: normal, all-down, monotone-up, single, two-element both directions.</p>
+      <span class="qa-hint">▶ expand</span>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+const codes = [
+{
+  label: 'BruteForce.java',
+  cx: 'O(n²) time · O(1) space',
+  code: `<span class="ln">1</span><span class="tp">int</span> <span class="fn">maxProfit</span>(<span class="tp">int</span>[] prices) {
+<span class="ln">2</span>    <span class="tp">int</span> max = <span class="nu">0</span>;
+<span class="ln">3</span>    <span class="kw">for</span> (<span class="tp">int</span> i = <span class="nu">0</span>; i < prices.length; i++) {
+<span class="ln">4</span>        <span class="kw">for</span> (<span class="tp">int</span> j = i + <span class="nu">1</span>; j < prices.length; j++) {
+<span class="ln">5</span>            max = Math.<span class="fn">max</span>(max, prices[j] - prices[i]);
+<span class="ln">6</span>        }
+<span class="ln">7</span>    }
+<span class="ln">8</span>    <span class="kw">return</span> max;
+<span class="ln">9</span>}
+<span class="ln"> </span>
+<span class="ln"> </span><span class="cm">// Checks every (i,j) pair — O(n²)</span>
+<span class="ln"> </span><span class="cm">// Will TLE on n = 10⁵. Never submit this.</span>`
+},
+{
+  label: 'PrefixSuffix.java',
+  cx: 'O(n) time · O(n) space',
+  code: `<span class="ln"> 1</span><span class="tp">int</span> <span class="fn">maxProfit</span>(<span class="tp">int</span>[] prices) {
+<span class="ln"> 2</span>    <span class="tp">int</span> n = prices.length;
+<span class="ln"> 3</span>    <span class="tp">int</span>[] minL = <span class="kw">new</span> <span class="tp">int</span>[n];  <span class="cm">// min price from left up to i</span>
+<span class="ln"> 4</span>    <span class="tp">int</span>[] maxR = <span class="kw">new</span> <span class="tp">int</span>[n];  <span class="cm">// max price from right down to i</span>
+<span class="ln"> 5</span>
+<span class="ln"> 6</span>    minL[<span class="nu">0</span>] = prices[<span class="nu">0</span>];
+<span class="ln"> 7</span>    <span class="kw">for</span> (<span class="tp">int</span> i = <span class="nu">1</span>; i < n; i++)
+<span class="ln"> 8</span>        minL[i] = Math.<span class="fn">min</span>(minL[i-<span class="nu">1</span>], prices[i]);
+<span class="ln"> 9</span>
+<span class="ln">10</span>    maxR[n-<span class="nu">1</span>] = prices[n-<span class="nu">1</span>];
+<span class="ln">11</span>    <span class="kw">for</span> (<span class="tp">int</span> i = n-<span class="nu">2</span>; i >= <span class="nu">0</span>; i--)
+<span class="ln">12</span>        maxR[i] = Math.<span class="fn">max</span>(maxR[i+<span class="nu">1</span>], prices[i]);
+<span class="ln">13</span>
+<span class="ln">14</span>    <span class="tp">int</span> profit = <span class="nu">0</span>;
+<span class="ln">15</span>    <span class="kw">for</span> (<span class="tp">int</span> i = <span class="nu">0</span>; i < n; i++)
+<span class="ln">16</span>        profit = Math.<span class="fn">max</span>(profit, maxR[i] - minL[i]);
+<span class="ln">17</span>
+<span class="ln">18</span>    <span class="kw">return</span> profit;
+<span class="ln">19</span>}
+<span class="ln">  </span><span class="cm">// O(n) time but wastes O(n) space on two arrays</span>`
+},
+{
+  label: 'Optimal.java',
+  cx: 'O(n) time · O(1) space',
+  code: `<span class="ln"> 1</span><span class="tp">int</span> <span class="fn">maxProfit</span>(<span class="tp">int</span>[] prices) {
+<span class="ln"> 2</span>    <span class="tp">int</span> minPrice  = prices[<span class="nu">0</span>];  <span class="cm">// cheapest buy seen so far</span>
+<span class="ln"> 3</span>    <span class="tp">int</span> maxProfit = <span class="nu">0</span>;
+<span class="ln"> 4</span>
+<span class="ln"> 5</span>    <span class="kw">for</span> (<span class="tp">int</span> i = <span class="nu">1</span>; i < prices.length; i++) {
+<span class="ln"> 6</span>        minPrice  = Math.<span class="fn">min</span>(minPrice, prices[i]);
+<span class="ln"> 7</span>        maxProfit = Math.<span class="fn">max</span>(maxProfit, prices[i] - minPrice);
+<span class="ln"> 8</span>    }
+<span class="ln"> 9</span>
+<span class="ln">10</span>    <span class="kw">return</span> maxProfit;
+<span class="ln">11</span>}
+<span class="ln">  </span>
+<span class="ln">  </span><span class="cm">// Single pass, two variables.</span>
+<span class="ln">  </span><span class="cm">// This is what interviewers want to see. ✓</span>`
+}
+];
+
+let active = 2;
+
+function load(idx) {
+  const c = codes[idx];
+  document.getElementById('codePre').innerHTML = c.code;
+  document.getElementById('tabLabel').textContent = c.label;
+  document.getElementById('complexityLabel').textContent = c.cx;
+  document.querySelectorAll('.ap-card').forEach((el, i) => el.classList.toggle('active', i === idx));
+  active = idx;
+}
+
+load(2);
+
+document.getElementById('approachGrid').addEventListener('click', e => {
+  const card = e.target.closest('.ap-card');
+  if (card) load(parseInt(card.dataset.idx));
+});
+
+document.getElementById('qaGrid').addEventListener('click', e => {
+  const card = e.target.closest('.qa-card');
+  if (!card) return;
+  const open = card.classList.toggle('open');
+  card.querySelector('.qa-hint').textContent = open ? '▼ collapse' : '▶ expand';
+});
+</script>

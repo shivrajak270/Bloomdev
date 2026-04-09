@@ -1,0 +1,32 @@
+version: "3.8"
+
+services:
+  frontend:
+    image: shivrajak47/desktopimagesforbloomdev:frontend-v1
+    container_name: frontend_windows
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+
+  backend:
+    image: shivrajak47/desktopimagesforbloomdev:backend-v1
+    container_name: backend_windows
+    ports:
+      - "8081:8080"
+    depends_on:
+      - postgres
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/bloomdev
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+
+  postgres:
+    image: shivrajak47/desktopimagesforbloomdev:postgres-v1
+    container_name: postgres_windows
+    ports:
+      - "5435:5432"
+    environment:
+      POSTGRES_DB: bloomdev
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres

@@ -1,0 +1,376 @@
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap');
+*{box-sizing:border-box;margin:0;padding:0;}
+.root{font-family:'JetBrains Mono',monospace;background:#0d1117;min-height:100vh;padding:22px 18px 40px;position:relative;overflow:hidden;}
+.bg-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(56,189,248,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(56,189,248,0.03) 1px,transparent 1px);background-size:32px 32px;pointer-events:none;}
+.bg-glow{position:absolute;top:-100px;left:50%;transform:translateX(-50%);width:700px;height:280px;background:radial-gradient(ellipse,rgba(56,189,248,0.07) 0%,transparent 70%);pointer-events:none;}
+.term-bar{display:flex;align-items:center;gap:8px;background:#161b22;border:1px solid #30363d;border-radius:10px 10px 0 0;padding:10px 16px;border-bottom:1px solid #21262d;}
+.dot{width:12px;height:12px;border-radius:50%;}
+.dot-r{background:#ff5f57;}.dot-y{background:#ffbd2e;}.dot-g{background:#28ca41;}
+.term-title{font-size:12px;color:#8b949e;margin-left:8px;}
+.term-body{background:#0d1117;border:1px solid #30363d;border-top:none;border-radius:0 0 10px 10px;padding:18px 22px 22px;margin-bottom:18px;}
+.pline{display:flex;align-items:baseline;gap:8px;margin-bottom:5px;}
+.pu{color:#38bdf8;font-size:13px;font-weight:600;}
+.pp{color:#a78bfa;font-size:13px;}
+.ps{color:#f472b6;font-size:13px;}
+.pc{color:#e6edf3;font-size:13px;}
+.pout{color:#8b949e;font-size:12px;padding-left:22px;line-height:1.75;}
+.pout .hi{color:#38bdf8;}
+.pout .ok{color:#4ade80;}
+.cursor{display:inline-block;width:8px;height:13px;background:#38bdf8;margin-left:2px;animation:blink 1s step-end infinite;vertical-align:middle;}
+@keyframes blink{50%{opacity:0;}}
+.sec{font-size:11px;color:#8b949e;letter-spacing:.12em;text-transform:uppercase;margin:22px 0 10px;display:flex;align-items:center;gap:8px;}
+.sec::after{content:'';flex:1;height:1px;background:#21262d;}
+.ap-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;}
+.ap-card{background:#161b22;border:1px solid #30363d;border-radius:8px;padding:14px 14px 12px;cursor:pointer;transition:border-color .15s,background .15s;}
+.ap-card:hover{border-color:#58a6ff;background:#1c2128;}
+.ap-card.active{border-color:#38bdf8;background:#0b1929;}
+.ap-tag{font-size:10px;font-weight:600;letter-spacing:.08em;padding:2px 8px;border-radius:4px;display:inline-block;margin-bottom:8px;}
+.bad{background:#3d1f1f;color:#f85149;}.good{background:#0d2a1f;color:#3fb950;}
+.ap-name{font-size:12px;color:#e6edf3;font-weight:500;margin-bottom:4px;}
+.ap-cx{font-size:11px;color:#8b949e;}
+.code-win{background:#010409;border:1px solid #30363d;border-radius:8px;overflow:hidden;margin-top:10px;}
+.code-top{background:#161b22;border-bottom:1px solid #21262d;padding:8px 14px;display:flex;align-items:center;gap:10px;}
+.ftab{font-size:11px;color:#e6edf3;padding:4px 10px;border-radius:4px;background:#0d1117;border:1px solid #30363d;}
+.code-body{padding:16px 20px;overflow-x:auto;}
+.code-body pre{font-family:'JetBrains Mono',monospace;font-size:12.5px;line-height:1.85;color:#e6edf3;white-space:pre;}
+.ln{color:#30363d;user-select:none;display:inline-block;width:22px;text-align:right;margin-right:16px;}
+.kw{color:#ff7b72;}.fn{color:#d2a8ff;}.tp{color:#79c0ff;}.cm{color:#8b949e;font-style:italic;}.nu{color:#79c0ff;}.ok2{color:#3fb950;}
+
+/* visual */
+.viz-wrap{background:#161b22;border:1px solid #30363d;border-radius:8px;padding:18px 20px;}
+.viz-canvas{position:relative;height:120px;display:flex;align-items:flex-end;gap:6px;justify-content:center;margin-bottom:14px;}
+.bar{background:#1e3a5f;border:1px solid #38bdf8;border-radius:3px 3px 0 0;transition:background .3s,border-color .3s;display:flex;align-items:flex-start;justify-content:center;font-size:10px;color:#38bdf8;padding-top:3px;font-weight:600;min-width:28px;}
+.bar.left-ptr{background:#0d2a3d;border-color:#38bdf8;box-shadow:0 0 8px rgba(56,189,248,0.3);}
+.bar.right-ptr{background:#1a1a0d;border-color:#facc15;box-shadow:0 0 8px rgba(250,204,21,0.3);}
+.bar.left-ptr .bar-val{color:#38bdf8;}
+.bar.right-ptr .bar-val{color:#facc15;}
+.bar.water-fill{background:rgba(56,189,248,0.15);border-color:#38bdf8;}
+.ptr-row{display:flex;justify-content:center;gap:6px;}
+.ptr-ind{font-size:10px;text-align:center;min-width:28px;color:#484f58;}
+.ptr-ind.lp{color:#38bdf8;font-weight:600;}
+.ptr-ind.rp{color:#facc15;font-weight:600;}
+.viz-stats{display:flex;gap:10px;margin-top:12px;justify-content:center;}
+.vstat{background:#0d1117;border:1px solid #21262d;border-radius:6px;padding:8px 14px;font-size:11px;text-align:center;}
+.vstat-label{color:#484f58;margin-bottom:2px;}
+.vstat-val{color:#e6edf3;font-weight:500;}
+.vstat-val.blue{color:#38bdf8;}.vstat-val.green{color:#3fb950;}.vstat-val.yellow{color:#facc15;}
+.viz-btn-row{display:flex;gap:8px;margin-top:12px;justify-content:center;}
+.viz-btn{font-family:'JetBrains Mono',monospace;font-size:11px;padding:6px 14px;border-radius:5px;cursor:pointer;background:transparent;border:1px solid #30363d;color:#8b949e;transition:border-color .15s,color .15s;}
+.viz-btn:hover{border-color:#38bdf8;color:#38bdf8;}
+.viz-btn.primary{border-color:#38bdf8;color:#38bdf8;}
+
+.ins-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;}
+.ins-card{background:#161b22;border:1px solid #21262d;border-radius:8px;padding:12px 14px;}
+.ins-lbl{font-size:10px;color:#484f58;text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px;}
+.ins-val{font-size:12px;color:#e6edf3;font-weight:500;line-height:1.5;}
+.ins-val .hi{color:#38bdf8;}
+
+.edge-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px;}
+.epill{font-size:11px;padding:4px 10px;border-radius:4px;background:#161b22;border:1px solid #30363d;color:#8b949e;}
+
+.qa-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;}
+.qa-card{background:#161b22;border:1px solid #30363d;border-radius:8px;padding:14px 16px;cursor:pointer;transition:border-color .15s;}
+.qa-card:hover{border-color:#58a6ff;}
+.qa-card.open{border-color:#38bdf8;background:#0b1929;}
+.qa-q{font-size:12px;color:#e6edf3;font-weight:500;margin-bottom:4px;}
+.qa-a{font-size:11.5px;color:#8b949e;line-height:1.7;display:none;margin-top:8px;border-top:1px solid #21262d;padding-top:8px;}
+.qa-card.open .qa-a{display:block;}
+.qa-a code{font-family:'JetBrains Mono',monospace;background:#0d1117;padding:8px 12px;display:block;border-radius:5px;margin-top:6px;font-size:11px;color:#e6edf3;border:1px solid #21262d;}
+.qa-hint{font-size:10px;color:#484f58;margin-top:5px;}
+
+.pattern-box{background:#161b22;border:1px solid #30363d;border-radius:8px;padding:16px 18px;}
+.pattern-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;}
+.ptag{font-size:11px;padding:5px 12px;border-radius:4px;border:1px solid #30363d;color:#8b949e;background:#0d1117;}
+.ptag.active-tag{border-color:#38bdf8;color:#38bdf8;background:#0b1929;}
+
+@media(max-width:600px){.ap-grid{grid-template-columns:1fr;}.qa-grid{grid-template-columns:1fr;}.ins-row{grid-template-columns:1fr 1fr;}}
+</style>
+
+<div class="root">
+<div class="bg-grid"></div>
+<div class="bg-glow"></div>
+
+<div class="term-bar">
+  <span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span>
+  <span class="term-title">ContainerWithMostWater.java — ~/dsa/two-pointers — zsh</span>
+</div>
+<div class="term-body">
+  <div class="pline">
+    <span class="pu">dev@macbook</span><span class="pp">~/dsa/two-pointers</span><span class="ps">$</span><span class="pc">cat problem.md</span>
+  </div>
+  <div class="pout">
+    <span class="hi"># LC 11 · Container With Most Water</span><br>
+    Given heights[], find two lines that together with x-axis<br>
+    form a container holding the most water. Return max area.<br><br>
+    <span class="hi">area</span> = min(heights[l], heights[r]) × (r − l)<br>
+    <span class="hi">Constraints:</span> 2 ≤ n ≤ 10⁵ &nbsp;·&nbsp; 0 ≤ heights[i] ≤ 10⁴<br><br>
+    <span class="ok">✓ Pattern: Two Pointers (shrink from both ends)</span>
+  </div>
+  <div class="pline" style="margin-top:10px;">
+    <span class="pu">dev@macbook</span><span class="pp">~/dsa/two-pointers</span><span class="ps">$</span><span class="pc">javac Solution.java<span class="cursor"></span></span>
+  </div>
+</div>
+
+<!-- APPROACHES -->
+<div class="sec">// approaches</div>
+<div class="ap-grid" id="apGrid">
+  <div class="ap-card" data-idx="0">
+    <span class="ap-tag bad">TLE on n=10⁵</span>
+    <p class="ap-name">Brute force — all pairs</p>
+    <p class="ap-cx">O(n²) time · O(1) space</p>
+  </div>
+  <div class="ap-card active" data-idx="1">
+    <span class="ap-tag good">✓ optimal — say this</span>
+    <p class="ap-name">Two pointers (greedy)</p>
+    <p class="ap-cx">O(n) time · O(1) space</p>
+  </div>
+</div>
+
+<div class="code-win">
+  <div class="code-top">
+    <span class="ftab" id="tabLbl">Optimal.java</span>
+    <span style="margin-left:auto;font-size:11px;color:#484f58;" id="cxLbl">O(n) time · O(1) space</span>
+  </div>
+  <div class="code-body"><pre id="codePre"></pre></div>
+</div>
+
+<!-- VISUALIZER -->
+<div class="sec">// two-pointer visualizer</div>
+<div class="viz-wrap">
+  <div class="viz-canvas" id="vizCanvas"></div>
+  <div class="ptr-row" id="ptrRow"></div>
+  <div class="viz-stats">
+    <div class="vstat"><div class="vstat-label">left</div><div class="vstat-val blue" id="vLeft">0</div></div>
+    <div class="vstat"><div class="vstat-label">right</div><div class="vstat-val yellow" id="vRight">7</div></div>
+    <div class="vstat"><div class="vstat-label">current area</div><div class="vstat-val" id="vCur">0</div></div>
+    <div class="vstat"><div class="vstat-label">max area</div><div class="vstat-val green" id="vMax">0</div></div>
+  </div>
+  <div class="viz-btn-row">
+    <button class="viz-btn primary" id="btnStep">step →</button>
+    <button class="viz-btn" id="btnReset">reset</button>
+    <button class="viz-btn" id="btnAuto">auto play</button>
+  </div>
+</div>
+
+<!-- KEY INSIGHT -->
+<div class="sec">// why it works</div>
+<div class="ins-row">
+  <div class="ins-card">
+    <div class="ins-lbl">invariant</div>
+    <div class="ins-val">Always move the <span class="hi">shorter</span> pointer inward</div>
+  </div>
+  <div class="ins-card">
+    <div class="ins-lbl">proof sketch</div>
+    <div class="ins-val">Moving taller side can't improve — width ↓ &amp; height bounded by shorter</div>
+  </div>
+  <div class="ins-card">
+    <div class="ins-lbl">fix in your code</div>
+    <div class="ins-val">Init max = <span class="hi">0</span>, not MIN_VALUE. Remove redundant <span class="hi">left&lt;right</span> in if-check</div>
+  </div>
+</div>
+
+<!-- PATTERN -->
+<div class="sec">// problem pattern tags</div>
+<div class="pattern-box">
+  <div class="ins-lbl">recognise this pattern when you see...</div>
+  <div class="pattern-row">
+    <span class="ptag active-tag">Two Pointers</span>
+    <span class="ptag active-tag">Greedy shrink</span>
+    <span class="ptag active-tag">Array + min() constraint</span>
+    <span class="ptag">Similar: Trapping Rain Water</span>
+    <span class="ptag">Similar: 3Sum</span>
+    <span class="ptag">Similar: Two Sum II (sorted)</span>
+  </div>
+</div>
+
+<!-- EDGE CASES -->
+<div class="sec">// edge cases</div>
+<div class="edge-row">
+  <span class="epill">n = 2 → single pair</span>
+  <span class="epill">all same height</span>
+  <span class="epill">one zero-height bar</span>
+  <span class="epill">increasing heights</span>
+  <span class="epill">decreasing heights</span>
+  <span class="epill">max at outermost pair</span>
+</div>
+
+<!-- Q&A -->
+<div class="sec">// interview Q&A — click to reveal</div>
+<div class="qa-grid" id="qaGrid">
+
+  <div class="qa-card">
+    <p class="qa-q">Q1 — Why move the shorter pointer?</p>
+    <p class="qa-a">Area = min(h[l],h[r]) × width. If we move the taller side, width decreases and height is still capped by the shorter bar — so area can only stay same or drop. Moving the shorter side is the only way to possibly find a taller bar that compensates.</p>
+    <span class="qa-hint">▶ expand</span>
+  </div>
+
+  <div class="qa-card">
+    <p class="qa-q">Q2 — Does this miss any pair?</p>
+    <p class="qa-a">No. When we discard a pointer position, every pair with that position as the shorter side has already been considered (we computed area at max width). Formal proof: by contradiction — any skipped pair would have smaller area than something we already tracked.</p>
+    <span class="qa-hint">▶ expand</span>
+  </div>
+
+  <div class="qa-card">
+    <p class="qa-q">Q3 — What's wrong with Integer.MIN_VALUE init?</p>
+    <p class="qa-a">Area is always ≥ 0, so Integer.MIN_VALUE is misleading — it implies area can be negative. Use 0. Also: the redundant <code>left &lt; right</code> inside the if-block is already guaranteed by the while condition — remove it.</p>
+    <span class="qa-hint">▶ expand</span>
+  </div>
+
+  <div class="qa-card">
+    <p class="qa-q">Q4 — How is this different from Trapping Rain Water?</p>
+    <p class="qa-a">Container (LC 11): one pair of lines, area between them, no bars in between matter. Trapping Rain Water (LC 42): every bar matters, water trapped above each bar is summed. Different formula and approach — rain water uses prefix max arrays or a monotonic stack.</p>
+    <span class="qa-hint">▶ expand</span>
+  </div>
+
+  <div class="qa-card">
+    <p class="qa-q">Q5 — Can you do better than O(n)?</p>
+    <p class="qa-a">No — you must read every element at least once to know if it could be the optimal shorter bar. Lower bound is Ω(n). The two-pointer solution is optimal.</p>
+    <span class="qa-hint">▶ expand</span>
+  </div>
+
+  <div class="qa-card">
+    <p class="qa-q">Q6 — What if heights can be negative?</p>
+    <p class="qa-a">The problem guarantees heights ≥ 0. But if negative were allowed: area = min(h[l],h[r]) × (r-l) could be negative. The greedy still works since moving the less-optimal pointer is the right choice regardless of sign.</p>
+    <span class="qa-hint">▶ expand</span>
+  </div>
+
+  <div class="qa-card">
+    <p class="qa-q">Q7 — Follow-up: maximise volume in 3D?</p>
+    <p class="qa-a">This becomes a much harder problem — equivalent to finding a box. No known O(n) solution. Generally requires O(n²) or O(n² log n) approaches. Good sign if interviewer asks this — acknowledge the increase in complexity.</p>
+    <span class="qa-hint">▶ expand</span>
+  </div>
+
+  <div class="qa-card">
+    <p class="qa-q">Q8 — How do you test this?</p>
+    <p class="qa-a">Run: [1,8,6,2,5,4,8,3,7]→49, [1,1]→1, [4,3,2,1,4]→16, [1,2,1]→2, [1,8,100,2,100,4,8,3,7]→200. Cover: normal, n=2, symmetric, tall inner bars, equal outer.</p>
+    <span class="qa-hint">▶ expand</span>
+  </div>
+
+</div>
+</div>
+
+<script>
+const HEIGHTS = [1,8,6,2,5,4,8,3,7];
+
+const codes = [
+{
+  label:'BruteForce.java', cx:'O(n²) time · O(1) space',
+  code:`<span class="ln">1</span><span class="tp">int</span> <span class="fn">maxArea</span>(<span class="tp">int</span>[] heights) {
+<span class="ln">2</span>    <span class="tp">int</span> max = <span class="nu">0</span>;  <span class="cm">// fix: init 0, not MIN_VALUE</span>
+<span class="ln">3</span>    <span class="kw">for</span> (<span class="tp">int</span> i = <span class="nu">0</span>; i < heights.length - <span class="nu">1</span>; i++) {
+<span class="ln">4</span>        <span class="kw">for</span> (<span class="tp">int</span> j = i + <span class="nu">1</span>; j < heights.length; j++) {
+<span class="ln">5</span>            <span class="tp">int</span> area = (j - i) * Math.<span class="fn">min</span>(heights[i], heights[j]);
+<span class="ln">6</span>            max = Math.<span class="fn">max</span>(max, area);
+<span class="ln">7</span>        }
+<span class="ln">8</span>    }
+<span class="ln">9</span>    <span class="kw">return</span> max;
+<span class="ln">10</span>}
+<span class="ln"> </span>
+<span class="ln"> </span><span class="cm">// Checks all n(n-1)/2 pairs — TLE on n=10⁵</span>`
+},
+{
+  label:'Optimal.java', cx:'O(n) time · O(1) space',
+  code:`<span class="ln"> 1</span><span class="tp">int</span> <span class="fn">maxArea</span>(<span class="tp">int</span>[] heights) {
+<span class="ln"> 2</span>    <span class="tp">int</span> max   = <span class="nu">0</span>;  <span class="cm">// area ≥ 0, init as 0</span>
+<span class="ln"> 3</span>    <span class="tp">int</span> left  = <span class="nu">0</span>;
+<span class="ln"> 4</span>    <span class="tp">int</span> right = heights.length - <span class="nu">1</span>;
+<span class="ln"> 5</span>
+<span class="ln"> 6</span>    <span class="kw">while</span> (left < right) {
+<span class="ln"> 7</span>        <span class="tp">int</span> area = Math.<span class="fn">min</span>(heights[left], heights[right])
+<span class="ln"> 8</span>                        * (right - left);
+<span class="ln"> 9</span>        max = Math.<span class="fn">max</span>(max, area);
+<span class="ln">10</span>
+<span class="ln">11</span>        <span class="cm">// move the shorter side inward</span>
+<span class="ln">12</span>        <span class="kw">if</span> (heights[left] <= heights[right]) left++;
+<span class="ln">13</span>        <span class="kw">else</span>                                 right--;
+<span class="ln">14</span>    }
+<span class="ln">15</span>
+<span class="ln">16</span>    <span class="kw">return</span> max;
+<span class="ln">17</span>}
+<span class="ln"> </span>
+<span class="ln"> </span><span class="cm">// Single pass, two variables. ✓ This is the answer.</span>`
+}];
+
+function loadCode(idx) {
+  const c = codes[idx];
+  document.getElementById('codePre').innerHTML = c.code;
+  document.getElementById('tabLbl').textContent = c.label;
+  document.getElementById('cxLbl').textContent = c.cx;
+  document.querySelectorAll('.ap-card').forEach((el,i) => el.classList.toggle('active', i===idx));
+}
+loadCode(1);
+document.getElementById('apGrid').addEventListener('click', e => {
+  const card = e.target.closest('.ap-card');
+  if (card) loadCode(parseInt(card.dataset.idx));
+});
+
+// Visualizer
+let left=0, right=HEIGHTS.length-1, maxA=0, autoTimer=null;
+const maxH = Math.max(...HEIGHTS);
+
+function renderViz() {
+  const canvas = document.getElementById('vizCanvas');
+  const ptrRow = document.getElementById('ptrRow');
+  const curArea = Math.min(HEIGHTS[left], HEIGHTS[right]) * (right - left);
+  maxA = Math.max(maxA, curArea);
+
+  canvas.innerHTML = HEIGHTS.map((h, i) => {
+    let cls = 'bar';
+    if (i === left) cls += ' left-ptr';
+    else if (i === right) cls += ' right-ptr';
+    else if (i > left && i < right) cls += ' water-fill';
+    const px = Math.round((h / maxH) * 100);
+    return `<div class="${cls}" style="height:${px}%;"><span class="bar-val" style="font-size:10px;">${h}</span></div>`;
+  }).join('');
+
+  ptrRow.innerHTML = HEIGHTS.map((_, i) => {
+    if (i === left) return `<div class="ptr-ind lp" style="min-width:28px;">L</div>`;
+    if (i === right) return `<div class="ptr-ind rp" style="min-width:28px;">R</div>`;
+    return `<div class="ptr-ind" style="min-width:28px;"></div>`;
+  }).join('');
+
+  document.getElementById('vLeft').textContent = left;
+  document.getElementById('vRight').textContent = right;
+  document.getElementById('vCur').textContent = curArea;
+  document.getElementById('vMax').textContent = maxA;
+}
+
+function step() {
+  if (left >= right) { stopAuto(); return; }
+  if (HEIGHTS[left] <= HEIGHTS[right]) left++;
+  else right--;
+  renderViz();
+}
+
+function reset() {
+  stopAuto(); left=0; right=HEIGHTS.length-1; maxA=0; renderViz();
+}
+
+function stopAuto() {
+  if (autoTimer) { clearInterval(autoTimer); autoTimer=null; }
+  document.getElementById('btnAuto').textContent = 'auto play';
+}
+
+document.getElementById('btnStep').addEventListener('click', step);
+document.getElementById('btnReset').addEventListener('click', reset);
+document.getElementById('btnAuto').addEventListener('click', () => {
+  if (autoTimer) { stopAuto(); return; }
+  autoTimer = setInterval(() => {
+    if (left >= right) { stopAuto(); return; }
+    step();
+  }, 800);
+  document.getElementById('btnAuto').textContent = 'pause';
+});
+
+renderViz();
+
+// Q&A
+document.getElementById('qaGrid').addEventListener('click', e => {
+  const card = e.target.closest('.qa-card');
+  if (!card) return;
+  const open = card.classList.toggle('open');
+  card.querySelector('.qa-hint').textContent = open ? '▼ collapse' : '▶ expand';
+});
+</script>

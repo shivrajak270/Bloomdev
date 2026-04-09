@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Two Sum – 10 LPA Prep</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #0f1117;
+    color: #e2e8f0;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    font-size: 15px;
+    line-height: 1.7;
+    padding-bottom: 60px;
+  }
+
+  .header {
+    background: #13181f;
+    border-bottom: 2px solid #22d3ee;
+    padding: 32px 36px;
+    display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px;
+  }
+  .header h1 { font-size: 28px; font-weight: 800; color: #fff; }
+  .header h1 span { color: #22d3ee; }
+  .header p { color: #475569; font-size: 13px; margin-top: 4px; }
+  .badge { background: rgba(34,211,238,0.1); border: 1px solid rgba(34,211,238,0.3); color: #22d3ee; padding: 7px 16px; border-radius: 6px; font-weight: 700; font-size: 12px; letter-spacing: 1px; }
+
+  .container { max-width: 860px; margin: 0 auto; padding: 32px 22px; }
+
+  /* STATS ROW */
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 28px; }
+  .stat { background: #13181f; border: 1px solid #1e293b; border-radius: 10px; padding: 16px; text-align: center; }
+  .stat .val { font-size: 24px; font-weight: 800; }
+  .stat .lbl { font-size: 11px; color: #475569; margin-top: 3px; }
+
+  /* CARDS */
+  .card { background: #13181f; border: 1px solid #1e293b; border-radius: 10px; margin-bottom: 14px; overflow: hidden; }
+  .card-head {
+    display: flex; align-items: center; gap: 14px;
+    padding: 16px 20px; cursor: pointer; user-select: none;
+    transition: background 0.15s;
+  }
+  .card-head:hover { background: #181e28; }
+  .emo { font-size: 20px; }
+  .qtitle { font-weight: 700; font-size: 15px; color: #fff; flex: 1; }
+  .tag { font-size: 10px; padding: 3px 10px; border-radius: 4px; font-weight: 700; letter-spacing: 1px; }
+  .tag-must   { background: rgba(34,211,238,0.12); color: #22d3ee; }
+  .tag-good   { background: rgba(245,158,11,0.12);  color: #f59e0b; }
+  .tag-bonus  { background: rgba(52,211,153,0.12);  color: #34d399; }
+  .arrow { color: #334155; font-size: 13px; transition: transform 0.2s; }
+  .arrow.open { transform: rotate(180deg); }
+
+  .card-body { display: none; padding: 0 20px 20px; border-top: 1px solid #1e293b; }
+  .card-body.open { display: block; }
+
+  p { color: #cbd5e1; margin: 12px 0; }
+  p:first-child { margin-top: 14px; }
+
+  pre {
+    background: #0a0d14;
+    border: 1px solid #1e293b;
+    border-radius: 8px;
+    padding: 14px 16px;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 13px;
+    color: #94a3b8;
+    line-height: 1.85;
+    overflow-x: auto;
+    margin: 12px 0;
+    white-space: pre;
+  }
+  code { background: #0a0d14; border: 1px solid #1e293b; color: #22d3ee; padding: 2px 7px; border-radius: 4px; font-family: 'Consolas', monospace; font-size: 13px; }
+
+  .kw  { color: #c084fc; }
+  .cm  { color: #3d4f6e; font-style: italic; }
+  .str { color: #86efac; }
+  .num { color: #f59e0b; }
+  .ok  { color: #34d399; }
+  .er  { color: #f87171; }
+
+  ul { padding-left: 20px; color: #cbd5e1; margin: 10px 0; }
+  li { margin-bottom: 6px; }
+
+  table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+  th { background: #0a0d14; color: #475569; font-size: 11px; letter-spacing: 1px; text-transform: uppercase; padding: 10px 14px; text-align: left; border-bottom: 1px solid #1e293b; }
+  td { padding: 10px 14px; border-bottom: 1px solid #13181f; color: #cbd5e1; font-size: 14px; }
+  tr:last-child td { border-bottom: none; }
+  .good { color: #34d399; font-weight: 700; }
+  .bad  { color: #f87171; }
+  .mid  { color: #f59e0b; }
+
+  .tip { background: rgba(245,158,11,0.06); border: 1px solid rgba(245,158,11,0.18); border-radius: 8px; padding: 12px 15px; margin-top: 14px; font-size: 13px; color: #94a3b8; }
+  .tip b { color: #f59e0b; }
+
+  /* BOTTOM SECTIONS */
+  .bottom { background: #13181f; border: 1px solid #1e293b; border-radius: 10px; padding: 22px; margin-top: 14px; }
+  .bottom-title { font-size: 11px; color: #334155; letter-spacing: 2px; margin-bottom: 14px; }
+  .chips { display: flex; gap: 10px; flex-wrap: wrap; }
+  .chip { background: #0a0d14; border: 1px solid #1e293b; border-radius: 6px; padding: 8px 14px; font-size: 12px; color: #64748b; }
+  .chip b { color: #e2e8f0; display: block; font-size: 13px; }
+
+  .top5 { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px,1fr)); gap: 10px; }
+  .top5-item { background: #0a0d14; border: 1px solid #1e2535; border-radius: 8px; padding: 13px; }
+  .top5-num { font-size: 20px; font-weight: 800; opacity: 0.35; }
+  .top5-lbl { font-size: 12px; color: #94a3b8; margin-top: 4px; }
+
+  footer { text-align: center; color: #1e293b; font-size: 11px; letter-spacing: 2px; margin-top: 40px; }
+
+  @media(max-width:600px) {
+    .stats { grid-template-columns: repeat(2,1fr); }
+    .header { padding: 24px 18px; }
+    .container { padding: 24px 14px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <h1>Two Sum <span>Cheat Sheet</span></h1>
+    <p>LeetCode #1 · Java · Everything you need for 10 LPA interviews</p>
+  </div>
+  <div class="badge">🎯 10 LPA READY</div>
+</div>
+
+<div class="container">
+
+  <div class="stats">
+    <div class="stat"><div class="val" style="color:#22d3ee">O(n)</div><div class="lbl">Best Time</div></div>
+    <div class="stat"><div class="val" style="color:#a78bfa">O(n)</div><div class="lbl">Space Used</div></div>
+    <div class="stat"><div class="val" style="color:#f87171">O(n²)</div><div class="lbl">Brute Force</div></div>
+    <div class="stat"><div class="val" style="color:#34d399" style="font-size:18px">HashMap</div><div class="lbl">Key Data Structure</div></div>
+  </div>
+
+  <!-- Q1 -->
+  <div class="card">
+    <div class="card-head" onclick="toggle(this)">
+      <span class="emo">🧠</span>
+      <span class="qtitle">Q1. How does your algorithm work? Explain the approach.</span>
+      <span class="tag tag-must">MUST</span>
+      <span class="arrow">▼</span>
+    </div>
+    <div class="card-body open">
+      <p>For every element compute <code>complement = target - nums[i]</code>. Check if complement is already in the HashMap. If yes → return both indices. If no → store current number and its index, continue.</p>
+      <pre><span class="kw">public int</span>[] twoSum(<span class="kw">int</span>[] nums, <span class="kw">int</span> target) {
+    Map&lt;Integer, Integer&gt; map = <span class="kw">new</span> HashMap&lt;&gt;();
+    <span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; nums.length; i++) {
+        <span class="kw">int</span> complement = target - nums[i];
+        <span class="kw">if</span> (map.containsKey(complement)) {
+            <span class="kw">return new int</span>[]{ map.get(complement), i };
+        }
+        map.put(nums[i], i);
+    }
+    <span class="kw">throw new</span> IllegalArgumentException(<span class="str">"No solution"</span>);
+}</pre>
+      <div class="tip"><b>💡 Say this out loud:</b> "I use a HashMap so I don't need two loops. For each number I check if its complement already exists. One pass is enough." — Say the logic FIRST, then write code.</div>
+    </div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="card">
+    <div class="card-head" onclick="toggle(this)">
+      <span class="emo">⏱</span>
+      <span class="qtitle">Q2. Time complexity? Compare all three approaches.</span>
+      <span class="tag tag-must">MUST</span>
+      <span class="arrow open">▼</span>
+    </div>
+    <div class="card-body open">
+      <table>
+        <tr><th>Approach</th><th>Time</th><th>Space</th><th>Note</th></tr>
+        <tr><td>Brute Force</td><td class="bad">O(n²)</td><td class="good">O(1)</td><td>Two nested loops</td></tr>
+        <tr><td>Sort + Two Pointers</td><td class="mid">O(n log n)</td><td class="good">O(1)</td><td>Loses original indices ⚠️</td></tr>
+        <tr><td>HashMap</td><td class="good">O(n) ✅</td><td class="mid">O(n)</td><td>Best for unsorted input</td></tr>
+      </table>
+      <div class="tip"><b>💡 Key point to mention:</b> Sorting loses original indices. That's why HashMap is the right choice when indices matter. Interviewers love when you bring this up.</div>
+    </div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="card">
+    <div class="card-head" onclick="toggle(this)">
+      <span class="emo">💾</span>
+      <span class="qtitle">Q3. What is the space complexity?</span>
+      <span class="tag tag-must">MUST</span>
+      <span class="arrow">▼</span>
+    </div>
+    <div class="card-body">
+      <p>HashMap stores up to n elements → <code>O(n)</code> space.</p>
+      <p>Brute force needs no extra memory → <code>O(1)</code> space, but O(n²) time.</p>
+      <p>This is a <b>space-time tradeoff</b> — we spend memory to save time.</p>
+      <div class="tip"><b>💡 Say "space-time tradeoff"</b> out loud. It's a small phrase that makes a big impression.</div>
+    </div>
+  </div>
+
+  <!-- Q4 -->
+  <div class="card">
+    <div class="card-head" onclick="toggle(this)">
+      <span class="emo">🔑</span>
+      <span class="qtitle">Q4. Why check containsKey BEFORE put? Trace nums=[3,3], target=6.</span>
+      <span class="tag tag-must">MUST</span>
+      <span class="arrow">▼</span>
+    </div>
+    <div class="card-body">
+      <p>If you <code>put</code> first, the second 3 overwrites the first one's index. Then <code>containsKey</code> returns the same index twice — which is wrong.</p>
+      <pre><span class="ok">✅ CORRECT — check first, then put:</span>
+i=0 → diff=3, map empty  → map.put(3, 0)    map={3:0}
+i=1 → diff=3, found at 0 → return {0, 1}   ✅
+
+<span class="er">❌ WRONG — put first, then check:</span>
+i=0 → map.put(3, 0)                          map={3:0}
+i=1 → map.put(3, 1)  ← overwrites index 0!  map={3:1}
+     → containsKey(3) → returns {1, 1}  ❌ same index!</pre>
+      <div class="tip"><b>💡 Draw this trace</b> on paper or whiteboard when they ask. Visualising = looks very sharp.</div>
+    </div>
+  </div>
+
+  <!-- Q5 -->
+  <div class="card">
+    <div class="card-head" onclick="toggle(this)">
+      <span class="emo">↔️</span>
+      <span class="qtitle">Q5. What if the array is sorted? (Two Sum II)</span>
+      <span class="tag tag-must">MUST</span>
+      <span class="arrow">▼</span>
+    </div>
+    <div class="card-body">
+      <p>Use <b>Two Pointers</b>. Start from both ends, move inward based on the sum.</p>
+      <pre><span class="kw">int</span> left = <span class="num">0</span>, right = nums.length - <span class="num">1</span>;
+<span class="kw">while</span> (left &lt; right) {
+    <span class="kw">int</span> sum = nums[left] + nums[right];
+    <span class="kw">if</span>      (sum == target) <span class="kw">return new int</span>[]{ left, right }; <span class="ok">// found</span>
+    <span class="kw">else if</span> (sum &lt; target)  left++;   <span class="cm">// need bigger</span>
+    <span class="kw">else</span>                    right--;  <span class="cm">// need smaller</span>
+}</pre>
+      <p>Time: <code>O(n)</code> &nbsp; Space: <code>O(1)</code> — no HashMap needed at all.</p>
+      <div class="tip"><b>💡 Always ask first:</b> "Is the array sorted?" before jumping to HashMap. It changes the best approach completely.</div>
+    </div>
+  </div>
+
+  <!-- Q6 -->
+  <div class="card">
+    <div class="card-head" onclick="toggle(this)">
+      <span class="emo">❓</span>
+      <span class="qtitle">Q6. What if no solution exists?</span>
+      <span class="tag tag-must">MUST</span>
+      <span class="arrow">▼</span>
+    </div>
+    <div class="card-body">
+      <p>Three valid answers — tell the interviewer you'll go with whatever they prefer:</p>
+      <pre><span class="kw">return new int</span>{};            <span class="cm">// empty array — most common</span>
+<span class="kw">return new int</span>[]{ -<span class="num">1</span>, -<span class="num">1</span> };  <span class="cm">// sentinel value</span>
+<span class="kw">throw new</span> IllegalArgumentException(<span class="str">"No solution"</span>); <span class="cm">// exception</span></pre>
+      <div class="tip"><b>💡 Ask before coding:</b> "Is a solution always guaranteed?" This one question signals you think about edge cases before writing a single line.</div>
+    </div>
+  </div>
+
+  <!-- Q7 -->
+  <div class="card">
+    <div class="card-head" onclick="toggle(this)">
+      <span class="emo">🧪</span>
+      <span class="qtitle">Q7. What edge cases would you test?</span>
+      <span class="tag tag-must">MUST</span>
+      <span class="arrow">▼</span>
+    </div>
+    <div class="card-body">
+      <pre>nums = [<span class="num">3</span>, <span class="num">3</span>],          target = <span class="num">6</span>   <span class="cm">// duplicates</span>
+nums = [<span class="num">0</span>, <span class="num">4</span>, <span class="num">3</span>, <span class="num">0</span>],   target = <span class="num">0</span>   <span class="cm">// zeros</span>
+nums = [-<span class="num">3</span>, <span class="num">4</span>, <span class="num">3</span>, <span class="num">90</span>], target = <span class="num">0</span>   <span class="cm">// negatives</span>
+nums = [<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>],        target = <span class="num">10</span>  <span class="cm">// no solution</span>
+nums = [<span class="num">5</span>, <span class="num">7</span>],           target = <span class="num">12</span>  <span class="cm">// minimum valid input</span></pre>
+      <div class="tip"><b>💡 List these BEFORE you start coding.</b> Interviewers notice. It's one of the fastest ways to look senior even as a fresher.</div>
+    </div>
+  </div>
+
+  <!-- Q8 -->
+  <div class="card">
+    <div class="card-head" onclick="toggle(this)">
+      <span class="emo">⚙️</span>
+      <span class="qtitle">Q8. How does HashMap work internally?</span>
+      <span class="tag tag-good">GOOD TO KNOW</span>
+      <span class="arrow">▼</span>
+    </div>
+    <div class="card-body">
+
+      <!-- STEP 1 -->
+      <p style="margin-top:16px; font-weight:700; color:#fff; font-size:15px;">🗂 Step 1 — What is a Bucket?</p>
+      <p>Think of a HashMap like a <b>big shelf with 16 compartments</b> (called buckets). When you store something, Java figures out which compartment to put it in. Default shelf size = <b>16 buckets</b>.</p>
+      <pre><span class="cm">// Imagine this shelf:</span>
+Bucket[<span class="num">0</span>]  → empty
+Bucket[<span class="num">1</span>]  → empty
+Bucket[<span class="num">2</span>]  → <span class="ok">"apple" → 5</span>
+Bucket[<span class="num">3</span>]  → empty
+Bucket[<span class="num">4</span>]  → <span class="ok">"mango" → 3</span>
+...
+Bucket[<span class="num">15</span>] → empty</pre>
+
+      <!-- STEP 2 -->
+      <p style="margin-top:20px; font-weight:700; color:#fff; font-size:15px;">🔢 Step 2 — hashCode() decides the bucket</p>
+      <p>When you call <code>map.put("apple", 5)</code>, Java runs <code>"apple".hashCode()</code> which gives a big number. Then it does <code>bigNumber % 16</code> to get a bucket index between 0–15.</p>
+      <pre><span class="cm">// Simplified flow of map.put("apple", 5):</span>
+<span class="num">1.</span> hash  = <span class="str">"apple"</span>.hashCode()   <span class="cm">// e.g. 93029210</span>
+<span class="num">2.</span> index = hash % <span class="num">16</span>           <span class="cm">// e.g. 2  ← bucket number</span>
+<span class="num">3.</span> Bucket[<span class="num">2</span>] = <span class="str">"apple"</span> → <span class="num">5</span>    <span class="cm">// stored here</span>
+
+<span class="cm">// map.get("apple") does the SAME thing:</span>
+<span class="num">1.</span> hash  = <span class="str">"apple"</span>.hashCode()   <span class="cm">// same hash = same bucket</span>
+<span class="num">2.</span> index = hash % <span class="num">16</span>           <span class="cm">// = 2</span>
+<span class="num">3.</span> Go to Bucket[<span class="num">2</span>], return <span class="num">5</span>  <span class="ok">// O(1) ✅</span></pre>
+      <p>That's why get/put is <code>O(1)</code> — no matter how many items you have, Java directly jumps to the right bucket instead of searching through everything.</p>
+
+      <!-- STEP 3 -->
+      <p style="margin-top:20px; font-weight:700; color:#fff; font-size:15px;">💥 Step 3 — What is a Collision?</p>
+      <p>Sometimes two different keys land in the <b>same bucket</b>. This is called a <b>collision</b>. For example, "apple" and "grape" might both hash to Bucket[2].</p>
+      <pre><span class="cm">// Both "apple" and "grape" land in Bucket[2]:</span>
+Bucket[<span class="num">2</span>] → <span class="str">"apple"</span>=<span class="num">5</span>  →  <span class="str">"grape"</span>=<span class="num">9</span>  →  null
+           <span class="cm">↑ linked list — each node points to the next</span>
+
+<span class="cm">// map.get("grape") now has to:</span>
+<span class="num">1.</span> Go to Bucket[<span class="num">2</span>]
+<span class="num">2.</span> Check first node: is it <span class="str">"grape"</span>? No, it's <span class="str">"apple"</span>. Skip.
+<span class="num">3.</span> Check next node: is it <span class="str">"grape"</span>? Yes! Return <span class="num">9</span>.  <span class="cm">// O(n) worst case</span></pre>
+      <p>If 1000 keys all crash into the same bucket, you'd have to scan all 1000 nodes = <b>O(n)</b>. Very slow.</p>
+
+      <!-- STEP 4 - JAVA 8 -->
+      <p style="margin-top:20px; font-weight:700; color:#fff; font-size:15px;">🚀 Step 4 — Java 8 Fix: Linked List → Red-Black Tree</p>
+      <p>Java 8 solved this. When a single bucket's linked list grows beyond <b>8 nodes</b>, Java automatically converts it to a <b>Red-Black Tree</b> (a self-balancing tree). Searching a tree is <code>O(log n)</code> instead of <code>O(n)</code>.</p>
+      <pre><span class="cm">// Java 7 (old) — all collisions use Linked List:</span>
+Bucket[<span class="num">2</span>] → node1 → node2 → node3 → ... → node1000
+           <span class="cm">worst case lookup = O(n)  ❌ slow</span>
+
+<span class="cm">// Java 8 (new) — long chains become Red-Black Tree:</span>
+Bucket[<span class="num">2</span>] → [ Red-Black Tree with 1000 nodes ]
+           <span class="cm">worst case lookup = O(log n)  ✅ fast</span>
+
+<span class="cm">// Trigger: chain length > 8  →  convert to tree</span>
+<span class="cm">// Reverse:  chain length < 6  →  convert back to list</span></pre>
+      <p>You don't need to do anything special — Java does this automatically inside HashMap.</p>
+
+      <!-- STEP 5 -->
+      <p style="margin-top:20px; font-weight:700; color:#fff; font-size:15px;">📈 Step 5 — What is Resize (Rehashing)?</p>
+      <p>HashMap doesn't stay 16 buckets forever. When it's <b>75% full</b> (12 out of 16 slots used), it doubles to 32 buckets, then recalculates every key's bucket. This is called <b>rehashing</b>.</p>
+      <pre><span class="cm">// Load Factor = 0.75 (default)</span>
+<span class="cm">// Capacity starts at 16</span>
+
+<span class="num">16</span> buckets × <span class="num">0.75</span> = <span class="num">12</span>  <span class="cm">← resize triggers when 12 entries added</span>
+→ new capacity = <span class="num">32</span> buckets
+→ all keys rehashed into new positions
+
+<span class="num">32</span> × <span class="num">0.75</span> = <span class="num">24</span>  <span class="cm">← next resize at 24 entries</span>
+→ new capacity = <span class="num">64</span> buckets  ... and so on</pre>
+      <p>Resize is expensive (<code>O(n)</code>) but rare. Overall HashMap stays <code>O(1)</code> average.</p>
+
+      <!-- SUMMARY TABLE -->
+      <p style="margin-top:20px; font-weight:700; color:#fff; font-size:15px;">📋 Full Summary</p>
+      <table>
+        <tr><th>Operation</th><th>Average Case</th><th>Worst Case (Java 7)</th><th>Worst Case (Java 8+)</th></tr>
+        <tr><td>get / put</td><td class="good">O(1)</td><td class="bad">O(n)</td><td class="mid">O(log n)</td></tr>
+        <tr><td>resize</td><td colspan="3" style="color:#64748b">O(n) — but happens rarely, amortized O(1)</td></tr>
+      </table>
+
+      <div class="tip" style="margin-top:16px;"><b>💡 The one sentence that impresses interviewers:</b> "Java 8 upgraded HashMap to use a Red-Black Tree instead of a Linked List when a bucket has more than 8 collisions — making worst-case lookup O(log n) instead of O(n)." — Say this confidently and they will remember you.</div>
+    </div>
+  </div>
+
+  <!-- Q9 -->
+  <div class="card">
+    <div class="card-head" onclick="toggle(this)">
+      <span class="emo">🚫</span>
+      <span class="qtitle">Q9. Can you solve it without extra space?</span>
+      <span class="tag tag-good">GOOD TO KNOW</span>
+      <span class="arrow">▼</span>
+    </div>
+    <div class="card-body">
+      <p>Yes — two options, no HashMap needed:</p>
+      <ul>
+        <li><b>Brute force:</b> two nested loops → <code>O(n²)</code> time, <code>O(1)</code> space</li>
+        <li><b>Sort + Two Pointers:</b> <code>O(n log n)</code> time, <code>O(1)</code> space — but original indices are lost after sorting</li>
+      </ul>
+      <div class="tip"><b>💡 If they say "no extra memory"</b> → say "Sort + Two Pointers" immediately, and add "but this loses the original indices — is that okay?" Shows you understand the full tradeoff.</div>
+    </div>
+  </div>
+
+  <!-- Q10 -->
+  <div class="card">
+    <div class="card-head" onclick="toggle(this)">
+      <span class="emo">📦</span>
+      <span class="qtitle">Q10. What if there are multiple pairs? Return all of them.</span>
+      <span class="tag tag-good">GOOD TO KNOW</span>
+      <span class="arrow">▼</span>
+    </div>
+    <div class="card-body">
+      <p>Don't return early. Collect all results into a List. Sort + Two Pointers handles duplicate-skipping cleanly:</p>
+      <pre><span class="kw">public</span> List&lt;int[]&gt; allPairs(<span class="kw">int</span>[] nums, <span class="kw">int</span> target) {
+    Arrays.sort(nums);
+    List&lt;int[]&gt; res = <span class="kw">new</span> ArrayList&lt;&gt;();
+    <span class="kw">int</span> l = <span class="num">0</span>, r = nums.length - <span class="num">1</span>;
+    <span class="kw">while</span> (l &lt; r) {
+        <span class="kw">int</span> sum = nums[l] + nums[r];
+        <span class="kw">if</span> (sum == target) {
+            res.add(<span class="kw">new int</span>[]{ nums[l], nums[r] });
+            <span class="kw">while</span> (l &lt; r &amp;&amp; nums[l] == nums[l+<span class="num">1</span>]) l++; <span class="cm">// skip duplicates</span>
+            <span class="kw">while</span> (l &lt; r &amp;&amp; nums[r] == nums[r-<span class="num">1</span>]) r--;
+            l++; r--;
+        } <span class="kw">else if</span> (sum &lt; target) l++;
+        <span class="kw">else</span> r--;
+    }
+    <span class="kw">return</span> res;
+}</pre>
+      <div class="tip"><b>💡 Bonus:</b> This is the exact same pattern used in 3Sum. Learn this once, apply it everywhere.</div>
+    </div>
+  </div>
+
+  <!-- TOP 5 -->
+  <div class="bottom" style="margin-top:28px;">
+    <div class="bottom-title">⭐ INTERVIEWERS ALWAYS ASK THESE 5 — KNOW THEM COLD</div>
+    <div class="top5">
+      <div class="top5-item"><div class="top5-num" style="color:#22d3ee">01</div><div class="top5-lbl">Algorithm explanation</div></div>
+      <div class="top5-item"><div class="top5-num" style="color:#f59e0b">02</div><div class="top5-lbl">Time complexity</div></div>
+      <div class="top5-item"><div class="top5-num" style="color:#f87171">03</div><div class="top5-lbl">Space complexity</div></div>
+      <div class="top5-item"><div class="top5-num" style="color:#a78bfa">04</div><div class="top5-lbl">containsKey before put</div></div>
+      <div class="top5-item"><div class="top5-num" style="color:#34d399">05</div><div class="top5-lbl">Sorted array solution</div></div>
+    </div>
+  </div>
+
+  <!-- NEXT PROBLEMS -->
+  <div class="bottom">
+    <div class="bottom-title">🔗 DO THESE NEXT — SAME PATTERN</div>
+    <div class="chips">
+      <div class="chip"><b>Two Sum II</b>sorted input</div>
+      <div class="chip"><b>3Sum</b>LeetCode 15</div>
+      <div class="chip"><b>4Sum</b>LeetCode 18</div>
+      <div class="chip"><b>Subarray Sum = K</b>LeetCode 560</div>
+      <div class="chip"><b>3Sum Closest</b>LeetCode 16</div>
+    </div>
+  </div>
+
+  <footer>TWO SUM · 10 LPA CHEAT SHEET · JAVA</footer>
+</div>
+
+<script>
+  function toggle(head) {
+    const body = head.nextElementSibling;
+    const arrow = head.querySelector('.arrow');
+    const isOpen = body.classList.contains('open');
+    body.classList.toggle('open', !isOpen);
+    arrow.classList.toggle('open', !isOpen);
+  }
+</script>
+</body>
+</html>

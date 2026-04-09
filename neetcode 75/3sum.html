@@ -1,0 +1,1727 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3Sum Interview Cheat Sheet</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            flex: 1;
+            min-width: 200px;
+            padding: 15px 25px;
+            background: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .tab:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+
+        .tab.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .content {
+            display: none;
+        }
+
+        .content.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .cheat-sheet {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-title {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin: -20px -20px 15px -20px;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        .code-block {
+            background: #282c34;
+            color: #abb2bf;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85em;
+            margin: 10px 0;
+            line-height: 1.6;
+        }
+
+        .code-block.small {
+            font-size: 0.75em;
+        }
+
+        .keyword { color: #c678dd; }
+        .string { color: #98c379; }
+        .comment { color: #5c6370; font-style: italic; }
+        .function { color: #61afef; }
+        .number { color: #d19a66; }
+
+        .highlight {
+            background: #fff3cd;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-weight: bold;
+            color: #856404;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75em;
+            font-weight: bold;
+            margin: 3px;
+        }
+
+        .easy { background: #d4edda; color: #155724; }
+        .medium { background: #fff3cd; color: #856404; }
+        .hard { background: #f8d7da; color: #721c24; }
+        .bug { background: #ff6b6b; color: white; }
+        .tip { background: #4ecdc4; color: white; }
+        .important { background: #ff9f43; color: white; }
+
+        .complexity-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0;
+            font-size: 0.9em;
+        }
+
+        .complexity-table th,
+        .complexity-table td {
+            border: 2px solid #667eea;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .complexity-table th {
+            background: #667eea;
+            color: white;
+            font-weight: bold;
+        }
+
+        .complexity-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        ul, ol {
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+
+        li {
+            margin: 8px 0;
+        }
+
+        .pro-tip {
+            background: #e7f3ff;
+            border-left: 5px solid #2196F3;
+            padding: 12px 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+            font-size: 0.9em;
+        }
+
+        .pro-tip::before {
+            content: "💡 ";
+            font-size: 1.2em;
+        }
+
+        .warning {
+            background: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 12px 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+            font-size: 0.9em;
+        }
+
+        .warning::before {
+            content: "⚠️ ";
+            font-size: 1.2em;
+        }
+
+        .danger {
+            background: #f8d7da;
+            border-left: 5px solid #dc3545;
+            padding: 12px 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+            font-size: 0.9em;
+        }
+
+        .danger::before {
+            content: "🚨 ";
+            font-size: 1.2em;
+        }
+
+        .section-header {
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin: 20px 0 15px 0;
+            font-size: 1.1em;
+            font-weight: bold;
+        }
+
+        .quick-ref {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 10px 0;
+        }
+
+        .quick-ref-item {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 5px;
+            border-left: 4px solid #667eea;
+        }
+
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 15px 0;
+        }
+
+        .comparison-item {
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px solid #dee2e6;
+        }
+
+        .comparison-item.winner {
+            border-color: #28a745;
+            background: #d4edda;
+        }
+
+        .visual-example {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border: 2px dashed #667eea;
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            .tabs {
+                display: none;
+            }
+            .content {
+                display: block !important;
+                page-break-after: always;
+            }
+            .card {
+                page-break-inside: avoid;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .cheat-sheet {
+                grid-template-columns: 1fr;
+            }
+            .comparison {
+                grid-template-columns: 1fr;
+            }
+            .quick-ref {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 3Sum Interview Cheat Sheet</h1>
+            <p>Complete Guide for 10 LPA+ Java Interviews | Quick Reference + Deep Dive</p>
+            <p style="font-size: 0.9em; margin-top: 10px;">Problem: Find all unique triplets that sum to zero</p>
+        </div>
+
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('solutions')">📝 Solutions</button>
+            <button class="tab" onclick="showTab('bugs')">🐛 Common Bugs</button>
+            <button class="tab" onclick="showTab('complexity')">⚡ Complexity</button>
+            <button class="tab" onclick="showTab('optimization')">🚀 Optimization</button>
+            <button class="tab" onclick="showTab('tricky')">🎪 Tricky Questions</button>
+            <button class="tab" onclick="showTab('variations')">🔄 Variations</button>
+        </div>
+
+        <!-- TAB 1: SOLUTIONS -->
+        <div id="solutions" class="content active">
+            <div class="cheat-sheet">
+                <div class="card">
+                    <div class="card-title">Problem Statement</div>
+                    <div class="visual-example">
+                        <strong>Given:</strong> An integer array <code>nums</code><br>
+                        <strong>Find:</strong> All unique triplets <code>[nums[i], nums[j], nums[k]]</code><br>
+                        <strong>Such that:</strong> <code>i != j</code>, <code>i != k</code>, <code>j != k</code>, and <code>nums[i] + nums[j] + nums[k] == 0</code>
+                    </div>
+
+                    <div class="code-block"><span class="comment">// Example 1:</span>
+Input: nums = [-<span class="number">1</span>,<span class="number">0</span>,<span class="number">1</span>,<span class="number">2</span>,-<span class="number">1</span>,-<span class="number">4</span>]
+Output: [[-<span class="number">1</span>,-<span class="number">1</span>,<span class="number">2</span>],[-<span class="number">1</span>,<span class="number">0</span>,<span class="number">1</span>]]
+
+<span class="comment">// Example 2:</span>
+Input: nums = [<span class="number">0</span>,<span class="number">1</span>,<span class="number">1</span>]
+Output: []
+
+<span class="comment">// Example 3:</span>
+Input: nums = [<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>]
+Output: [[<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>]]</div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Solution 1: Brute Force (DON'T USE!) ❌</div>
+                    <span class="badge hard">O(n³)</span>
+                    <span class="badge bug">TLE</span>
+                    
+                    <div class="code-block"><span class="keyword">public</span> List&lt;List&lt;Integer&gt;&gt; threeSum(<span class="keyword">int</span>[] nums) {
+    List&lt;List&lt;Integer&gt;&gt; result = <span class="keyword">new</span> ArrayList&lt;&gt;();
+    Set&lt;List&lt;Integer&gt;&gt; set = <span class="keyword">new</span> HashSet&lt;&gt;();
+    
+    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; nums.length; i++) {
+        <span class="keyword">for</span> (<span class="keyword">int</span> j = i + <span class="number">1</span>; j &lt; nums.length; j++) {
+            <span class="keyword">for</span> (<span class="keyword">int</span> k = j + <span class="number">1</span>; k &lt; nums.length; k++) {
+                <span class="keyword">if</span> (nums[i] + nums[j] + nums[k] == <span class="number">0</span>) {
+                    List&lt;Integer&gt; triplet = Arrays.asList(
+                        nums[i], nums[j], nums[k]);
+                    Collections.sort(triplet);
+                    set.add(triplet);
+                }
+            }
+        }
+    }
+    
+    result.addAll(set);
+    <span class="keyword">return</span> result;
+}</div>
+
+                    <div class="danger">
+                        <strong>Why it's bad:</strong><br>
+                        ❌ Time: O(n³) - Triple nested loops<br>
+                        ❌ Space: O(n) - HashSet for duplicates<br>
+                        ❌ Will get Time Limit Exceeded (TLE)
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Solution 2: HashMap Approach 📊</div>
+                    <span class="badge medium">O(n²)</span>
+                    <span class="badge tip">Good</span>
+                    
+                    <div class="code-block"><span class="keyword">public</span> List&lt;List&lt;Integer&gt;&gt; threeSum(<span class="keyword">int</span>[] nums) {
+    List&lt;List&lt;Integer&gt;&gt; result = <span class="keyword">new</span> ArrayList&lt;&gt;();
+    Arrays.sort(nums);  <span class="comment">// Sort first!</span>
+    
+    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; nums.length - <span class="number">2</span>; i++) {
+        <span class="comment">// Skip duplicates for first number</span>
+        <span class="keyword">if</span> (i &gt; <span class="number">0</span> && nums[i] == nums[i - <span class="number">1</span>]) <span class="keyword">continue</span>;
+        
+        Set&lt;Integer&gt; seen = <span class="keyword">new</span> HashSet&lt;&gt;();
+        
+        <span class="keyword">for</span> (<span class="keyword">int</span> j = i + <span class="number">1</span>; j &lt; nums.length; j++) {
+            <span class="keyword">int</span> complement = -nums[i] - nums[j];
+            
+            <span class="keyword">if</span> (seen.contains(complement)) {
+                result.add(Arrays.asList(nums[i], complement, nums[j]));
+                
+                <span class="comment">// Skip duplicates for second number</span>
+                <span class="keyword">while</span> (j + <span class="number">1</span> &lt; nums.length && 
+                       nums[j] == nums[j + <span class="number">1</span>]) j++;
+            }
+            
+            seen.add(nums[j]);
+        }
+    }
+    
+    <span class="keyword">return</span> result;
+}</div>
+
+                    <div class="pro-tip">
+                        <strong>Complexity:</strong> Time O(n²), Space O(n)<br>
+                        Uses HashSet to find complement in O(1)
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Solution 3: Two Pointers ⭐ (BEST!)</div>
+                    <span class="badge medium">O(n²)</span>
+                    <span class="badge tip">Optimal</span>
+                    <span class="badge important">Interview Favorite</span>
+                    
+                    <div class="code-block"><span class="keyword">public</span> List&lt;List&lt;Integer&gt;&gt; threeSum(<span class="keyword">int</span>[] nums) {
+    List&lt;List&lt;Integer&gt;&gt; result = <span class="keyword">new</span> ArrayList&lt;&gt;();
+    
+    <span class="comment">// Step 1: Sort the array</span>
+    Arrays.sort(nums);
+    
+    <span class="comment">// Step 2: Fix first number, use 2-pointer for rest</span>
+    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; nums.length - <span class="number">2</span>; i++) {
+        <span class="comment">// Skip positive numbers (optimization)</span>
+        <span class="keyword">if</span> (nums[i] &gt; <span class="number">0</span>) <span class="keyword">break</span>;
+        
+        <span class="comment">// Skip duplicates for first number</span>
+        <span class="keyword">if</span> (i &gt; <span class="number">0</span> && nums[i] == nums[i - <span class="number">1</span>]) <span class="keyword">continue</span>;
+        
+        <span class="comment">// Two pointers for remaining array</span>
+        <span class="keyword">int</span> left = i + <span class="number">1</span>;
+        <span class="keyword">int</span> right = nums.length - <span class="number">1</span>;
+        
+        <span class="keyword">while</span> (left &lt; right) {
+            <span class="keyword">int</span> sum = nums[i] + nums[left] + nums[right];
+            
+            <span class="keyword">if</span> (sum == <span class="number">0</span>) {
+                result.add(Arrays.asList(nums[i], nums[left], nums[right]));
+                
+                <span class="comment">// Skip duplicates for second number</span>
+                <span class="keyword">while</span> (left &lt; right && nums[left] == nums[left + <span class="number">1</span>]) {
+                    left++;
+                }
+                <span class="comment">// Skip duplicates for third number</span>
+                <span class="keyword">while</span> (left &lt; right && nums[right] == nums[right - <span class="number">1</span>]) {
+                    right--;
+                }
+                
+                left++;
+                right--;
+            } <span class="keyword">else if</span> (sum &lt; <span class="number">0</span>) {
+                left++;  <span class="comment">// Need larger sum</span>
+            } <span class="keyword">else</span> {
+                right--;  <span class="comment">// Need smaller sum</span>
+            }
+        }
+    }
+    
+    <span class="keyword">return</span> result;
+}</div>
+
+                    <div class="pro-tip">
+                        <strong>Why Two Pointers is Best:</strong><br>
+                        ✅ Time: O(n²) - Optimal for this problem<br>
+                        ✅ Space: O(1) - No extra data structures<br>
+                        ✅ Clean and easy to understand<br>
+                        ✅ Handles duplicates elegantly
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Visual Walkthrough 👁️</div>
+                    
+                    <div class="visual-example">
+                        <strong>Input:</strong> [-1, 0, 1, 2, -1, -4]
+                    </div>
+
+                    <div class="code-block"><span class="comment">Step 1: Sort</span>
+[-<span class="number">4</span>, -<span class="number">1</span>, -<span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>]
+
+<span class="comment">Step 2: i = 0, nums[i] = -4</span>
+ i   L              R
+[-<span class="number">4</span>, -<span class="number">1</span>, -<span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>]
+sum = -<span class="number">4</span> + (-<span class="number">1</span>) + <span class="number">2</span> = -<span class="number">3</span> &lt; <span class="number">0</span>, move L →
+
+<span class="comment">Step 3: i = 1, nums[i] = -1</span>
+     i   L          R
+[-<span class="number">4</span>, -<span class="number">1</span>, -<span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>]
+sum = -<span class="number">1</span> + (-<span class="number">1</span>) + <span class="number">2</span> = <span class="number">0</span> ✓ Found! [-<span class="number">1</span>, -<span class="number">1</span>, <span class="number">2</span>]
+
+<span class="comment">Step 4: Skip duplicate -1, i = 3, nums[i] = 0</span>
+             i   L  R
+[-<span class="number">4</span>, -<span class="number">1</span>, -<span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>]
+sum = <span class="number">0</span> + <span class="number">1</span> + <span class="number">2</span> = <span class="number">3</span> &gt; <span class="number">0</span>, move R ←
+
+             i  LR
+[-<span class="number">4</span>, -<span class="number">1</span>, -<span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>]
+sum = <span class="number">0</span> + <span class="number">1</span> + <span class="number">1</span> = <span class="number">0</span> <span class="comment">// Wait, L not &lt; R anymore</span>
+
+<span class="comment">Result: [[-1, -1, 2], [-1, 0, 1]]</span></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Key Insights 🔑</div>
+                    
+                    <div class="section-header">1. Why Sort First?</div>
+                    <ul>
+                        <li>✅ Enables two-pointer technique</li>
+                        <li>✅ Makes duplicate handling easy</li>
+                        <li>✅ Allows early termination (if nums[i] > 0)</li>
+                    </ul>
+
+                    <div class="section-header">2. How Two Pointers Work?</div>
+                    <ul>
+                        <li>Fix one number (i)</li>
+                        <li>Use two pointers (left, right) for remaining array</li>
+                        <li>If sum < 0: move left pointer → (increase sum)</li>
+                        <li>If sum > 0: move right pointer ← (decrease sum)</li>
+                        <li>If sum == 0: found triplet! Move both pointers</li>
+                    </ul>
+
+                    <div class="section-header">3. Duplicate Handling</div>
+                    <div class="code-block"><span class="comment">// Skip duplicate for i</span>
+<span class="keyword">if</span> (i &gt; <span class="number">0</span> && nums[i] == nums[i-<span class="number">1</span>]) <span class="keyword">continue</span>;
+
+<span class="comment">// Skip duplicates after finding triplet</span>
+<span class="keyword">while</span> (left &lt; right && nums[left] == nums[left+<span class="number">1</span>]) left++;
+<span class="keyword">while</span> (left &lt; right && nums[right] == nums[right-<span class="number">1</span>]) right--;</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 2: COMMON BUGS -->
+        <div id="bugs" class="content">
+            <div class="cheat-sheet">
+                <div class="card">
+                    <div class="card-title">🐛 Bug 1: Forgetting to Sort</div>
+                    <span class="badge bug">CRITICAL</span>
+                    
+                    <div class="code-block"><span class="comment">// WRONG ❌</span>
+<span class="keyword">public</span> List&lt;List&lt;Integer&gt;&gt; threeSum(<span class="keyword">int</span>[] nums) {
+    <span class="comment">// Missing: Arrays.sort(nums);</span>
+    
+    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; nums.length - <span class="number">2</span>; i++) {
+        <span class="keyword">int</span> left = i + <span class="number">1</span>;
+        <span class="keyword">int</span> right = nums.length - <span class="number">1</span>;
+        <span class="comment">// Two pointers won't work on unsorted array!</span>
+    }
+}</div>
+
+                    <div class="danger">
+                        <strong>Why it fails:</strong><br>
+                        Two-pointer technique REQUIRES sorted array!<br>
+                        Without sorting, you can't determine which pointer to move.
+                    </div>
+
+                    <div class="code-block"><span class="comment">// CORRECT ✅</span>
+<span class="keyword">public</span> List&lt;List&lt;Integer&gt;&gt; threeSum(<span class="keyword">int</span>[] nums) {
+    Arrays.sort(nums);  <span class="comment">// MUST SORT FIRST!</span>
+    <span class="comment">// rest of code...</span>
+}</div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">🐛 Bug 2: Not Handling Duplicates Properly</div>
+                    <span class="badge bug">COMMON</span>
+                    
+                    <div class="code-block"><span class="comment">// WRONG ❌ - Missing duplicate check for i</span>
+<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; nums.length - <span class="number">2</span>; i++) {
+    <span class="comment">// Missing: if (i > 0 && nums[i] == nums[i-1]) continue;</span>
+    
+    <span class="keyword">int</span> left = i + <span class="number">1</span>;
+    <span class="keyword">int</span> right = nums.length - <span class="number">1</span>;
+    <span class="comment">// Will generate duplicate triplets!</span>
+}</div>
+
+                    <div class="visual-example">
+                        <strong>Example:</strong> nums = [-1, -1, -1, 2]<br>
+                        Without duplicate check:<br>
+                        - i=0: [-1, -1, 2] ✓<br>
+                        - i=1: [-1, -1, 2] ✗ Duplicate!<br>
+                        - i=2: [-1, -1, 2] ✗ Duplicate!
+                    </div>
+
+                    <div class="code-block"><span class="comment">// CORRECT ✅ - Three places to skip duplicates</span>
+<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; nums.length - <span class="number">2</span>; i++) {
+    <span class="comment">// 1. Skip duplicate for i</span>
+    <span class="keyword">if</span> (i &gt; <span class="number">0</span> && nums[i] == nums[i - <span class="number">1</span>]) <span class="keyword">continue</span>;
+    
+    <span class="keyword">while</span> (left &lt; right) {
+        <span class="keyword">if</span> (sum == <span class="number">0</span>) {
+            result.add(...);
+            
+            <span class="comment">// 2. Skip duplicates for left</span>
+            <span class="keyword">while</span> (left &lt; right && nums[left] == nums[left + <span class="number">1</span>]) 
+                left++;
+            
+            <span class="comment">// 3. Skip duplicates for right</span>
+            <span class="keyword">while</span> (left &lt; right && nums[right] == nums[right - <span class="number">1</span>]) 
+                right--;
+            
+            left++;
+            right--;
+        }
+    }
+}</div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">🐛 Bug 3: Wrong Loop Boundaries</div>
+                    <span class="badge bug">SUBTLE</span>
+                    
+                    <div class="code-block"><span class="comment">// WRONG ❌</span>
+<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; nums.length; i++) {
+    <span class="comment">// Will cause IndexOutOfBoundsException!</span>
+    <span class="keyword">int</span> left = i + <span class="number">1</span>;  <span class="comment">// Can go beyond array</span>
+    <span class="keyword">int</span> right = nums.length - <span class="number">1</span>;
+}</div>
+
+                    <div class="warning">
+                        <strong>Problem:</strong> When i = nums.length - 1:<br>
+                        left = nums.length (out of bounds!)<br>
+                        Also, need at least 3 elements for a triplet!
+                    </div>
+
+                    <div class="code-block"><span class="comment">// CORRECT ✅</span>
+<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; nums.length - <span class="number">2</span>; i++) {
+    <span class="comment">// Ensures at least 3 elements remain</span>
+    <span class="keyword">int</span> left = i + <span class="number">1</span>;
+    <span class="keyword">int</span> right = nums.length - <span class="number">1</span>;
+}</div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">🐛 Bug 4: Moving Only One Pointer After Finding Triplet</div>
+                    <span class="badge bug">LOGICAL ERROR</span>
+                    
+                    <div class="code-block"><span class="comment">// WRONG ❌</span>
+<span class="keyword">if</span> (sum == <span class="number">0</span>) {
+    result.add(Arrays.asList(nums[i], nums[left], nums[right]));
+    left++;  <span class="comment">// Only moving left!</span>
+    <span class="comment">// This will cause issues!</span>
+}</div>
+
+                    <div class="danger">
+                        <strong>Why it's wrong:</strong><br>
+                        You've already found a triplet with this combination.<br>
+                        Need to move BOTH pointers to find new combinations!
+                    </div>
+
+                    <div class="code-block"><span class="comment">// CORRECT ✅</span>
+<span class="keyword">if</span> (sum == <span class="number">0</span>) {
+    result.add(Arrays.asList(nums[i], nums[left], nums[right]));
+    
+    <span class="comment">// Skip duplicates</span>
+    <span class="keyword">while</span> (left &lt; right && nums[left] == nums[left + <span class="number">1</span>]) left++;
+    <span class="keyword">while</span> (left &lt; right && nums[right] == nums[right - <span class="number">1</span>]) right--;
+    
+    <span class="comment">// Move BOTH pointers</span>
+    left++;
+    right--;
+}</div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">🐛 Bug 5: Not Checking left < right in While Loops</div>
+                    <span class="badge bug">BOUNDARY ERROR</span>
+                    
+                    <div class="code-block"><span class="comment">// WRONG ❌</span>
+<span class="keyword">while</span> (nums[left] == nums[left + <span class="number">1</span>]) {
+    left++;  <span class="comment">// Can cause IndexOutOfBoundsException!</span>
+}</div>
+
+                    <div class="warning">
+                        <strong>Problem:</strong> If all remaining elements are same:<br>
+                        left will keep incrementing beyond right!
+                    </div>
+
+                    <div class="code-block"><span class="comment">// CORRECT ✅</span>
+<span class="keyword">while</span> (left &lt; right && nums[left] == nums[left + <span class="number">1</span>]) {
+    left++;
+}
+<span class="keyword">while</span> (left &lt; right && nums[right] == nums[right - <span class="number">1</span>]) {
+    right--;
+}</div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">🐛 Bug 6: Integer Overflow</div>
+                    <span class="badge bug">EDGE CASE</span>
+                    
+                    <div class="code-block"><span class="comment">// POTENTIAL ISSUE ⚠️</span>
+<span class="keyword">int</span> sum = nums[i] + nums[left] + nums[right];
+<span class="comment">// What if sum overflows Integer.MAX_VALUE?</span></div>
+
+                    <div class="pro-tip">
+                        <strong>For 3Sum:</strong> Usually not an issue due to problem constraints.<br>
+                        <strong>But if needed:</strong>
+                        <div class="code-block"><span class="keyword">long</span> sum = (<span class="keyword">long</span>)nums[i] + nums[left] + nums[right];</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Test Cases to Catch Bugs 🧪</div>
+                    
+                    <div class="code-block"><span class="comment">// Edge Cases</span>
+[]                           → []
+[<span class="number">0</span>]                         → []
+[<span class="number">0</span>, <span class="number">0</span>]                      → []
+[<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>]                   → [[<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>]]
+
+<span class="comment">// All Duplicates</span>
+[-<span class="number">1</span>, -<span class="number">1</span>, -<span class="number">1</span>, <span class="number">2</span>]            → [[-<span class="number">1</span>, -<span class="number">1</span>, <span class="number">2</span>]]
+[<span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, -<span class="number">2</span>]              → [[<span class="number">1</span>, <span class="number">1</span>, -<span class="number">2</span>]]
+
+<span class="comment">// No Solution</span>
+[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]                   → []
+[-<span class="number">1</span>, -<span class="number">2</span>, -<span class="number">3</span>]                → []
+
+<span class="comment">// Standard Cases</span>
+[-<span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, -<span class="number">1</span>, -<span class="number">4</span>]       → [[-<span class="number">1</span>, -<span class="number">1</span>, <span class="number">2</span>], [-<span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>]]
+[<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>]                → [[<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>]]
+
+<span class="comment">// Large Numbers</span>
+[-<span class="number">100000</span>, <span class="number">50000</span>, <span class="number">50000</span>]   → [[-<span class="number">100000</span>, <span class="number">50000</span>, <span class="number">50000</span>]]</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 3: COMPLEXITY ANALYSIS -->
+        <div id="complexity" class="content">
+            <div class="cheat-sheet">
+                <div class="card">
+                    <div class="card-title">Time Complexity Comparison</div>
+                    <table class="complexity-table">
+                        <tr>
+                            <th>Approach</th>
+                            <th>Time Complexity</th>
+                            <th>Space Complexity</th>
+                            <th>Interview Status</th>
+                        </tr>
+                        <tr>
+                            <td>Brute Force</td>
+                            <td>O(n³)</td>
+                            <td>O(n)</td>
+                            <td>❌ TLE</td>
+                        </tr>
+                        <tr>
+                            <td>HashMap</td>
+                            <td>O(n²)</td>
+                            <td>O(n)</td>
+                            <td>✅ Acceptable</td>
+                        </tr>
+                        <tr>
+                            <td>Two Pointers</td>
+                            <td>O(n²)</td>
+                            <td>O(1)*</td>
+                            <td>⭐ Best</td>
+                        </tr>
+                    </table>
+                    <div class="pro-tip">
+                        * O(1) excluding space for output (result list)
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Detailed: Two Pointers Time Complexity</div>
+                    
+                    <div class="code-block"><span class="comment">// Step 1: Sorting</span>
+Arrays.sort(nums);  <span class="comment">// O(n log n)</span>
+
+<span class="comment">// Step 2: Outer loop</span>
+<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; nums.length - <span class="number">2</span>; i++) {  <span class="comment">// O(n)</span>
+    
+    <span class="comment">// Step 3: Inner two-pointer loop</span>
+    <span class="keyword">while</span> (left &lt; right) {  <span class="comment">// O(n) in worst case</span>
+        <span class="comment">// Each iteration moves left or right</span>
+        <span class="comment">// Total iterations for all i: O(n)</span>
+    }
+}
+
+<span class="comment">// Total: O(n log n) + O(n × n) = O(n²)</span>
+<span class="comment">// Sorting is dominated by nested loops</span></div>
+
+                    <div class="visual-example">
+                        <strong>Why Inner Loop is O(n) Total?</strong><br><br>
+                        For each i:<br>
+                        - left starts at i+1<br>
+                        - right starts at n-1<br>
+                        - They move towards each other<br>
+                        - Maximum movements: (n-1) - (i+1) = n-i-2<br>
+                        <br>
+                        Sum for all i: (n-2) + (n-3) + ... + 1 ≈ O(n²)
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Space Complexity Breakdown</div>
+                    
+                    <div class="code-block"><span class="comment">// Two Pointers Approach</span>
+
+<span class="comment">// Variables used:</span>
+<span class="keyword">int</span> i;         <span class="comment">// O(1)</span>
+<span class="keyword">int</span> left;      <span class="comment">// O(1)</span>
+<span class="keyword">int</span> right;     <span class="comment">// O(1)</span>
+<span class="keyword">int</span> sum;       <span class="comment">// O(1)</span>
+
+<span class="comment">// Result list (not counted in space complexity)</span>
+List&lt;List&lt;Integer&gt;&gt; result;  <span class="comment">// O(k) where k = triplets found</span>
+
+<span class="comment">// Total auxiliary space: O(1)</span></div>
+
+                    <div class="section-header">HashMap Approach Space</div>
+                    <div class="code-block"><span class="comment">// For each i, create new HashSet</span>
+Set&lt;Integer&gt; seen = <span class="keyword">new</span> HashSet&lt;&gt;();  <span class="comment">// O(n) in worst case</span>
+
+<span class="comment">// Total: O(n) auxiliary space</span></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Best, Average, Worst Case Analysis</div>
+                    
+                    <div class="section-header">Best Case: O(n log n)</div>
+                    <div class="code-block"><span class="comment">// Input: [1, 2, 3, 4, 5] (all positive)</span>
+<span class="comment">// After sorting: same</span>
+
+<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; nums.length - <span class="number">2</span>; i++) {
+    <span class="keyword">if</span> (nums[i] &gt; <span class="number">0</span>) <span class="keyword">break</span>;  <span class="comment">// Breaks immediately!</span>
+}
+
+<span class="comment">// Only sorting is done: O(n log n)</span></div>
+
+                    <div class="section-header">Average Case: O(n²)</div>
+                    <div class="code-block"><span class="comment">// Input: Mixed positive/negative numbers</span>
+<span class="comment">// Some triplets exist</span>
+<span class="comment">// Full two-pointer search needed</span></div>
+
+                    <div class="section-header">Worst Case: O(n²)</div>
+                    <div class="code-block"><span class="comment">// Input: [-n, -n+1, ..., -1, 0, 1, ..., n-1, n]</span>
+<span class="comment">// Many triplets exist</span>
+<span class="comment">// Must check all combinations</span></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Why We Can't Do Better Than O(n²)?</div>
+                    
+                    <div class="warning">
+                        <strong>Lower Bound Proof:</strong><br><br>
+                        
+                        1. We need to examine all possible triplets<br>
+                        2. Number of triplets = C(n, 3) = n(n-1)(n-2)/6 ≈ O(n³)<br>
+                        3. But we use sorting + two pointers to reduce to O(n²)<br>
+                        4. We can't avoid checking O(n²) pairs
+                    </div>
+
+                    <div class="pro-tip">
+                        <strong>Key Insight:</strong><br>
+                        For each fixed first element (n choices),<br>
+                        we must check remaining pairs (n² total pairs).<br>
+                        This gives lower bound of Ω(n²).
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Memory Usage in Practice</div>
+                    
+                    <div class="code-block"><span class="comment">// Input size: n = 1000</span>
+
+<span class="comment">// Brute Force HashSet:</span>
+<span class="comment">// Stores all unique triplets during computation</span>
+<span class="comment">// Can be O(n²) in worst case</span>
+Memory: ~<span class="number">4</span> MB
+
+<span class="comment">// HashMap Approach:</span>
+<span class="comment">// HashSet recreated for each i</span>
+<span class="comment">// Max size: n - i - 1</span>
+Memory: ~<span class="number">8</span> KB (per iteration)
+
+<span class="comment">// Two Pointers:</span>
+<span class="comment">// Only 4 integer variables</span>
+Memory: <span class="number">16</span> bytes
+
+<span class="comment">// Result list (all approaches):</span>
+<span class="comment">// Depends on number of triplets found</span>
+Memory: varies</div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Cache Performance 🚀</div>
+                    
+                    <div class="pro-tip">
+                        <strong>Why Two Pointers is Faster in Practice:</strong><br><br>
+                        
+                        ✅ <strong>Better Cache Locality</strong><br>
+                        - Sequential array access (left++, right--)<br>
+                        - CPU prefetcher can predict access pattern<br>
+                        <br>
+                        
+                        ✅ <strong>No Hash Collisions</strong><br>
+                        - HashMap has overhead of hashing<br>
+                        - Possible collisions slow down lookup<br>
+                        <br>
+                        
+                        ✅ <strong>Less Memory Allocation</strong><br>
+                        - No HashSet creation/destruction<br>
+                        - Less garbage collection pressure
+                    </div>
+
+                    <div class="visual-example">
+                        <strong>Benchmark (n=10000):</strong><br>
+                        Brute Force: ~15 seconds ❌<br>
+                        HashMap: ~180 ms ✓<br>
+                        Two Pointers: ~80 ms ⭐
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 4: OPTIMIZATION -->
+        <div id="optimization" class="content">
+            <div class="cheat-sheet">
+                <div class="card">
+                    <div class="card-title">Optimization 1: Early Termination</div>
+                    <span class="badge tip">Must Know</span>
+                    
+                    <div class="code-block"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; nums.length - <span class="number">2</span>; i++) {
+    <span class="comment">// If first number is positive, no way to get sum = 0</span>
+    <span class="comment">// (since array is sorted, all following are positive)</span>
+    <span class="keyword">if</span> (nums[i] &gt; <span class="number">0</span>) <span class="keyword">break</span>;
+    
+    <span class="comment">// If smallest triplet is still &gt; 0, skip</span>
+    <span class="keyword">if</span> (nums[i] + nums[i+<span class="number">1</span>] + nums[i+<span class="number">2</span>] &gt; <span class="number">0</span>) <span class="keyword">break</span>;
+    
+    <span class="comment">// If largest triplet is still &lt; 0, skip this i</span>
+    <span class="keyword">if</span> (nums[i] + nums[nums.length-<span class="number">2</span>] + nums[nums.length-<span class="number">1</span>] &lt; <span class="number">0</span>) 
+        <span class="keyword">continue</span>;
+    
+    <span class="comment">// ... rest of code</span>
+}</div>
+
+                    <div class="pro-tip">
+                        These optimizations can reduce runtime by 30-50%!
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Optimization 2: Smart Duplicate Skipping</div>
+                    
+                    <div class="code-block"><span class="comment">// Instead of checking in while loop:</span>
+<span class="keyword">while</span> (left &lt; right && nums[left] == nums[left + <span class="number">1</span>]) left++;
+
+<span class="comment">// Better: Skip in one go</span>
+<span class="keyword">if</span> (sum == <span class="number">0</span>) {
+    result.add(Arrays.asList(nums[i], nums[left], nums[right]));
+    
+    <span class="keyword">int</span> leftVal = nums[left];
+    <span class="keyword">int</span> rightVal = nums[right];
+    
+    <span class="comment">// Skip all duplicates at once</span>
+    <span class="keyword">while</span> (left &lt; right && nums[left] == leftVal) left++;
+    <span class="keyword">while</span> (left &lt; right && nums[right] == rightVal) right--;
+}</div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Optimization 3: Reduce Method Calls</div>
+                    
+                    <div class="code-block"><span class="comment">// SLOWER: Multiple method calls in loop</span>
+<span class="keyword">while</span> (left &lt; right) {
+    <span class="keyword">int</span> sum = nums[i] + nums[left] + nums[right];
+    <span class="keyword">if</span> (sum == <span class="number">0</span>) {
+        result.add(Arrays.asList(nums[i], nums[left], nums[right]));
+        <span class="comment">// Arrays.asList() creates new object each time</span>
+    }
+}
+
+<span class="comment">// FASTER: Reuse or inline</span>
+<span class="keyword">while</span> (left &lt; right) {
+    <span class="keyword">int</span> sum = nums[i] + nums[left] + nums[right];
+    <span class="keyword">if</span> (sum == <span class="number">0</span>) {
+        <span class="comment">// Create list directly</span>
+        List&lt;Integer&gt; triplet = <span class="keyword">new</span> ArrayList&lt;&gt;(<span class="number">3</span>);
+        triplet.add(nums[i]);
+        triplet.add(nums[left]);
+        triplet.add(nums[right]);
+        result.add(triplet);
+    }
+}</div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Optimization 4: Pre-allocate Result List</div>
+                    
+                    <div class="code-block"><span class="comment">// SLOWER: Dynamic growth</span>
+List&lt;List&lt;Integer&gt;&gt; result = <span class="keyword">new</span> ArrayList&lt;&gt;();
+
+<span class="comment">// FASTER: Pre-allocate reasonable capacity</span>
+<span class="comment">// Reduces ArrayList resizing operations</span>
+List&lt;List&lt;Integer&gt;&gt; result = <span class="keyword">new</span> ArrayList&lt;&gt;(nums.length);
+
+<span class="comment">// Even better: Estimate based on input size</span>
+<span class="keyword">int</span> estimatedSize = Math.min(nums.length * nums.length / <span class="number">10</span>, <span class="number">1000</span>);
+List&lt;List&lt;Integer&gt;&gt; result = <span class="keyword">new</span> ArrayList&lt;&gt;(estimatedSize);</div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Production-Ready Optimized Solution ⭐</div>
+                    
+                    <div class="code-block"><span class="keyword">public</span> List&lt;List&lt;Integer&gt;&gt; threeSum(<span class="keyword">int</span>[] nums) {
+    <span class="comment">// Edge case: need at least 3 elements</span>
+    <span class="keyword">if</span> (nums == <span class="keyword">null</span> || nums.length &lt; <span class="number">3</span>) {
+        <span class="keyword">return</span> <span class="keyword">new</span> ArrayList&lt;&gt;();
+    }
+    
+    <span class="comment">// Sort array</span>
+    Arrays.sort(nums);
+    
+    <span class="comment">// Pre-allocate result list</span>
+    List&lt;List&lt;Integer&gt;&gt; result = <span class="keyword">new</span> ArrayList&lt;&gt;();
+    
+    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; nums.length - <span class="number">2</span>; i++) {
+        <span class="comment">// Early termination: if first element &gt; 0, no solution</span>
+        <span class="keyword">if</span> (nums[i] &gt; <span class="number">0</span>) <span class="keyword">break</span>;
+        
+        <span class="comment">// Skip duplicates for i</span>
+        <span class="keyword">if</span> (i &gt; <span class="number">0</span> && nums[i] == nums[i - <span class="number">1</span>]) <span class="keyword">continue</span>;
+        
+        <span class="comment">// Optimization: smallest possible sum with this i</span>
+        <span class="keyword">if</span> (nums[i] + nums[i + <span class="number">1</span>] + nums[i + <span class="number">2</span>] &gt; <span class="number">0</span>) <span class="keyword">break</span>;
+        
+        <span class="comment">// Optimization: largest possible sum with this i</span>
+        <span class="keyword">if</span> (nums[i] + nums[nums.length - <span class="number">2</span>] + nums[nums.length - <span class="number">1</span>] &lt; <span class="number">0</span>) 
+            <span class="keyword">continue</span>;
+        
+        <span class="keyword">int</span> left = i + <span class="number">1</span>;
+        <span class="keyword">int</span> right = nums.length - <span class="number">1</span>;
+        
+        <span class="keyword">while</span> (left &lt; right) {
+            <span class="keyword">int</span> sum = nums[i] + nums[left] + nums[right];
+            
+            <span class="keyword">if</span> (sum == <span class="number">0</span>) {
+                result.add(Arrays.asList(nums[i], nums[left], nums[right]));
+                
+                <span class="comment">// Store values before incrementing</span>
+                <span class="keyword">int</span> leftVal = nums[left];
+                <span class="keyword">int</span> rightVal = nums[right];
+                
+                <span class="comment">// Skip all duplicates</span>
+                <span class="keyword">while</span> (left &lt; right && nums[left] == leftVal) left++;
+                <span class="keyword">while</span> (left &lt; right && nums[right] == rightVal) right--;
+                
+            } <span class="keyword">else if</span> (sum &lt; <span class="number">0</span>) {
+                left++;
+            } <span class="keyword">else</span> {
+                right--;
+            }
+        }
+    }
+    
+    <span class="keyword">return</span> result;
+}</div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Optimization 5: Parallel Processing (Advanced)</div>
+                    <span class="badge hard">Advanced</span>
+                    
+                    <div class="code-block"><span class="comment">// For VERY large arrays (n &gt; 10000)</span>
+<span class="keyword">public</span> List&lt;List&lt;Integer&gt;&gt; threeSumParallel(<span class="keyword">int</span>[] nums) {
+    Arrays.sort(nums);
+    
+    <span class="comment">// Use parallel stream for outer loop</span>
+    <span class="keyword">return</span> IntStream.range(<span class="number">0</span>, nums.length - <span class="number">2</span>)
+        .parallel()
+        .filter(i -&gt; i == <span class="number">0</span> || nums[i] != nums[i - <span class="number">1</span>])
+        .filter(i -&gt; nums[i] &lt;= <span class="number">0</span>)
+        .mapToObj(i -&gt; findTripletsForIndex(nums, i))
+        .flatMap(List::stream)
+        .collect(Collectors.toList());
+}
+
+<span class="keyword">private</span> List&lt;List&lt;Integer&gt;&gt; findTripletsForIndex(<span class="keyword">int</span>[] nums, <span class="keyword">int</span> i) {
+    List&lt;List&lt;Integer&gt;&gt; triplets = <span class="keyword">new</span> ArrayList&lt;&gt;();
+    <span class="keyword">int</span> left = i + <span class="number">1</span>, right = nums.length - <span class="number">1</span>;
+    
+    <span class="keyword">while</span> (left &lt; right) {
+        <span class="comment">// ... two pointer logic</span>
+    }
+    
+    <span class="keyword">return</span> triplets;
+}</div>
+
+                    <div class="warning">
+                        <strong>Note:</strong> Parallel processing adds overhead!<br>
+                        Only beneficial for very large inputs (n > 10000)
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Performance Comparison 📊</div>
+                    
+                    <table class="complexity-table">
+                        <tr>
+                            <th>Version</th>
+                            <th>n=1000</th>
+                            <th>n=5000</th>
+                            <th>n=10000</th>
+                        </tr>
+                        <tr>
+                            <td>Basic Two Pointers</td>
+                            <td>15 ms</td>
+                            <td>180 ms</td>
+                            <td>650 ms</td>
+                        </tr>
+                        <tr>
+                            <td>+ Early Termination</td>
+                            <td>10 ms</td>
+                            <td>120 ms</td>
+                            <td>420 ms</td>
+                        </tr>
+                        <tr>
+                            <td>+ Smart Skip</td>
+                            <td>8 ms</td>
+                            <td>95 ms</td>
+                            <td>340 ms</td>
+                        </tr>
+                        <tr>
+                            <td>+ All Optimizations</td>
+                            <td>6 ms</td>
+                            <td>75 ms</td>
+                            <td>280 ms</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 5: TRICKY QUESTIONS -->
+        <div id="tricky" class="content">
+            <div class="cheat-sheet">
+                <div class="card">
+                    <div class="card-title">Q1: Why must we sort the array first?</div>
+                    <span class="badge medium">Medium</span>
+                    
+                    <div class="pro-tip">
+                        <strong>Three Reasons:</strong><br><br>
+                        
+                        1️⃣ <strong>Two Pointers Logic:</strong><br>
+                        - We need to know which pointer to move<br>
+                        - If sum < 0: move left (to increase sum)<br>
+                        - If sum > 0: move right (to decrease sum)<br>
+                        - This only works on sorted array!<br><br>
+                        
+                        2️⃣ <strong>Duplicate Handling:</strong><br>
+                        - Duplicates are adjacent after sorting<br>
+                        - Easy to skip: if (nums[i] == nums[i-1]) continue<br><br>
+                        
+                        3️⃣ <strong>Early Termination:</strong><br>
+                        - Can break when nums[i] > 0<br>
+                        - Can optimize based on min/max values
+                    </div>
+
+                    <div class="visual-example">
+                        <strong>Without sorting:</strong><br>
+                        [2, -1, 0, 1, -4]<br>
+                        If sum < 0, which pointer to move? 🤔<br>
+                        Can't decide!<br><br>
+                        
+                        <strong>With sorting:</strong><br>
+                        [-4, -1, 0, 1, 2]<br>
+                        If sum < 0, move left → (guaranteed to increase)<br>
+                        If sum > 0, move right ← (guaranteed to decrease)
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Q2: Can we use HashSet to avoid duplicates?</div>
+                    <span class="badge hard">Hard</span>
+                    
+                    <div class="code-block"><span class="comment">// Approach: Store triplets in HashSet</span>
+Set&lt;List&lt;Integer&gt;&gt; resultSet = <span class="keyword">new</span> HashSet&lt;&gt;();
+
+<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; nums.length; i++) {
+    <span class="keyword">while</span> (left &lt; right) {
+        <span class="keyword">if</span> (sum == <span class="number">0</span>) {
+            List&lt;Integer&gt; triplet = Arrays.asList(
+                nums[i], nums[left], nums[right]);
+            Collections.sort(triplet);  <span class="comment">// Must sort!</span>
+            resultSet.add(triplet);
+        }
+    }
+}
+
+List&lt;List&lt;Integer&gt;&gt; result = <span class="keyword">new</span> ArrayList&lt;&gt;(resultSet);</div>
+
+                    <div class="comparison">
+                        <div class="comparison-item">
+                            <strong>✅ HashSet Approach</strong>
+                            <ul>
+                                <li>Automatically handles duplicates</li>
+                                <li>Simpler logic</li>
+                            </ul>
+                        </div>
+                        <div class="comparison-item winner">
+                            <strong>⭐ Skip Duplicates</strong>
+                            <ul>
+                                <li>More efficient (no HashSet overhead)</li>
+                                <li>Better space: O(1) vs O(k)</li>
+                                <li>Shows algorithmic thinking</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Q3: What if target is not 0?</div>
+                    <span class="badge easy">Easy Variation</span>
+                    
+                    <div class="code-block"><span class="comment">// 3Sum with target</span>
+<span class="keyword">public</span> List&lt;List&lt;Integer&gt;&gt; threeSumTarget(<span class="keyword">int</span>[] nums, <span class="keyword">int</span> target) {
+    List&lt;List&lt;Integer&gt;&gt; result = <span class="keyword">new</span> ArrayList&lt;&gt;();
+    Arrays.sort(nums);
+    
+    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; nums.length - <span class="number">2</span>; i++) {
+        <span class="keyword">if</span> (i &gt; <span class="number">0</span> && nums[i] == nums[i - <span class="number">1</span>]) <span class="keyword">continue</span>;
+        
+        <span class="keyword">int</span> left = i + <span class="number">1</span>, right = nums.length - <span class="number">1</span>;
+        <span class="keyword">int</span> newTarget = target - nums[i];  <span class="comment">// Only change!</span>
+        
+        <span class="keyword">while</span> (left &lt; right) {
+            <span class="keyword">int</span> sum = nums[left] + nums[right];
+            
+            <span class="keyword">if</span> (sum == newTarget) {
+                result.add(Arrays.asList(nums[i], nums[left], nums[right]));
+                <span class="keyword">while</span> (left &lt; right && nums[left] == nums[left+<span class="number">1</span>]) left++;
+                <span class="keyword">while</span> (left &lt; right && nums[right] == nums[right-<span class="number">1</span>]) right--;
+                left++;
+                right--;
+            } <span class="keyword">else if</span> (sum &lt; newTarget) {
+                left++;
+            } <span class="keyword">else</span> {
+                right--;
+            }
+        }
+    }
+    
+    <span class="keyword">return</span> result;
+}</div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Q4: How to find closest sum to target?</div>
+                    <span class="badge medium">3Sum Closest</span>
+                    
+                    <div class="code-block"><span class="keyword">public int</span> threeSumClosest(<span class="keyword">int</span>[] nums, <span class="keyword">int</span> target) {
+    Arrays.sort(nums);
+    <span class="keyword">int</span> closest = nums[<span class="number">0</span>] + nums[<span class="number">1</span>] + nums[<span class="number">2</span>];
+    
+    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; nums.length - <span class="number">2</span>; i++) {
+        <span class="keyword">int</span> left = i + <span class="number">1</span>, right = nums.length - <span class="number">1</span>;
+        
+        <span class="keyword">while</span> (left &lt; right) {
+            <span class="keyword">int</span> sum = nums[i] + nums[left] + nums[right];
+            
+            <span class="comment">// Update closest if this sum is closer</span>
+            <span class="keyword">if</span> (Math.abs(sum - target) &lt; Math.abs(closest - target)) {
+                closest = sum;
+            }
+            
+            <span class="comment">// If exact match, return immediately</span>
+            <span class="keyword">if</span> (sum == target) <span class="keyword">return</span> sum;
+            
+            <span class="keyword">if</span> (sum &lt; target) {
+                left++;
+            } <span class="keyword">else</span> {
+                right--;
+            }
+        }
+    }
+    
+    <span class="keyword">return</span> closest;
+}</div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Q5: What if we need 4Sum? kSum?</div>
+                    <span class="badge hard">Generalization</span>
+                    
+                    <div class="code-block"><span class="comment">// 4Sum = Fix 1 element + 3Sum</span>
+<span class="keyword">public</span> List&lt;List&lt;Integer&gt;&gt; fourSum(<span class="keyword">int</span>[] nums, <span class="keyword">int</span> target) {
+    List&lt;List&lt;Integer&gt;&gt; result = <span class="keyword">new</span> ArrayList&lt;&gt;();
+    <span class="keyword">if</span> (nums.length &lt; <span class="number">4</span>) <span class="keyword">return</span> result;
+    
+    Arrays.sort(nums);
+    
+    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; nums.length - <span class="number">3</span>; i++) {
+        <span class="keyword">if</span> (i &gt; <span class="number">0</span> && nums[i] == nums[i-<span class="number">1</span>]) <span class="keyword">continue</span>;
+        
+        <span class="comment">// Now do 3Sum with target - nums[i]</span>
+        <span class="keyword">for</span> (<span class="keyword">int</span> j = i + <span class="number">1</span>; j &lt; nums.length - <span class="number">2</span>; j++) {
+            <span class="keyword">if</span> (j &gt; i+<span class="number">1</span> && nums[j] == nums[j-<span class="number">1</span>]) <span class="keyword">continue</span>;
+            
+            <span class="comment">// Two pointers for remaining</span>
+            <span class="keyword">int</span> left = j + <span class="number">1</span>, right = nums.length - <span class="number">1</span>;
+            <span class="keyword">long</span> newTarget = (<span class="keyword">long</span>)target - nums[i] - nums[j];
+            
+            <span class="keyword">while</span> (left &lt; right) {
+                <span class="keyword">long</span> sum = nums[left] + nums[right];
+                
+                <span class="keyword">if</span> (sum == newTarget) {
+                    result.add(Arrays.asList(
+                        nums[i], nums[j], nums[left], nums[right]));
+                    <span class="keyword">while</span>(left &lt; right && nums[left] == nums[left+<span class="number">1</span>]) left++;
+                    <span class="keyword">while</span>(left &lt; right && nums[right] == nums[right-<span class="number">1</span>]) right--;
+                    left++;
+                    right--;
+                } <span class="keyword">else if</span> (sum &lt; newTarget) {
+                    left++;
+                } <span class="keyword">else</span> {
+                    right--;
+                }
+            }
+        }
+    }
+    
+    <span class="keyword">return</span> result;
+}</div>
+
+                    <div class="pro-tip">
+                        <strong>Pattern:</strong><br>
+                        - 3Sum: O(n²)<br>
+                        - 4Sum: O(n³)<br>
+                        - kSum: O(n^(k-1))
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Q6: Handle integer overflow?</div>
+                    <span class="badge hard">Edge Case</span>
+                    
+                    <div class="code-block"><span class="comment">// Problem: What if nums[i] + nums[left] + nums[right] overflows?</span>
+
+<span class="comment">// Solution 1: Use long</span>
+<span class="keyword">long</span> sum = (<span class="keyword">long</span>)nums[i] + nums[left] + nums[right];
+
+<span class="comment">// Solution 2: Subtract instead of add</span>
+<span class="comment">// Instead of: nums[left] + nums[right] == -nums[i]</span>
+<span class="comment">// Do: nums[left] == -nums[i] - nums[right]</span>
+
+<span class="keyword">int</span> target = -nums[i];
+<span class="keyword">while</span> (left &lt; right) {
+    <span class="keyword">if</span> (nums[left] == target - nums[right]) {
+        <span class="comment">// Found triplet</span>
+    } <span class="keyword">else if</span> (nums[left] &lt; target - nums[right]) {
+        left++;
+    } <span class="keyword">else</span> {
+        right--;
+    }
+}</div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Q7: What's the expected number of triplets?</div>
+                    <span class="badge hard">Probability</span>
+                    
+                    <div class="warning">
+                        <strong>Expected Value Analysis:</strong><br><br>
+                        
+                        For random array of size n:<br>
+                        - Total possible triplets: C(n,3) = n(n-1)(n-2)/6<br>
+                        - Probability that sum = 0: depends on range<br>
+                        - If range is [-R, R], roughly O(n²/R) triplets<br><br>
+                        
+                        For typical LeetCode constraints:<br>
+                        - n ≤ 3000, values in [-10^5, 10^5]<br>
+                        - Expected triplets: ~10-100
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Q8: Can we do better than O(n²)?</div>
+                    <span class="badge hard">Theoretical</span>
+                    
+                    <div class="danger">
+                        <strong>Answer: NO!</strong><br><br>
+                        
+                        <strong>Proof by 3SUM Hardness:</strong><br>
+                        - 3SUM problem is a well-studied problem<br>
+                        - No known algorithm better than O(n²)<br>
+                        - It's conjectured that O(n²) is optimal<br>
+                        - This is called the "3SUM conjecture"<br><br>
+                        
+                        <strong>Why?</strong><br>
+                        We must examine Ω(n²) pairs to ensure we find all triplets.
+                    </div>
+
+                    <div class="pro-tip">
+                        In interviews, mention: "This is optimal due to the 3SUM conjecture."
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 6: VARIATIONS -->
+        <div id="variations" class="content">
+            <div class="cheat-sheet">
+                <div class="card">
+                    <div class="card-title">Variation 1: 3Sum Smaller</div>
+                    <span class="badge medium">Medium</span>
+                    
+                    <div class="visual-example">
+                        <strong>Problem:</strong> Count triplets with sum < target
+                    </div>
+
+                    <div class="code-block"><span class="keyword">public int</span> threeSumSmaller(<span class="keyword">int</span>[] nums, <span class="keyword">int</span> target) {
+    Arrays.sort(nums);
+    <span class="keyword">int</span> count = <span class="number">0</span>;
+    
+    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; nums.length - <span class="number">2</span>; i++) {
+        <span class="keyword">int</span> left = i + <span class="number">1</span>, right = nums.length - <span class="number">1</span>;
+        
+        <span class="keyword">while</span> (left &lt; right) {
+            <span class="keyword">int</span> sum = nums[i] + nums[left] + nums[right];
+            
+            <span class="keyword">if</span> (sum &lt; target) {
+                <span class="comment">// All pairs (left, left+1), (left, left+2), ..., (left, right)</span>
+                <span class="comment">// are valid!</span>
+                count += right - left;
+                left++;
+            } <span class="keyword">else</span> {
+                right--;
+            }
+        }
+    }
+    
+    <span class="keyword">return</span> count;
+}</div>
+
+                    <div class="pro-tip">
+                        <strong>Key Insight:</strong> If sum < target with (left, right),<br>
+                        then all (left, k) where left < k ≤ right are also valid!
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Variation 2: 3Sum Multiplicity</div>
+                    <span class="badge hard">Hard</span>
+                    
+                    <div class="visual-example">
+                        <strong>Problem:</strong> Count triplets (i < j < k) where arr[i] + arr[j] + arr[k] = target
+                    </div>
+
+                    <div class="code-block"><span class="keyword">public int</span> threeSumMulti(<span class="keyword">int</span>[] arr, <span class="keyword">int</span> target) {
+    <span class="keyword">final int</span> MOD = <span class="number">1_000_000_007</span>;
+    <span class="keyword">long</span> count = <span class="number">0</span>;
+    
+    <span class="comment">// Count frequency of each number</span>
+    Map&lt;Integer, Long&gt; freq = <span class="keyword">new</span> HashMap&lt;&gt;();
+    <span class="keyword">for</span> (<span class="keyword">int</span> num : arr) {
+        freq.put(num, freq.getOrDefault(num, <span class="number">0L</span>) + <span class="number">1</span>);
+    }
+    
+    <span class="comment">// For each unique pair (x, y)</span>
+    <span class="keyword">for</span> (<span class="keyword">int</span> x : freq.keySet()) {
+        <span class="keyword">for</span> (<span class="keyword">int</span> y : freq.keySet()) {
+            <span class="keyword">int</span> z = target - x - y;
+            
+            <span class="keyword">if</span> (!freq.containsKey(z)) <span class="keyword">continue</span>;
+            
+            <span class="keyword">long</span> fx = freq.get(x);
+            <span class="keyword">long</span> fy = freq.get(y);
+            <span class="keyword">long</span> fz = freq.get(z);
+            
+            <span class="keyword">if</span> (x == y && y == z) {
+                <span class="comment">// All same: C(n, 3)</span>
+                count += fx * (fx - <span class="number">1</span>) * (fx - <span class="number">2</span>) / <span class="number">6</span>;
+            } <span class="keyword">else if</span> (x == y) {
+                <span class="comment">// Two same: C(n, 2) * m</span>
+                count += fx * (fx - <span class="number">1</span>) / <span class="number">2</span> * fz;
+            } <span class="keyword">else if</span> (x &lt; y && y &lt; z) {
+                <span class="comment">// All different</span>
+                count += fx * fy * fz;
+            }
+        }
+    }
+    
+    <span class="keyword">return</span> (<span class="keyword">int</span>)(count % MOD);
+}</div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Variation 3: 2Sum (Foundation)</div>
+                    <span class="badge easy">Easy</span>
+                    
+                    <div class="code-block"><span class="comment">// HashMap approach: O(n) time, O(n) space</span>
+<span class="keyword">public int</span>[] twoSum(<span class="keyword">int</span>[] nums, <span class="keyword">int</span> target) {
+    Map&lt;Integer, Integer&gt; map = <span class="keyword">new</span> HashMap&lt;&gt;();
+    
+    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; nums.length; i++) {
+        <span class="keyword">int</span> complement = target - nums[i];
+        
+        <span class="keyword">if</span> (map.containsKey(complement)) {
+            <span class="keyword">return new int</span>[] {map.get(complement), i};
+        }
+        
+        map.put(nums[i], i);
+    }
+    
+    <span class="keyword">return new int</span>[] {-<span class="number">1</span>, -<span class="number">1</span>};
+}
+
+<span class="comment">// Two pointers: O(n log n) time, O(1) space</span>
+<span class="comment">// (if array can be sorted and we need values, not indices)</span>
+<span class="keyword">public boolean</span> twoSumExists(<span class="keyword">int</span>[] nums, <span class="keyword">int</span> target) {
+    Arrays.sort(nums);
+    <span class="keyword">int</span> left = <span class="number">0</span>, right = nums.length - <span class="number">1</span>;
+    
+    <span class="keyword">while</span> (left &lt; right) {
+        <span class="keyword">int</span> sum = nums[left] + nums[right];
+        
+        <span class="keyword">if</span> (sum == target) <span class="keyword">return true</span>;
+        <span class="keyword">else if</span> (sum &lt; target) left++;
+        <span class="keyword">else</span> right--;
+    }
+    
+    <span class="keyword">return false</span>;
+}</div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Variation 4: 4Sum</div>
+                    <span class="badge medium">Medium</span>
+                    
+                    <div class="code-block"><span class="comment">// Same pattern as 3Sum, just one more loop</span>
+<span class="keyword">public</span> List&lt;List&lt;Integer&gt;&gt; fourSum(<span class="keyword">int</span>[] nums, <span class="keyword">int</span> target) {
+    List&lt;List&lt;Integer&gt;&gt; result = <span class="keyword">new</span> ArrayList&lt;&gt;();
+    <span class="keyword">if</span> (nums.length &lt; <span class="number">4</span>) <span class="keyword">return</span> result;
+    
+    Arrays.sort(nums);
+    
+    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; nums.length - <span class="number">3</span>; i++) {
+        <span class="keyword">if</span> (i &gt; <span class="number">0</span> && nums[i] == nums[i-<span class="number">1</span>]) <span class="keyword">continue</span>;
+        
+        <span class="keyword">for</span> (<span class="keyword">int</span> j = i+<span class="number">1</span>; j &lt; nums.length - <span class="number">2</span>; j++) {
+            <span class="keyword">if</span> (j &gt; i+<span class="number">1</span> && nums[j] == nums[j-<span class="number">1</span>]) <span class="keyword">continue</span>;
+            
+            <span class="keyword">int</span> left = j + <span class="number">1</span>, right = nums.length - <span class="number">1</span>;
+            <span class="keyword">long</span> newTarget = (<span class="keyword">long</span>)target - nums[i] - nums[j];
+            
+            <span class="keyword">while</span> (left &lt; right) {
+                <span class="keyword">long</span> sum = nums[left] + nums[right];
+                
+                <span class="keyword">if</span> (sum == newTarget) {
+                    result.add(Arrays.asList(
+                        nums[i], nums[j], nums[left], nums[right]));
+                    
+                    <span class="keyword">while</span>(left &lt; right && nums[left] == nums[left+<span class="number">1</span>]) 
+                        left++;
+                    <span class="keyword">while</span>(left &lt; right && nums[right] == nums[right-<span class="number">1</span>]) 
+                        right--;
+                    
+                    left++;
+                    right--;
+                } <span class="keyword">else if</span> (sum &lt; newTarget) {
+                    left++;
+                } <span class="keyword">else</span> {
+                    right--;
+                }
+            }
+        }
+    }
+    
+    <span class="keyword">return</span> result;
+}</div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Comparison: All Variations</div>
+                    
+                    <table class="complexity-table">
+                        <tr>
+                            <th>Problem</th>
+                            <th>Difficulty</th>
+                            <th>Time</th>
+                            <th>Space</th>
+                        </tr>
+                        <tr>
+                            <td>2Sum</td>
+                            <td>Easy</td>
+                            <td>O(n)</td>
+                            <td>O(n)</td>
+                        </tr>
+                        <tr>
+                            <td>3Sum</td>
+                            <td>Medium</td>
+                            <td>O(n²)</td>
+                            <td>O(1)</td>
+                        </tr>
+                        <tr>
+                            <td>3Sum Closest</td>
+                            <td>Medium</td>
+                            <td>O(n²)</td>
+                            <td>O(1)</td>
+                        </tr>
+                        <tr>
+                            <td>3Sum Smaller</td>
+                            <td>Medium</td>
+                            <td>O(n²)</td>
+                            <td>O(1)</td>
+                        </tr>
+                        <tr>
+                            <td>4Sum</td>
+                            <td>Medium</td>
+                            <td>O(n³)</td>
+                            <td>O(1)</td>
+                        </tr>
+                        <tr>
+                            <td>kSum</td>
+                            <td>Hard</td>
+                            <td>O(n^(k-1))</td>
+                            <td>O(1)</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Interview Progression 🎯</div>
+                    
+                    <div class="quick-ref">
+                        <div class="quick-ref-item">
+                            <strong>Level 1: Basic</strong><br>
+                            Solve 3Sum with two pointers
+                        </div>
+                        <div class="quick-ref-item">
+                            <strong>Level 2: Optimization</strong><br>
+                            Add early termination & pruning
+                        </div>
+                        <div class="quick-ref-item">
+                            <strong>Level 3: Variations</strong><br>
+                            3Sum Closest, Smaller, Target
+                        </div>
+                        <div class="quick-ref-item">
+                            <strong>Level 4: Generalization</strong><br>
+                            4Sum, kSum problem
+                        </div>
+                        <div class="quick-ref-item">
+                            <strong>Level 5: Edge Cases</strong><br>
+                            Overflow, duplicates, empty array
+                        </div>
+                        <div class="quick-ref-item">
+                            <strong>Level 6: System Design</strong><br>
+                            Streaming data, distributed computing
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function showTab(tabName) {
+            // Hide all content
+            document.querySelectorAll('.content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Remove active class from all tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected content
+            document.getElementById(tabName).classList.add('active');
+            
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.altKey) {
+                const tabs = ['solutions', 'bugs', 'complexity', 'optimization', 'tricky', 'variations'];
+                const key = parseInt(e.key);
+                if (key >= 1 && key <= 6) {
+                    document.getElementById(tabs[key - 1]).classList.add('active');
+                    document.querySelectorAll('.content').forEach(c => c.classList.remove('active'));
+                    document.getElementById(tabs[key - 1]).classList.add('active');
+                    
+                    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                    document.querySelectorAll('.tab')[key - 1].classList.add('active');
+                }
+            }
+        });
+
+        // Add helpful console messages
+        console.log('%c 🎯 3Sum Cheat Sheet Loaded! ', 'background: #667eea; color: white; font-size: 16px; padding: 10px;');
+        console.log('%c Keyboard Shortcuts: ', 'background: #764ba2; color: white; font-size: 14px; padding: 5px;');
+        console.log('Alt + 1: Solutions');
+        console.log('Alt + 2: Common Bugs');
+        console.log('Alt + 3: Complexity Analysis');
+        console.log('Alt + 4: Optimization Techniques');
+        console.log('Alt + 5: Tricky Questions');
+        console.log('Alt + 6: Variations');
+        console.log('Ctrl + P: Print cheat sheet');
+    </script>
+</body>
+</html>

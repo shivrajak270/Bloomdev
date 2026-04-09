@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Top K Frequent Elements — Cheat Sheet</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --bg:#06080f;
+  --s0:#0d1220;
+  --s1:#111b2e;
+  --s2:#162035;
+  --border:#1c2d47;
+  --a1:#f0c040;   /* gold */
+  --a2:#ff4f6d;   /* red-pink */
+  --a3:#3cffd0;   /* teal */
+  --a4:#6ea8ff;   /* blue */
+  --text:#dde8f8;
+  --muted:#4a6380;
+  --mono:'IBM Plex Mono',monospace;
+  --sans:'Outfit',sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--sans);
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+/* hexagon grid bg */
+body::before{
+  content:'';
+  position:fixed;inset:0;
+  background-image:radial-gradient(circle at 20% 20%, rgba(240,192,64,0.04) 0%, transparent 50%),
+                   radial-gradient(circle at 80% 80%, rgba(60,255,208,0.04) 0%, transparent 50%);
+  pointer-events:none;z-index:0;
+}
+
+.wrap{max-width:1120px;margin:0 auto;padding:2rem 1.5rem;position:relative;z-index:1}
+
+/* ── HEADER ── */
+header{padding:3.5rem 0 2rem;display:grid;grid-template-columns:1fr auto;align-items:start;gap:1rem}
+.h-left{}
+.eyebrow{font-family:var(--mono);font-size:0.7rem;letter-spacing:.22em;text-transform:uppercase;color:var(--a1);margin-bottom:.6rem}
+h1{font-size:clamp(2rem,5vw,3.2rem);font-weight:800;line-height:1.05;margin-bottom:.8rem}
+h1 em{font-style:normal;color:var(--a1)}
+.tagline{font-family:var(--mono);font-size:.8rem;color:var(--muted)}
+.h-right{display:flex;flex-direction:column;gap:.5rem;align-items:flex-end;padding-top:.4rem}
+.badge{font-family:var(--mono);font-size:.65rem;font-weight:700;padding:.28rem .7rem;border-radius:2px;text-transform:uppercase;letter-spacing:.06em;white-space:nowrap}
+.bg{background:rgba(240,192,64,.12);color:var(--a1);border:1px solid rgba(240,192,64,.3)}
+.br{background:rgba(255,79,109,.12);color:var(--a2);border:1px solid rgba(255,79,109,.3)}
+.bt{background:rgba(60,255,208,.1);color:var(--a3);border:1px solid rgba(60,255,208,.2)}
+.bb{background:rgba(110,168,255,.1);color:var(--a4);border:1px solid rgba(110,168,255,.2)}
+
+/* ── SECTION LABEL ── */
+.sec{font-family:var(--mono);font-size:.62rem;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--border);padding-bottom:.6rem;margin:3rem 0 1.2rem;display:flex;align-items:center;gap:.6rem}
+.sec::before{content:'';display:inline-block;width:3px;height:12px;background:var(--a1);border-radius:1px;flex-shrink:0}
+
+/* ── COMPARE TABLE ── */
+.tbl-wrap{overflow-x:auto;margin-bottom:2rem}
+table{width:100%;border-collapse:collapse;font-size:.82rem}
+th{font-family:var(--mono);font-size:.62rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);padding:.7rem 1rem;text-align:left;border-bottom:1px solid var(--border)}
+td{padding:.9rem 1rem;border-bottom:1px solid rgba(28,45,71,.5);vertical-align:top;line-height:1.55}
+tr:hover td{background:rgba(240,192,64,.025)}
+.ap{font-family:var(--mono);font-weight:700;font-size:.82rem}
+.ap1{color:var(--a2)}
+.ap2{color:var(--a4)}
+.ap3{color:var(--a3)}
+.cx{font-family:var(--mono);font-size:.8rem}
+.tag{display:inline-block;font-family:var(--mono);font-size:.62rem;background:var(--s2);border:1px solid var(--border);border-radius:2px;padding:.12rem .42rem;margin:.1rem;color:var(--a4)}
+.good{color:var(--a3);font-size:.78rem}
+.bad{color:var(--a2);font-size:.78rem;opacity:.85}
+
+/* ── SOLUTION CARDS ── */
+.sol-grid{display:grid;gap:1.4rem}
+.sc{background:var(--s1);border:1px solid var(--border);border-radius:6px;overflow:hidden;transition:border-color .2s}
+.sc:hover{border-color:rgba(240,192,64,.25)}
+.sc-head{display:flex;align-items:center;justify-content:space-between;padding:.8rem 1.2rem;background:rgba(255,255,255,.018);border-bottom:1px solid var(--border);gap:.5rem;flex-wrap:wrap}
+.sc-title{font-size:.88rem;font-weight:700}
+.pills{display:flex;gap:.4rem;flex-wrap:wrap}
+.pill{font-family:var(--mono);font-size:.62rem;padding:.18rem .52rem;border-radius:20px;font-weight:700;white-space:nowrap}
+.pt{background:rgba(110,168,255,.12);color:var(--a4)}
+.ps{background:rgba(60,255,208,.1);color:var(--a3)}
+.sc-meta{display:flex;gap:2rem;padding:.65rem 1.2rem;border-bottom:1px solid var(--border);flex-wrap:wrap}
+.mi{font-size:.73rem;color:var(--muted)}
+.mi span{color:var(--text)}
+pre{margin:0;padding:1.1rem 1.2rem;overflow-x:auto;font-family:var(--mono);font-size:.76rem;line-height:1.68;background:transparent}
+.kw{color:#ff79c6}
+.ty{color:#8be9fd}
+.fn{color:#50fa7b}
+.st{color:#f1fa8c}
+.cm{color:#445e7a;font-style:italic}
+.nm{color:#bd93f9}
+
+/* ── HEAP VISUAL ── */
+.heap-box{background:var(--s1);border:1px solid var(--border);border-radius:6px;padding:1.4rem 1.5rem;margin-bottom:2rem}
+.heap-box h3{font-size:.82rem;font-family:var(--mono);color:var(--a1);margin-bottom:1rem;letter-spacing:.08em}
+.heap-steps{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.8rem}
+.hs{background:var(--s2);border:1px solid var(--border);border-radius:4px;padding:.8rem}
+.hs-label{font-family:var(--mono);font-size:.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.4rem}
+.hs-tree{font-family:var(--mono);font-size:.75rem;line-height:1.8;color:var(--text);white-space:pre}
+.hs-note{font-size:.7rem;color:var(--a2);margin-top:.35rem}
+.hs-note.ok{color:var(--a3)}
+
+/* ── CONCEPTS ── */
+.cg{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1rem}
+.cc{background:var(--s1);border:1px solid var(--border);border-radius:6px;padding:1.1rem 1.2rem}
+.cc h4{font-size:.82rem;font-weight:700;margin-bottom:.45rem;display:flex;align-items:center;gap:.5rem}
+.cc p{font-size:.77rem;color:#7a9bb5;line-height:1.62}
+.dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.d1{background:var(--a1)}.d2{background:var(--a2)}.d3{background:var(--a3)}.d4{background:var(--a4)}
+code{font-family:var(--mono);background:rgba(60,255,208,.08);padding:.1rem .35rem;border-radius:3px;color:var(--a3);font-size:.77rem}
+
+/* ── Q&A ── */
+.ql{display:grid;gap:.75rem}
+.qi{background:var(--s1);border:1px solid var(--border);border-radius:6px;overflow:hidden}
+.qh{display:flex;align-items:flex-start;gap:.7rem;padding:.9rem 1.1rem;cursor:pointer;user-select:none;transition:background .15s}
+.qh:hover{background:rgba(255,255,255,.02)}
+.qnum{font-family:var(--mono);font-size:.62rem;color:var(--a1);background:rgba(240,192,64,.1);border:1px solid rgba(240,192,64,.25);padding:.15rem .45rem;border-radius:2px;flex-shrink:0;margin-top:.1rem}
+.qt{font-size:.86rem;font-weight:700;flex:1;line-height:1.4}
+.qdiff{font-family:var(--mono);font-size:.6rem;font-weight:700;padding:.18rem .5rem;border-radius:2px;flex-shrink:0;margin-top:.12rem}
+.de{background:rgba(60,255,208,.1);color:var(--a3)}
+.dm{background:rgba(110,168,255,.1);color:var(--a4)}
+.dh{background:rgba(255,79,109,.12);color:var(--a2)}
+.qa{display:none;padding:.9rem 1.1rem .9rem 3rem;font-size:.8rem;color:#7a9bb5;line-height:1.72;border-top:1px solid var(--border)}
+.qa.open{display:block}
+.qa ul{padding-left:1.1rem}
+.qa li{margin-bottom:.3rem}
+.qa strong{color:var(--text)}
+.ti{font-size:.75rem;color:var(--muted);flex-shrink:0;margin-top:.12rem}
+
+/* ── REF GRID ── */
+.rg{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:1rem}
+.rc{background:var(--s1);border:1px solid var(--border);border-radius:6px;padding:1rem 1.1rem}
+.rc h4{font-family:var(--mono);font-size:.62rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:.6rem}
+.rc ul{list-style:none;padding:0}
+.rc li{font-size:.78rem;padding:.28rem 0;border-bottom:1px solid rgba(28,45,71,.5);color:#7a9bb5}
+.rc li:last-child{border-bottom:none}
+.rc li strong{color:var(--text);font-weight:600}
+
+/* ── COMPLEXITY TIMELINE ── */
+.timeline{display:flex;gap:0;margin-bottom:2rem;border:1px solid var(--border);border-radius:6px;overflow:hidden}
+.tstep{flex:1;padding:.9rem 1rem;border-right:1px solid var(--border);background:var(--s1)}
+.tstep:last-child{border-right:none}
+.ts-label{font-family:var(--mono);font-size:.6rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:.35rem}
+.ts-val{font-family:var(--mono);font-size:.85rem;font-weight:700}
+.ts-note{font-size:.7rem;color:var(--muted);margin-top:.2rem}
+.tv1{color:var(--a2)}.tv2{color:var(--a4)}.tv3{color:var(--a3)}
+
+/* ── FOOTER ── */
+footer{text-align:center;padding:2.5rem 0 1.5rem;font-family:var(--mono);font-size:.68rem;color:var(--muted)}
+
+/* animations */
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.wrap>*{animation:fadeUp .45s ease both}
+.wrap>*:nth-child(2){animation-delay:.05s}
+.wrap>*:nth-child(3){animation-delay:.1s}
+.wrap>*:nth-child(4){animation-delay:.15s}
+.wrap>*:nth-child(5){animation-delay:.2s}
+
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+
+@media(max-width:600px){
+  header{grid-template-columns:1fr}
+  .h-right{align-items:flex-start;flex-direction:row;flex-wrap:wrap}
+  .timeline{flex-direction:column}
+  .tstep{border-right:none;border-bottom:1px solid var(--border)}
+  .tstep:last-child{border-bottom:none}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- HEADER -->
+<header>
+  <div class="h-left">
+    <div class="eyebrow">// leetcode 347 · arrays & hashing · heap</div>
+    <h1>Top K <em>Frequent</em><br>Elements</h1>
+    <div class="tagline">3 Solutions · Java · 10 LPA Interview Prep</div>
+  </div>
+  <div class="h-right">
+    <span class="badge bg">Sorting — O(n log n)</span>
+    <span class="badge bb">Min-Heap — O(n log k)</span>
+    <span class="badge bt">Bucket Sort — O(n)</span>
+  </div>
+</header>
+
+<!-- COMPARE -->
+<div class="sec">01 — approach comparison</div>
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th>Approach</th><th>Key Idea</th><th>Time</th><th>Space</th><th>When to use</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><span class="ap ap1">S1 · Sort Entries</span></td>
+      <td><span class="tag">entrySet</span><span class="tag">sort desc</span><br/><small style="color:var(--muted)">Build freq map → sort by value → take first k</small></td>
+      <td class="cx">O(n log n)</td><td class="cx">O(n)</td>
+      <td><span class="good">✔ Simplest to write</span><br/><span class="bad">✘ Slow for large n</span></td>
+    </tr>
+    <tr>
+      <td><span class="ap ap2">S2 · Min-Heap</span></td>
+      <td><span class="tag">PriorityQueue</span><span class="tag">size k</span><br/><small style="color:var(--muted)">Keep min-heap of size k, evict smallest freq</small></td>
+      <td class="cx">O(n log k)</td><td class="cx">O(n+k)</td>
+      <td><span class="good">✔ Great when k &lt;&lt; n</span><br/><span class="bad">✘ Heap overhead</span></td>
+    </tr>
+    <tr>
+      <td><span class="ap ap3">S3 · Bucket Sort</span></td>
+      <td><span class="tag">List[n+1]</span><span class="tag">freq as index</span><br/><small style="color:var(--muted)">Index = frequency, traverse from right</small></td>
+      <td class="cx">O(n)</td><td class="cx">O(n)</td>
+      <td><span class="good">✔ Optimal — best answer</span><br/><span class="bad">✘ Extra bucket space</span></td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<!-- COMPLEXITY TIMELINE -->
+<div class="timeline">
+  <div class="tstep">
+    <div class="ts-label">Step 1 — all solutions</div>
+    <div class="ts-val tv1">O(n)</div>
+    <div class="ts-note">Build frequency HashMap</div>
+  </div>
+  <div class="tstep">
+    <div class="ts-label">Step 2 — S1</div>
+    <div class="ts-val tv1">O(n log n)</div>
+    <div class="ts-note">Sort all entries by freq</div>
+  </div>
+  <div class="tstep">
+    <div class="ts-label">Step 2 — S2</div>
+    <div class="ts-val tv2">O(n log k)</div>
+    <div class="ts-note">Heap insert + evict</div>
+  </div>
+  <div class="tstep">
+    <div class="ts-label">Step 2 — S3</div>
+    <div class="ts-val tv3">O(n)</div>
+    <div class="ts-note">Fill + scan buckets</div>
+  </div>
+  <div class="tstep">
+    <div class="ts-label">Step 3 — all</div>
+    <div class="ts-val tv3">O(k)</div>
+    <div class="ts-note">Extract k results</div>
+  </div>
+</div>
+
+<!-- SOLUTIONS -->
+<div class="sec">02 — solutions with annotations</div>
+<div class="sol-grid">
+
+  <!-- S1 -->
+  <div class="sc">
+    <div class="sc-head">
+      <span class="sc-title ap1">Solution 1 — Sort Map Entries</span>
+      <div class="pills"><span class="pill pt">T: O(n log n)</span><span class="pill ps">S: O(n)</span></div>
+    </div>
+    <div class="sc-meta">
+      <div class="mi">Pattern: <span>Sort + Slice</span></div>
+      <div class="mi">Verdict: <span style="color:var(--a2)">Simple but suboptimal</span></div>
+    </div>
+<pre><code>Map&lt;<span class="ty">Integer</span>,<span class="ty">Integer</span>&gt; tmp = <span class="kw">new</span> HashMap&lt;&gt;();
+<span class="cm">// 1. Build frequency map</span>
+<span class="kw">for</span>(<span class="ty">int</span> x : nums)
+  tmp.<span class="fn">put</span>(x, tmp.<span class="fn">getOrDefault</span>(x, <span class="nm">0</span>) + <span class="nm">1</span>);
+
+<span class="cm">// 2. Collect entries and sort descending by frequency</span>
+List&lt;Map.Entry&lt;<span class="ty">Integer</span>,<span class="ty">Integer</span>&gt;&gt; list = <span class="kw">new</span> ArrayList&lt;&gt;(tmp.<span class="fn">entrySet</span>());
+list.<span class="fn">sort</span>((a, b) -&gt; b.<span class="fn">getValue</span>() - a.<span class="fn">getValue</span>()); <span class="cm">// desc order</span>
+
+<span class="cm">// 3. Take first k keys</span>
+<span class="ty">int</span>[] ans = <span class="kw">new</span> <span class="ty">int</span>[k];
+<span class="kw">for</span>(<span class="ty">int</span> i = <span class="nm">0</span>; i &lt; k; i++)
+  ans[i] = list.<span class="fn">get</span>(i).<span class="fn">getKey</span>();
+<span class="kw">return</span> ans;</code></pre>
+  </div>
+
+  <!-- S2 -->
+  <div class="sc">
+    <div class="sc-head">
+      <span class="sc-title ap2">Solution 2 — Min-Heap of size k</span>
+      <div class="pills"><span class="pill pt">T: O(n log k)</span><span class="pill ps">S: O(n+k)</span></div>
+    </div>
+    <div class="sc-meta">
+      <div class="mi">Pattern: <span>PriorityQueue / Heap</span></div>
+      <div class="mi">Verdict: <span style="color:var(--a4)">✔ Classic interview answer</span></div>
+    </div>
+<pre><code>Map&lt;<span class="ty">Integer</span>,<span class="ty">Integer</span>&gt; h = <span class="kw">new</span> HashMap&lt;&gt;();
+<span class="kw">for</span>(<span class="ty">int</span> x : nums) h.<span class="fn">put</span>(x, h.<span class="fn">getOrDefault</span>(x,<span class="nm">0</span>)+<span class="nm">1</span>);
+
+<span class="cm">// Min-heap: smallest frequency on top</span>
+PriorityQueue&lt;Map.Entry&lt;<span class="ty">Integer</span>,<span class="ty">Integer</span>&gt;&gt; pq =
+  <span class="kw">new</span> <span class="fn">PriorityQueue</span>&lt;&gt;((a,b) -&gt; a.<span class="fn">getValue</span>()-b.<span class="fn">getValue</span>());
+
+<span class="kw">for</span>(Map.Entry&lt;<span class="ty">Integer</span>,<span class="ty">Integer</span>&gt; e : h.<span class="fn">entrySet</span>()){
+  pq.<span class="fn">add</span>(e);
+  <span class="kw">if</span>(pq.<span class="fn">size</span>() &gt; k) pq.<span class="fn">poll</span>(); <span class="cm">// evict lowest freq</span>
+  <span class="cm">// heap never exceeds size k → O(log k) per op</span>
+}
+
+<span class="ty">int</span>[] ans = <span class="kw">new</span> <span class="ty">int</span>[k];
+<span class="ty">int</span> j = <span class="nm">0</span>;
+<span class="kw">while</span>(!pq.<span class="fn">isEmpty</span>()) ans[j++] = pq.<span class="fn">poll</span>().<span class="fn">getKey</span>();
+<span class="kw">return</span> ans;</code></pre>
+  </div>
+
+  <!-- S3 -->
+  <div class="sc">
+    <div class="sc-head">
+      <span class="sc-title ap3">Solution 3 — Bucket Sort (Optimal)</span>
+      <div class="pills"><span class="pill pt">T: O(n)</span><span class="pill ps">S: O(n)</span></div>
+    </div>
+    <div class="sc-meta">
+      <div class="mi">Pattern: <span>Index = Frequency</span></div>
+      <div class="mi">Verdict: <span style="color:var(--a3)">✔ Best — impress your interviewer</span></div>
+    </div>
+<pre><code>Map&lt;<span class="ty">Integer</span>,<span class="ty">Integer</span>&gt; h = <span class="kw">new</span> HashMap&lt;&gt;();
+<span class="kw">for</span>(<span class="ty">int</span> x : nums) h.<span class="fn">put</span>(x, h.<span class="fn">getOrDefault</span>(x,<span class="nm">0</span>)+<span class="nm">1</span>);
+
+<span class="cm">// Bucket index = frequency. Max freq possible = n</span>
+List&lt;List&lt;<span class="ty">Integer</span>&gt;&gt; buckets = <span class="kw">new</span> ArrayList&lt;&gt;();
+<span class="kw">for</span>(<span class="ty">int</span> i = <span class="nm">0</span>; i &lt;= n; i++) buckets.<span class="fn">add</span>(<span class="kw">new</span> ArrayList&lt;&gt;());
+
+<span class="kw">for</span>(Map.Entry&lt;<span class="ty">Integer</span>,<span class="ty">Integer</span>&gt; e : h.<span class="fn">entrySet</span>())
+  buckets.<span class="fn">get</span>(e.<span class="fn">getValue</span>()).<span class="fn">add</span>(e.<span class="fn">getKey</span>());
+  <span class="cm">// num with freq 3 → buckets[3]</span>
+
+<span class="cm">// Scan right-to-left (highest freq first) until k collected</span>
+<span class="ty">int</span>[] ans = <span class="kw">new</span> <span class="ty">int</span>[k]; <span class="ty">int</span> j = <span class="nm">0</span>;
+<span class="kw">for</span>(<span class="ty">int</span> i = n; i &gt;= <span class="nm">0</span> &amp;&amp; j &lt; k; i--)
+  <span class="kw">for</span>(<span class="ty">int</span> num : buckets.<span class="fn">get</span>(i))
+    <span class="kw">if</span>(j &lt; k) ans[j++] = num;
+<span class="kw">return</span> ans;</code></pre>
+  </div>
+
+</div>
+
+<!-- HEAP VISUAL -->
+<div class="sec">03 — min-heap mechanics (S2 walkthrough)</div>
+<div class="heap-box">
+  <h3>// Input: [1,1,1,2,2,3], k=2 &nbsp;→&nbsp; freq: {1:3, 2:2, 3:1}</h3>
+  <div class="heap-steps">
+    <div class="hs">
+      <div class="hs-label">Add {1:3}</div>
+      <div class="hs-tree">     [1:3]</div>
+      <div class="hs-note ok">size=1 ≤ k=2 ✔</div>
+    </div>
+    <div class="hs">
+      <div class="hs-label">Add {2:2}</div>
+      <div class="hs-tree">     [2:2]
+    [1:3]</div>
+      <div class="hs-note ok">size=2 ≤ k=2 ✔</div>
+    </div>
+    <div class="hs">
+      <div class="hs-label">Add {3:1} → size&gt;k</div>
+      <div class="hs-tree">     [3:1]
+  [2:2]  [1:3]</div>
+      <div class="hs-note">size=3 &gt; k → poll min</div>
+    </div>
+    <div class="hs">
+      <div class="hs-label">Poll {3:1} (lowest)</div>
+      <div class="hs-tree">     [2:2]
+    [1:3]</div>
+      <div class="hs-note ok">Heap has top-2 ✔</div>
+    </div>
+    <div class="hs">
+      <div class="hs-label">Result</div>
+      <div class="hs-tree">poll → [2:2]
+poll → [1:3]</div>
+      <div class="hs-note ok">ans = [2, 1] ✔</div>
+    </div>
+  </div>
+</div>
+
+<!-- KEY CONCEPTS -->
+<div class="sec">04 — key concepts</div>
+<div class="cg">
+  <div class="cc"><h4><span class="dot d1"></span>getOrDefault()</h4><p>Returns the stored value if key exists, otherwise returns the given default. Cleaner than a manual <code>containsKey</code> check: <code>map.getOrDefault(x, 0)+1</code>.</p></div>
+  <div class="cc"><h4><span class="dot d2"></span>Min-Heap vs Max-Heap</h4><p>Min-heap keeps the <em>smallest</em> frequency at the top so we can quickly evict it. Using a max-heap would require storing ALL n elements — O(n log n), defeating the purpose.</p></div>
+  <div class="cc"><h4><span class="dot d3"></span>Bucket Sort Insight</h4><p>Frequency of any element ∈ [1, n]. So create <code>n+1</code> buckets indexed by frequency. Elements with the same frequency go in the same bucket. Scan from right (highest freq).</p></div>
+  <div class="cc"><h4><span class="dot d4"></span>Map.Entry in Java</h4><p>When you need both key and value together from a HashMap, iterate with <code>map.entrySet()</code>. Each entry exposes <code>.getKey()</code> and <code>.getValue()</code>.</p></div>
+  <div class="cc"><h4><span class="dot d1"></span>Why not int[] as Map key?</h4><p>Java arrays use reference equality for <code>hashCode()</code>. Two different <code>int[]</code> with same contents will hash differently. Always encode to a <code>String</code> instead.</p></div>
+  <div class="cc"><h4><span class="dot d2"></span>computeIfAbsent()</h4><p>Cleaner grouping: <code>map.computeIfAbsent(key, k -&gt; new ArrayList&lt;&gt;()).add(val)</code> — avoids the verbose <code>if(!map.containsKey)</code> pattern entirely.</p></div>
+</div>
+
+<!-- Q&A -->
+<div class="sec">05 — interview questions & answers</div>
+<div class="ql">
+
+  <div class="qi">
+    <div class="qh" onclick="tog(this)">
+      <span class="qnum">Q1</span>
+      <span class="qt">Why use a min-heap instead of a max-heap for the top-k problem?</span>
+      <span class="qdiff de">Easy</span><span class="ti">▼</span>
+    </div>
+    <div class="qa">
+      With a <strong>min-heap of size k</strong>, the root is always the <em>smallest</em> of the current top-k. When a new element arrives, if its frequency is greater than the root's, we can evict the root and insert the new one — maintaining the invariant in O(log k).
+      <br/><br/>A <strong>max-heap</strong> would require inserting all n elements first (O(n log n)) and then extracting k times — much worse when k ≪ n.
+    </div>
+  </div>
+
+  <div class="qi">
+    <div class="qh" onclick="tog(this)">
+      <span class="qnum">Q2</span>
+      <span class="qt">Why is bucket sort O(n) here, and not O(n log n)?</span>
+      <span class="qdiff de">Easy</span><span class="ti">▼</span>
+    </div>
+    <div class="qa">
+      Bucket sort avoids comparisons. Instead of sorting elements against each other, we use the <strong>frequency value as an array index</strong>. Since frequencies are bounded integers (1 to n), we can place each element directly into its bucket in O(1). The entire fill + scan is O(n) — no log factor.
+    </div>
+  </div>
+
+  <div class="qi">
+    <div class="qh" onclick="tog(this)">
+      <span class="qnum">Q3</span>
+      <span class="qt">What does getOrDefault() do and why is it preferred?</span>
+      <span class="qdiff de">Easy</span><span class="ti">▼</span>
+    </div>
+    <div class="qa">
+      <code>map.getOrDefault(key, defaultValue)</code> returns the mapped value if the key exists, otherwise returns <code>defaultValue</code> without throwing an exception.<br/><br/>
+      It replaces the verbose pattern:<br/>
+      <code>if(map.containsKey(k)) map.put(k, map.get(k)+1); else map.put(k,1);</code><br/>
+      with a single clean line: <code>map.put(k, map.getOrDefault(k,0)+1);</code>
+    </div>
+  </div>
+
+  <div class="qi">
+    <div class="qh" onclick="tog(this)">
+      <span class="qnum">Q4</span>
+      <span class="qt">Why is bucket size n+1 and not n?</span>
+      <span class="qdiff dm">Medium</span><span class="ti">▼</span>
+    </div>
+    <div class="qa">
+      The <strong>maximum possible frequency</strong> of any element is <code>n</code> (when all elements are the same). Bucket indices run from <code>0</code> to <code>n</code> — that's <code>n+1</code> slots. If we only allocated <code>n</code> slots (indices 0 to n-1), accessing <code>buckets.get(n)</code> would throw an <code>IndexOutOfBoundsException</code>.
+    </div>
+  </div>
+
+  <div class="qi">
+    <div class="qh" onclick="tog(this)">
+      <span class="qnum">Q5</span>
+      <span class="qt">What is the space complexity of each solution?</span>
+      <span class="qdiff dm">Medium</span><span class="ti">▼</span>
+    </div>
+    <div class="qa">
+      <ul>
+        <li><strong>S1</strong>: O(n) — freq map + entry list (both at most n entries)</li>
+        <li><strong>S2</strong>: O(n + k) — freq map O(n) + heap O(k)</li>
+        <li><strong>S3</strong>: O(n) — freq map O(n) + n+1 buckets (each element appears once)</li>
+      </ul>
+      All are O(n) asymptotically. The output array of size k is typically excluded from space complexity analysis.
+    </div>
+  </div>
+
+  <div class="qi">
+    <div class="qh" onclick="tog(this)">
+      <span class="qnum">Q6</span>
+      <span class="qt">Does HashMap maintain insertion order? What if order matters?</span>
+      <span class="qdiff dm">Medium</span><span class="ti">▼</span>
+    </div>
+    <div class="qa">
+      <strong>No</strong>. <code>HashMap</code> makes no guarantees about iteration order. If you need insertion order, use <code>LinkedHashMap</code>. If you need sorted key order, use <code>TreeMap</code> (keys sorted ascending) or <code>TreeMap(Collections.reverseOrder())</code> for descending.
+      <br/><br/>For this problem, order of the output doesn't matter — the problem only requires the correct k elements, not in any specific order.
+    </div>
+  </div>
+
+  <div class="qi">
+    <div class="qh" onclick="tog(this)">
+      <span class="qnum">Q7</span>
+      <span class="qt">What are the edge cases you must handle?</span>
+      <span class="qdiff dm">Medium</span><span class="ti">▼</span>
+    </div>
+    <div class="qa">
+      <ul>
+        <li><strong>k = total unique elements</strong>: return all elements — should work naturally</li>
+        <li><strong>nums = [1]</strong>, k=1: single element, freq=1 → bucket[1] → ans=[1]</li>
+        <li><strong>All elements same</strong>: e.g., [3,3,3], k=1 → freq map has one entry → ans=[3]</li>
+        <li><strong>Tie in frequency</strong>: problem guarantees the answer is unique, but be aware</li>
+        <li><strong>Negative numbers</strong>: handled naturally by HashMap (keys can be any Integer)</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="qi">
+    <div class="qh" onclick="tog(this)">
+      <span class="qnum">Q8</span>
+      <span class="qt">What are common Top-K problem variants using the same heap pattern?</span>
+      <span class="qdiff dh">Hard</span><span class="ti">▼</span>
+    </div>
+    <div class="qa">
+      The min-heap of size k pattern directly solves:
+      <ul>
+        <li><strong>LC 215</strong> — Kth Largest Element in an Array</li>
+        <li><strong>LC 692</strong> — Top K Frequent Words (+ lexicographic tiebreaker)</li>
+        <li><strong>LC 973</strong> — K Closest Points to Origin</li>
+        <li><strong>LC 1337</strong> — K Weakest Rows in a Matrix</li>
+        <li><strong>LC 658</strong> — Find K Closest Elements</li>
+        <li><strong>LC 295</strong> — Find Median from Data Stream (two heaps)</li>
+      </ul>
+      Master heap of size k → solve all of these.
+    </div>
+  </div>
+
+  <div class="qi">
+    <div class="qh" onclick="tog(this)">
+      <span class="qnum">Q9</span>
+      <span class="qt">Top K Frequent Words — how does it differ from this problem?</span>
+      <span class="qdiff dh">Hard</span><span class="ti">▼</span>
+    </div>
+    <div class="qa">
+      Two differences:
+      <ul>
+        <li><strong>Type</strong>: keys are Strings, not integers</li>
+        <li><strong>Tiebreaker</strong>: if two words have the same frequency, the one that comes first <em>lexicographically</em> ranks higher</li>
+      </ul>
+      Comparator for the min-heap:<br/>
+      <code>(a,b) -&gt; a.getValue().equals(b.getValue()) ? b.getKey().compareTo(a.getKey()) : a.getValue()-b.getValue()</code><br/><br/>
+      The reversed lexicographic order in the min-heap ensures that when we evict (poll), the lexicographically larger word gets removed first.
+    </div>
+  </div>
+
+  <div class="qi">
+    <div class="qh" onclick="tog(this)">
+      <span class="qnum">Q10</span>
+      <span class="qt">Can you solve this in O(n) without bucket sort? Any other way?</span>
+      <span class="qdiff dh">Hard</span><span class="ti">▼</span>
+    </div>
+    <div class="qa">
+      Theoretically yes — <strong>QuickSelect</strong> (partial sort) can find the kth largest in O(n) average time. Steps:
+      <ul>
+        <li>Build freq map O(n)</li>
+        <li>Run QuickSelect on the unique keys by their frequency to find the kth pivot O(n) avg</li>
+        <li>Collect all elements ≥ pivot frequency</li>
+      </ul>
+      Worst case is still O(n²) (like QuickSort). Bucket sort is strictly O(n) with no worst case — preferred in interviews. QuickSelect is useful when extra space must be minimized.
+    </div>
+  </div>
+
+</div>
+
+<!-- QUICK REF -->
+<div class="sec">06 — quick reference</div>
+<div class="rg">
+  <div class="rc"><h4>Java APIs Used</h4><ul>
+    <li><strong>getOrDefault(k,v)</strong> — safe freq increment</li>
+    <li><strong>entrySet()</strong> — iterate key+value pairs</li>
+    <li><strong>PriorityQueue((a,b)->…)</strong> — custom comparator</li>
+    <li><strong>pq.poll()</strong> — remove & return head</li>
+    <li><strong>Collections.reverseOrder()</strong> — max-heap</li>
+  </ul></div>
+  <div class="rc"><h4>Complexity Summary</h4><ul>
+    <li><strong>S1 Sort</strong> — O(n log n) / O(n)</li>
+    <li><strong>S2 Heap</strong> — O(n log k) / O(n+k)</li>
+    <li><strong>S3 Bucket</strong> — O(n) / O(n)</li>
+    <li><strong>n</strong> = input length</li>
+    <li><strong>k</strong> = elements to return</li>
+  </ul></div>
+  <div class="rc"><h4>Related Problems</h4><ul>
+    <li><strong>LC 215</strong> — Kth Largest Element</li>
+    <li><strong>LC 692</strong> — Top K Frequent Words</li>
+    <li><strong>LC 973</strong> — K Closest Points</li>
+    <li><strong>LC 295</strong> — Find Median (2 heaps)</li>
+    <li><strong>LC 451</strong> — Sort by Frequency</li>
+  </ul></div>
+  <div class="rc"><h4>Interview Tips</h4><ul>
+    <li>Start with S2 heap — safe default</li>
+    <li>Offer S3 bucket as optimization</li>
+    <li>Always mention k ≪ n for heap benefit</li>
+    <li>Say "min-heap of size k" confidently</li>
+    <li>Handle tie + negative inputs verbally</li>
+  </ul></div>
+</div>
+
+<footer>Top K Frequent Elements · Java · Heap + Bucket Sort · 10 LPA Interview Prep</footer>
+</div>
+
+<script>
+function tog(h){
+  const a=h.nextElementSibling, ic=h.querySelector('.ti');
+  const open=a.classList.contains('open');
+  document.querySelectorAll('.qa').forEach(x=>x.classList.remove('open'));
+  document.querySelectorAll('.ti').forEach(x=>x.textContent='▼');
+  if(!open){a.classList.add('open');ic.textContent='▲';}
+}
+</script>
+</body>
+</html>

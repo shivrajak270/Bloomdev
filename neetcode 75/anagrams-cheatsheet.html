@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Group Anagrams — Dev Cheat Sheet</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --bg: #0a0e17;
+    --surface: #111827;
+    --card: #151d2e;
+    --border: #1e2d45;
+    --accent1: #00d9ff;
+    --accent2: #ff6b35;
+    --accent3: #7fff6e;
+    --accent4: #bf7aff;
+    --text: #e2eaf7;
+    --muted: #5a7090;
+    --tag-bg: #1a2540;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Grid noise overlay */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: 
+      linear-gradient(rgba(0,217,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,217,255,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container { max-width: 1100px; margin: 0 auto; padding: 2rem 1.5rem; position: relative; z-index: 1; }
+
+  /* HEADER */
+  header { text-align: center; padding: 3.5rem 0 2.5rem; }
+  .eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.25em;
+    color: var(--accent1);
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+  }
+  h1 {
+    font-size: clamp(2rem, 5vw, 3.4rem);
+    font-weight: 800;
+    line-height: 1.1;
+    background: linear-gradient(135deg, var(--accent1) 0%, var(--accent4) 60%, var(--accent2) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 1rem;
+  }
+  .subtitle {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+  .badge-row { display: flex; gap: 0.6rem; justify-content: center; flex-wrap: wrap; margin-top: 1.2rem; }
+  .badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    padding: 0.3rem 0.75rem;
+    border-radius: 2px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .badge-orange { background: rgba(255,107,53,0.15); color: var(--accent2); border: 1px solid rgba(255,107,53,0.3); }
+  .badge-blue   { background: rgba(0,217,255,0.1);  color: var(--accent1); border: 1px solid rgba(0,217,255,0.2); }
+  .badge-green  { background: rgba(127,255,110,0.1); color: var(--accent3); border: 1px solid rgba(127,255,110,0.25); }
+
+  /* SECTION TITLES */
+  .section-title {
+    font-size: 0.65rem;
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--muted);
+    border-left: 2px solid var(--accent1);
+    padding-left: 0.75rem;
+    margin: 3rem 0 1.25rem;
+  }
+
+  /* COMPARISON TABLE */
+  .compare-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.82rem;
+    margin-bottom: 2rem;
+  }
+  .compare-table th {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    padding: 0.75rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    color: var(--muted);
+  }
+  .compare-table td {
+    padding: 0.85rem 1rem;
+    border-bottom: 1px solid rgba(30,45,69,0.5);
+    vertical-align: top;
+    line-height: 1.5;
+  }
+  .compare-table tr:hover td { background: rgba(0,217,255,0.03); }
+  .label-approach { font-family: 'JetBrains Mono', monospace; font-weight: 700; }
+  .s1 { color: var(--accent2); }
+  .s2 { color: var(--accent1); }
+  .s3 { color: var(--accent3); }
+  .complexity { font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; }
+  .tag {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    background: var(--tag-bg);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    padding: 0.15rem 0.45rem;
+    margin: 0.1rem;
+    color: var(--accent4);
+  }
+  .pros { color: var(--accent3); font-size: 0.78rem; }
+  .cons { color: var(--accent2); font-size: 0.78rem; opacity: 0.85; }
+
+  /* CODE CARDS */
+  .solutions-grid { display: grid; gap: 1.5rem; }
+  .sol-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .sol-card:hover { border-color: rgba(0,217,255,0.25); }
+  .sol-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0.85rem 1.2rem;
+    background: rgba(255,255,255,0.02);
+    border-bottom: 1px solid var(--border);
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+  .sol-title { font-size: 0.9rem; font-weight: 700; }
+  .complexity-pills { display: flex; gap: 0.4rem; align-items: center; }
+  .pill {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    padding: 0.2rem 0.55rem;
+    border-radius: 20px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .pill-time { background: rgba(0,217,255,0.12); color: var(--accent1); }
+  .pill-space { background: rgba(191,122,255,0.12); color: var(--accent4); }
+
+  .sol-meta {
+    display: flex; gap: 2rem; padding: 0.75rem 1.2rem;
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+  }
+  .meta-item { font-size: 0.75rem; color: var(--muted); }
+  .meta-item span { color: var(--text); }
+
+  pre {
+    margin: 0;
+    padding: 1.2rem;
+    overflow-x: auto;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    line-height: 1.65;
+    background: transparent;
+  }
+  /* Syntax colors */
+  .kw { color: #ff79c6; }
+  .type { color: #8be9fd; }
+  .fn { color: #50fa7b; }
+  .str { color: #f1fa8c; }
+  .cm { color: #5a7090; font-style: italic; }
+  .num { color: #bd93f9; }
+  .var { color: #e2eaf7; }
+
+  /* KEY CONCEPTS */
+  .concepts-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; }
+  .concept-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1.1rem 1.2rem;
+  }
+  .concept-card h4 {
+    font-size: 0.82rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    display: flex; align-items: center; gap: 0.5rem;
+  }
+  .concept-card p { font-size: 0.78rem; color: #8a9bb5; line-height: 1.6; }
+  .dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+  .dot-blue { background: var(--accent1); }
+  .dot-green { background: var(--accent3); }
+  .dot-purple { background: var(--accent4); }
+  .dot-orange { background: var(--accent2); }
+
+  /* INTERVIEW Q */
+  .q-list { display: grid; gap: 0.8rem; }
+  .q-item {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .q-header {
+    display: flex; align-items: flex-start; gap: 0.75rem;
+    padding: 1rem 1.2rem;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.15s;
+  }
+  .q-header:hover { background: rgba(255,255,255,0.02); }
+  .q-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--accent1);
+    background: rgba(0,217,255,0.08);
+    border: 1px solid rgba(0,217,255,0.2);
+    padding: 0.15rem 0.45rem;
+    border-radius: 2px;
+    flex-shrink: 0;
+    margin-top: 0.1rem;
+  }
+  .q-text { font-size: 0.88rem; font-weight: 700; flex: 1; line-height: 1.4; }
+  .q-difficulty {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem;
+    font-weight: 700;
+    padding: 0.2rem 0.5rem;
+    border-radius: 2px;
+    flex-shrink: 0;
+    margin-top: 0.1rem;
+  }
+  .diff-easy   { background: rgba(127,255,110,0.12); color: var(--accent3); }
+  .diff-medium { background: rgba(0,217,255,0.12);  color: var(--accent1); }
+  .diff-hard   { background: rgba(255,107,53,0.12); color: var(--accent2); }
+  .q-answer {
+    display: none;
+    padding: 0 1.2rem 1rem 3.2rem;
+    font-size: 0.82rem;
+    color: #8a9bb5;
+    line-height: 1.7;
+    border-top: 1px solid var(--border);
+    padding-top: 0.9rem;
+  }
+  .q-answer.open { display: block; }
+  .q-answer code {
+    font-family: 'JetBrains Mono', monospace;
+    background: rgba(0,217,255,0.08);
+    padding: 0.1rem 0.35rem;
+    border-radius: 3px;
+    color: var(--accent1);
+    font-size: 0.8rem;
+  }
+  .q-answer ul { padding-left: 1.2rem; }
+  .q-answer li { margin-bottom: 0.35rem; }
+  .toggle-icon { font-size: 0.8rem; color: var(--muted); flex-shrink: 0; margin-top: 0.1rem; }
+
+  /* QUICK REF */
+  .ref-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1rem; }
+  .ref-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1rem;
+  }
+  .ref-card h4 { font-size: 0.78rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.6rem; font-family: 'JetBrains Mono', monospace; }
+  .ref-card ul { list-style: none; padding: 0; }
+  .ref-card li { font-size: 0.8rem; padding: 0.3rem 0; border-bottom: 1px solid rgba(30,45,69,0.5); color: #8a9bb5; }
+  .ref-card li:last-child { border-bottom: none; }
+  .ref-card li strong { color: var(--text); font-weight: 600; }
+
+  /* FOOTER */
+  footer { text-align: center; padding: 3rem 0 1.5rem; font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--muted); }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .container > * { animation: fadeUp 0.4s ease both; }
+  .container > *:nth-child(2) { animation-delay: 0.05s; }
+  .container > *:nth-child(3) { animation-delay: 0.1s; }
+  .container > *:nth-child(4) { animation-delay: 0.15s; }
+  .container > *:nth-child(5) { animation-delay: 0.2s; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- HEADER -->
+  <header>
+    <div class="eyebrow">// leetcode · arrays & hashing</div>
+    <h1>Group Anagrams</h1>
+    <div class="subtitle">3 Solutions · Java · Interview Prep for 10 LPA+</div>
+    <div class="badge-row">
+      <span class="badge badge-orange">O(n·k·log k)</span>
+      <span class="badge badge-blue">O(n·k)</span>
+      <span class="badge badge-green">HashMap · Sorting · Frequency</span>
+    </div>
+  </header>
+
+  <!-- APPROACH COMPARISON -->
+  <div class="section-title">// 01 — approach comparison</div>
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th>Approach</th>
+        <th>Key Idea</th>
+        <th>Time</th>
+        <th>Space</th>
+        <th>Pros / Cons</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="label-approach s1">S1 · Brute Force</span></td>
+        <td><span class="tag">double loop</span> <span class="tag">sort + compare</span><br/><small style="color:var(--muted)">Sort each pair, mark visited with hash[]</small></td>
+        <td class="complexity">O(n²·k log k)</td>
+        <td class="complexity">O(n)</td>
+        <td>
+          <div class="pros">✔ No extra map needed</div>
+          <div class="cons">✘ Quadratic — TLE on large inputs</div>
+        </td>
+      </tr>
+      <tr>
+        <td><span class="label-approach s2">S2 · Sort Key</span></td>
+        <td><span class="tag">HashMap</span> <span class="tag">sorted string as key</span><br/><small style="color:var(--muted)">Sort chars → use as map key</small></td>
+        <td class="complexity">O(n·k log k)</td>
+        <td class="complexity">O(n·k)</td>
+        <td>
+          <div class="pros">✔ Clean, readable, interview-safe</div>
+          <div class="cons">✘ Sorting overhead per word</div>
+        </td>
+      </tr>
+      <tr>
+        <td><span class="label-approach s3">S3 · Freq Key</span></td>
+        <td><span class="tag">int[26]</span> <span class="tag">frequency string key</span><br/><small style="color:var(--muted)">Count chars → encode as "a2b1c0…"</small></td>
+        <td class="complexity">O(n·k)</td>
+        <td class="complexity">O(n·k)</td>
+        <td>
+          <div class="pros">✔ Optimal time — no sorting</div>
+          <div class="cons">✘ Slightly more verbose key building</div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- SOLUTIONS -->
+  <div class="section-title">// 02 — solutions with annotations</div>
+  <div class="solutions-grid">
+
+    <!-- S1 -->
+    <div class="sol-card">
+      <div class="sol-header">
+        <span class="sol-title s1">Solution 1 — Brute Force (Double Loop + Sort)</span>
+        <div class="complexity-pills">
+          <span class="pill pill-time">T: O(n²·k log k)</span>
+          <span class="pill pill-space">S: O(n)</span>
+        </div>
+      </div>
+      <div class="sol-meta">
+        <div class="meta-item">Pattern: <span>Visited Array</span></div>
+        <div class="meta-item">Use when: <span>N is very small</span></div>
+        <div class="meta-item">Verdict: <span style="color:var(--accent2)">Not recommended</span></div>
+      </div>
+      <pre><code><span class="cm">// hash[] marks already-grouped strings</span>
+<span class="kw">for</span>(<span class="type">int</span> i=<span class="num">0</span>; i&lt;n; i++){
+  <span class="kw">if</span>(hash[i]==<span class="num">1</span>) <span class="kw">continue</span>;       <span class="cm">// already placed</span>
+
+  List&lt;<span class="type">String</span>&gt; temp = <span class="kw">new</span> ArrayList&lt;&gt;();
+  <span class="type">char</span>[] first = strs[i].<span class="fn">toCharArray</span>();
+  Arrays.<span class="fn">sort</span>(first);                  <span class="cm">// canonical form of strs[i]</span>
+  temp.<span class="fn">add</span>(strs[i]);
+  hash[i] = <span class="num">1</span>;
+
+  <span class="kw">for</span>(<span class="type">int</span> j=i+<span class="num">1</span>; j&lt;n; j++){         <span class="cm">// compare with every later str</span>
+    <span class="kw">if</span>(hash[j]==<span class="num">1</span>) <span class="kw">continue</span>;
+    <span class="type">char</span>[] second = strs[j].<span class="fn">toCharArray</span>();
+    Arrays.<span class="fn">sort</span>(second);
+    <span class="kw">if</span>(Arrays.<span class="fn">equals</span>(first, second)){  <span class="cm">// anagram check</span>
+      hash[j] = <span class="num">1</span>;
+      temp.<span class="fn">add</span>(strs[j]);
+    }
+  }
+  ans.<span class="fn">add</span>(temp);
+}</code></pre>
+    </div>
+
+    <!-- S2 -->
+    <div class="sol-card">
+      <div class="sol-header">
+        <span class="sol-title s2">Solution 2 — HashMap with Sorted Key</span>
+        <div class="complexity-pills">
+          <span class="pill pill-time">T: O(n·k log k)</span>
+          <span class="pill pill-space">S: O(n·k)</span>
+        </div>
+      </div>
+      <div class="sol-meta">
+        <div class="meta-item">Pattern: <span>HashMap Grouping</span></div>
+        <div class="meta-item">Use when: <span>General interviews</span></div>
+        <div class="meta-item">Verdict: <span style="color:var(--accent1)">✔ Recommended default</span></div>
+      </div>
+      <pre><code>Map&lt;<span class="type">String</span>, List&lt;<span class="type">String</span>&gt;&gt; map = <span class="kw">new</span> HashMap&lt;&gt;();
+
+<span class="kw">for</span>(<span class="type">String</span> s : strs){
+  <span class="type">char</span>[] ch = s.<span class="fn">toCharArray</span>();
+  Arrays.<span class="fn">sort</span>(ch);                     <span class="cm">// "eat","tea","ate" → "aet"</span>
+  <span class="type">String</span> key = <span class="kw">new</span> <span class="fn">String</span>(ch);         <span class="cm">// sorted chars = canonical key</span>
+
+  map.<span class="fn">computeIfAbsent</span>(key, k -&gt;
+        <span class="kw">new</span> ArrayList&lt;&gt;())
+     .<span class="fn">add</span>(s);                          <span class="cm">// group under same key</span>
+}
+
+<span class="kw">return new</span> ArrayList&lt;&gt;(map.<span class="fn">values</span>()); <span class="cm">// O(1) — just wrap values</span></code></pre>
+    </div>
+
+    <!-- S3 -->
+    <div class="sol-card">
+      <div class="sol-header">
+        <span class="sol-title s3">Solution 3 — Frequency Count Key (Optimal)</span>
+        <div class="complexity-pills">
+          <span class="pill pill-time">T: O(n·k)</span>
+          <span class="pill pill-space">S: O(n·k)</span>
+        </div>
+      </div>
+      <div class="sol-meta">
+        <div class="meta-item">Pattern: <span>Frequency Encoding</span></div>
+        <div class="meta-item">Use when: <span>k is very large</span></div>
+        <div class="meta-item">Verdict: <span style="color:var(--accent3)">✔ Optimal (no sort)</span></div>
+      </div>
+      <pre><code><span class="cm">// Build unique key: "a2b0c1...z0" from char frequencies</span>
+<span class="type">String</span> <span class="fn">buildKey</span>(<span class="type">String</span> s){
+  <span class="type">int</span>[] freq = <span class="kw">new</span> <span class="type">int</span>[<span class="num">26</span>];
+  <span class="kw">for</span>(<span class="type">char</span> c : s.<span class="fn">toCharArray</span>())
+    freq[c - <span class="str">'a'</span>]++;            <span class="cm">// count each letter</span>
+
+  StringBuilder sb = <span class="kw">new</span> <span class="fn">StringBuilder</span>();
+  <span class="type">char</span> g = <span class="str">'a'</span>;
+  <span class="kw">for</span>(<span class="type">int</span> cnt : freq){
+    sb.<span class="fn">append</span>(g).<span class="fn">append</span>(cnt); <span class="cm">// e.g. "a1e1t1" for "eat"</span>
+    g++;
+  }
+  <span class="kw">return</span> sb.<span class="fn">toString</span>();        <span class="cm">// key is same for all anagrams</span>
+}
+
+<span class="cm">// Main logic same as S2 — just replace sorted key with freq key</span>
+<span class="kw">for</span>(<span class="type">String</span> s : strs)
+  map.<span class="fn">computeIfAbsent</span>(<span class="fn">buildKey</span>(s), k -&gt; <span class="kw">new</span> ArrayList&lt;&gt;())
+     .<span class="fn">add</span>(s);</code></pre>
+    </div>
+
+  </div>
+
+  <!-- KEY CONCEPTS -->
+  <div class="section-title">// 03 — key concepts to know</div>
+  <div class="concepts-grid">
+    <div class="concept-card">
+      <h4><span class="dot dot-blue"></span>Anagram Definition</h4>
+      <p>Two strings are anagrams if they contain the same characters with the same frequencies. Order doesn't matter. "listen" ↔ "silent".</p>
+    </div>
+    <div class="concept-card">
+      <h4><span class="dot dot-green"></span>Canonical Form</h4>
+      <p>A normalized representation shared by all anagrams. Sorting chars gives a canonical form: "eat", "tea", "ate" → <strong style="color:var(--accent1)">"aet"</strong>.</p>
+    </div>
+    <div class="concept-card">
+      <h4><span class="dot dot-purple"></span>HashMap Grouping</h4>
+      <p>Use a <code style="color:var(--accent4);font-family:'JetBrains Mono',monospace;font-size:0.78rem;">Map&lt;String, List&lt;String&gt;&gt;</code> where key = canonical form. All anagrams land in the same bucket. O(1) average insert & lookup.</p>
+    </div>
+    <div class="concept-card">
+      <h4><span class="dot dot-orange"></span>Why Freq Key is Faster</h4>
+      <p>Sorting is O(k log k). Counting frequencies is O(k). For long strings (large k), the frequency key approach wins. Both have same space complexity.</p>
+    </div>
+    <div class="concept-card">
+      <h4><span class="dot dot-blue"></span>computeIfAbsent</h4>
+      <p>Clean Java idiom: <code style="color:var(--accent1);font-family:'JetBrains Mono',monospace;font-size:0.78rem;">map.computeIfAbsent(key, k → new ArrayList&lt;&gt;()).add(val)</code>. Avoids manual containsKey check.</p>
+    </div>
+    <div class="concept-card">
+      <h4><span class="dot dot-green"></span>Edge Cases</h4>
+      <p>Single string input, all strings identical, empty strings <code style="color:var(--accent3);font-family:'JetBrains Mono',monospace;font-size:0.78rem;">""</code> (group together), strings with length 1, mixed-case (problem usually guarantees lowercase).</p>
+    </div>
+  </div>
+
+  <!-- INTERVIEW Q&A -->
+  <div class="section-title">// 04 — interview questions & answers</div>
+  <div class="q-list" id="qlist">
+
+    <div class="q-item">
+      <div class="q-header" onclick="toggle(this)">
+        <span class="q-num">Q1</span>
+        <span class="q-text">What is the time complexity of Solution 2 and why?</span>
+        <span class="q-difficulty diff-easy">Easy</span>
+        <span class="toggle-icon">▼</span>
+      </div>
+      <div class="q-answer">
+        <strong>O(n · k log k)</strong> where <code>n</code> = number of strings, <code>k</code> = max string length.
+        <ul>
+          <li>For each of the <code>n</code> strings, we sort its characters: O(k log k).</li>
+          <li>HashMap insert/lookup is O(k) due to string hashing (key length is k).</li>
+          <li>Total: O(n·k log k). Space is O(n·k) for storing all strings in the map.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="q-item">
+      <div class="q-header" onclick="toggle(this)">
+        <span class="q-num">Q2</span>
+        <span class="q-text">Why is Solution 3 better than Solution 2 asymptotically?</span>
+        <span class="q-difficulty diff-medium">Medium</span>
+        <span class="toggle-icon">▼</span>
+      </div>
+      <div class="q-answer">
+        S3 avoids sorting by building a frequency-based key in <strong>O(k)</strong> instead of O(k log k). For very long strings, this matters significantly. 
+        <br/><br/>Both use the same HashMap approach — the only difference is <strong>how the key is built</strong>. S3's total complexity is O(n·k), which is the theoretical optimum (you must read every character at least once).
+      </div>
+    </div>
+
+    <div class="q-item">
+      <div class="q-header" onclick="toggle(this)">
+        <span class="q-num">Q3</span>
+        <span class="q-text">What makes a good grouping key? Could you use int[26] directly as a HashMap key?</span>
+        <span class="q-difficulty diff-medium">Medium</span>
+        <span class="toggle-icon">▼</span>
+      </div>
+      <div class="q-answer">
+        <strong>No</strong>, you cannot use <code>int[]</code> directly as a HashMap key in Java. Arrays use reference equality (<code>==</code>) for <code>hashCode()</code> and <code>equals()</code>, not content equality. Two different <code>int[]</code> arrays with identical contents will hash differently.
+        <br/><br/>Instead, encode the frequency array into a <strong>String</strong> (as in S3) or use <code>Arrays.toString(freq)</code>. Strings in Java have proper content-based hashing.
+      </div>
+    </div>
+
+    <div class="q-item">
+      <div class="q-header" onclick="toggle(this)">
+        <span class="q-num">Q4</span>
+        <span class="q-text">Why is Solution 1 not suitable for production/interviews at scale?</span>
+        <span class="q-difficulty diff-easy">Easy</span>
+        <span class="toggle-icon">▼</span>
+      </div>
+      <div class="q-answer">
+        S1 uses a <strong>nested loop</strong> (O(n²)) and sorts inside the inner loop, giving O(n²·k log k). For n = 10⁴ strings, this is ~10⁸ operations — likely TLE on LeetCode and any production system with large datasets.
+        <br/><br/>The fix is to use a HashMap (S2/S3), reducing the outer iteration to a single pass O(n).
+      </div>
+    </div>
+
+    <div class="q-item">
+      <div class="q-header" onclick="toggle(this)">
+        <span class="q-num">Q5</span>
+        <span class="q-text">How would you handle unicode/uppercase characters?</span>
+        <span class="q-difficulty diff-medium">Medium</span>
+        <span class="toggle-icon">▼</span>
+      </div>
+      <div class="q-answer">
+        <ul>
+          <li><strong>Uppercase</strong>: Normalize with <code>s.toLowerCase()</code> before processing if case-insensitive grouping is needed.</li>
+          <li><strong>Unicode</strong>: The <code>int[26]</code> approach only works for lowercase a–z. For unicode, use a <code>HashMap&lt;Character, Integer&gt;</code> for frequency counting, then encode it into a sorted string of (char, count) pairs.</li>
+          <li>The <strong>sorting approach (S2)</strong> naturally handles any character set since <code>Arrays.sort</code> works on any comparable chars.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="q-item">
+      <div class="q-header" onclick="toggle(this)">
+        <span class="q-num">Q6</span>
+        <span class="q-text">Can you solve this without extra space (in-place)?</span>
+        <span class="q-difficulty diff-hard">Hard</span>
+        <span class="toggle-icon">▼</span>
+      </div>
+      <div class="q-answer">
+        Not truly in-place for the output — we must return grouped lists, which requires O(n·k) output space regardless. However, we can minimize <em>auxiliary</em> space:
+        <ul>
+          <li>S1 uses O(n) auxiliary space (hash[] array), but still O(n·k) total output.</li>
+          <li>S2/S3 use O(n·k) for the HashMap (keys + values).</li>
+          <li>If output space is excluded, S1 is "most space-efficient" in auxiliary terms, but at the cost of O(n²) time.</li>
+        </ul>
+        In an interview, clarify whether "space" means total or auxiliary before optimizing.
+      </div>
+    </div>
+
+    <div class="q-item">
+      <div class="q-header" onclick="toggle(this)">
+        <span class="q-num">Q7</span>
+        <span class="q-text">What data structure variation would you use if input strings keep streaming in?</span>
+        <span class="q-difficulty diff-hard">Hard</span>
+        <span class="toggle-icon">▼</span>
+      </div>
+      <div class="q-answer">
+        For a <strong>streaming/online</strong> variant, maintain a persistent <code>HashMap&lt;String, List&lt;String&gt;&gt;</code> where key = canonical form (sorted or frequency-encoded). 
+        <br/><br/>Each new string is processed in O(k log k) or O(k) and inserted into the map. Querying for a group is O(k) for key generation + O(1) lookup. This is effectively what S2/S3 do but can be applied incrementally. You could expose an <code>addString(s)</code> and <code>getGroups()</code> API.
+      </div>
+    </div>
+
+    <div class="q-item">
+      <div class="q-header" onclick="toggle(this)">
+        <span class="q-num">Q8</span>
+        <span class="q-text">How would you write a unit test for groupAnagrams?</span>
+        <span class="q-difficulty diff-easy">Easy</span>
+        <span class="toggle-icon">▼</span>
+      </div>
+      <div class="q-answer">
+        Key test cases to cover:
+        <ul>
+          <li><code>["eat","tea","tan","ate","nat","bat"]</code> → 3 groups</li>
+          <li><code>[""]</code> → one group with empty string</li>
+          <li><code>["a"]</code> → one group with "a"</li>
+          <li>All identical strings → one group</li>
+          <li>No anagrams → each string in its own group</li>
+          <li>Large input (n = 10⁴) for performance</li>
+        </ul>
+        Since output order is non-deterministic, sort each inner list and the outer list before asserting equality.
+      </div>
+    </div>
+
+  </div>
+
+  <!-- QUICK REF -->
+  <div class="section-title">// 05 — quick reference</div>
+  <div class="ref-grid">
+    <div class="ref-card">
+      <h4>Java APIs Used</h4>
+      <ul>
+        <li><strong>Arrays.sort(char[])</strong> — O(k log k)</li>
+        <li><strong>Arrays.equals(a, b)</strong> — O(k) compare</li>
+        <li><strong>new String(char[])</strong> — build string from chars</li>
+        <li><strong>map.computeIfAbsent()</strong> — clean grouping</li>
+        <li><strong>new ArrayList&lt;&gt;(map.values())</strong> — collect groups</li>
+      </ul>
+    </div>
+    <div class="ref-card">
+      <h4>Complexity Summary</h4>
+      <ul>
+        <li><strong>S1</strong> — O(n²k log k) / O(n)</li>
+        <li><strong>S2</strong> — O(nk log k) / O(nk)</li>
+        <li><strong>S3</strong> — O(nk) / O(nk)</li>
+        <li><strong>n</strong> = number of strings</li>
+        <li><strong>k</strong> = max string length</li>
+      </ul>
+    </div>
+    <div class="ref-card">
+      <h4>Related Problems</h4>
+      <ul>
+        <li><strong>Valid Anagram</strong> — LC 242</li>
+        <li><strong>Find All Anagram in String</strong> — LC 438</li>
+        <li><strong>Minimum Window Substring</strong> — LC 76</li>
+        <li><strong>Permutation in String</strong> — LC 567</li>
+        <li><strong>Sort Characters by Freq</strong> — LC 451</li>
+      </ul>
+    </div>
+    <div class="ref-card">
+      <h4>Interview Tips</h4>
+      <ul>
+        <li>Always state TC/SC before coding</li>
+        <li>Default to S2 — cleaner, readable</li>
+        <li>Mention S3 as optimization if asked</li>
+        <li>Handle edge: empty string input</li>
+        <li>Use computeIfAbsent to impress</li>
+      </ul>
+    </div>
+  </div>
+
+  <footer>
+    Group Anagrams · Java · Cheat Sheet &nbsp;·&nbsp; Arrays & Hashing Pattern &nbsp;·&nbsp; 10 LPA Interview Prep
+  </footer>
+
+</div>
+
+<script>
+  function toggle(header) {
+    const answer = header.nextElementSibling;
+    const icon = header.querySelector('.toggle-icon');
+    const isOpen = answer.classList.contains('open');
+    // close all
+    document.querySelectorAll('.q-answer').forEach(a => a.classList.remove('open'));
+    document.querySelectorAll('.toggle-icon').forEach(i => i.textContent = '▼');
+    if (!isOpen) {
+      answer.classList.add('open');
+      icon.textContent = '▲';
+    }
+  }
+</script>
+</body>
+</html>

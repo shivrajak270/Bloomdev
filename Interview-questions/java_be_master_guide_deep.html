@@ -1,0 +1,2211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Java BE Interview Master — 10 LPA Complete Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@700;900&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#f8f5ef;--surface:#ffffff;--s2:#f1ede4;--s3:#e8e2d6;
+  --border:#ddd7c8;--text:#1a1710;--muted:#7a7260;
+  --red:#c03820;--blue:#1a5c96;--green:#1a7040;--amber:#b06010;
+  --purple:#6030a0;--teal:#0a7070;
+  --code:#141210;--code-fg:#e0d8c0;
+}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.75;}
+.layout{display:flex;min-height:100vh;}
+
+/* ── SIDEBAR ── */
+.sb{width:265px;min-width:265px;background:var(--surface);border-right:1.5px solid var(--border);position:sticky;top:0;height:100vh;overflow-y:auto;flex-shrink:0;}
+.sb-logo{padding:1.4rem 1.5rem;background:var(--text);border-bottom:2px solid var(--red);}
+.sb-logo h2{font-family:'Fraunces',serif;font-size:16px;color:#f8f5ef;line-height:1.35;}
+.sb-logo p{font-size:11px;color:rgba(248,245,239,.45);margin-top:3px;letter-spacing:.5px;}
+.sb-sec{padding:.7rem 1.5rem .2rem;font-size:9.5px;font-weight:600;text-transform:uppercase;letter-spacing:2.5px;color:var(--muted);}
+.sb a{display:flex;align-items:center;gap:9px;padding:7px 1.5rem;font-size:12.5px;color:var(--muted);text-decoration:none;border-left:3px solid transparent;transition:all .15s;}
+.sb a:hover,.sb a.on{color:var(--red);border-left-color:var(--red);background:rgba(192,56,32,.05);font-weight:500;}
+.sb a .dot{font-size:15px;line-height:1;}
+
+/* ── MAIN ── */
+.main{flex:1;min-width:0;}
+.hero{background:var(--text);color:var(--bg);padding:3rem 3.5rem 2.5rem;position:relative;overflow:hidden;}
+.hero::before{content:'BE';position:absolute;right:-20px;top:-30px;font-family:'Fraunces',serif;font-size:220px;font-weight:900;opacity:.05;line-height:1;pointer-events:none;}
+.hero-tag{font-size:10.5px;letter-spacing:3.5px;text-transform:uppercase;color:rgba(255,200,80,.9);margin-bottom:.9rem;font-weight:500;}
+.hero h1{font-family:'Fraunces',serif;font-size:clamp(1.9rem,3.5vw,2.9rem);font-weight:900;line-height:1.1;margin-bottom:.9rem;}
+.hero h1 em{color:rgba(255,200,80,.9);font-style:normal;}
+.hero p{font-size:14px;color:rgba(248,245,239,.6);max-width:580px;line-height:1.85;}
+.stats{display:flex;gap:2rem;margin-top:1.8rem;padding-top:1.5rem;border-top:1px solid rgba(255,255,255,.08);}
+.stat .n{font-family:'Fraunces',serif;font-size:2rem;font-weight:900;color:rgba(255,200,80,.9);line-height:1;}
+.stat .l{font-size:10.5px;color:rgba(248,245,239,.4);text-transform:uppercase;letter-spacing:1px;margin-top:3px;}
+
+/* ── CONTENT ── */
+.content{padding:2.5rem 3.5rem;max-width:960px;}
+
+/* ── CHAPTER ── */
+.ch{margin-bottom:5rem;}
+.ch-head{display:flex;align-items:flex-start;gap:1.5rem;margin-bottom:2.2rem;padding-bottom:1.5rem;border-bottom:2px solid var(--border);}
+.ch-n{font-family:'Fraunces',serif;font-size:4.5rem;font-weight:900;color:var(--border);line-height:1;flex-shrink:0;margin-top:-10px;}
+.ch-info .ch-title{font-family:'Fraunces',serif;font-size:1.9rem;font-weight:700;line-height:1.15;}
+.ch-info .ch-sub{font-size:13px;color:var(--muted);margin-top:5px;}
+.ch-tags{display:flex;gap:6px;margin-top:.6rem;flex-wrap:wrap;}
+.ctag{font-size:10.5px;padding:2px 9px;border-radius:20px;font-weight:600;letter-spacing:.3px;}
+.hot{background:#fff0ea;color:var(--red);border:1px solid #f0b898;}
+.med{background:#fffaec;color:var(--amber);border:1px solid #e8c878;}
+.ok{background:#edfaf3;color:var(--green);border:1px solid #80d8a0;}
+
+/* ── Q&A ── */
+.qa{background:var(--surface);border:1.5px solid var(--border);border-radius:14px;margin-bottom:1.2rem;overflow:hidden;transition:box-shadow .2s;}
+.qa:hover{box-shadow:0 3px 16px rgba(26,23,16,.08);}
+.qa.open{border-color:rgba(192,56,32,.3);box-shadow:0 3px 16px rgba(192,56,32,.07);}
+.qa-q{padding:1.2rem 1.5rem;cursor:pointer;display:flex;align-items:flex-start;gap:1rem;user-select:none;}
+.qa-q:hover{background:var(--s2);}
+.qn{font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:600;color:var(--red);background:rgba(192,56,32,.09);padding:3px 9px;border-radius:5px;flex-shrink:0;margin-top:3px;white-space:nowrap;}
+.qt{font-weight:600;font-size:14.5px;flex:1;line-height:1.4;}
+.qa-arr{color:var(--muted);font-size:15px;flex-shrink:0;transition:transform .22s;margin-top:4px;}
+.qa.open .qa-arr{transform:rotate(180deg);color:var(--red);}
+.qa-body{display:none;padding:0 1.75rem 1.75rem;}
+.qa.open .qa-body{display:block;}
+
+/* ── ANSWER TYPOGRAPHY ── */
+.qa-body p{font-size:14px;line-height:1.88;margin-top:.9rem;color:#252018;}
+.qa-body p+p{margin-top:.55rem;}
+.qa-body strong{color:var(--red);font-weight:600;}
+.qa-body em{color:var(--blue);font-style:normal;font-weight:500;}
+.qa-body h4{font-size:14px;font-weight:700;margin:1.3rem 0 .4rem;color:var(--text);}
+.qa-body ul,.qa-body ol{padding-left:1.5rem;margin-top:.5rem;}
+.qa-body li{font-size:14px;line-height:1.82;margin-bottom:.3rem;color:#252018;}
+.qa-body li strong{color:var(--red);}
+.qa-body li em{color:var(--blue);font-style:normal;font-weight:500;}
+
+/* ── CALLOUTS ── */
+.box{border-radius:10px;padding:1.1rem 1.4rem;margin:1rem 0;font-size:13.5px;line-height:1.8;}
+.box .bl{font-size:9.5px;text-transform:uppercase;letter-spacing:2.5px;font-weight:700;margin-bottom:.5rem;display:block;}
+.box p,.box li{line-height:1.82;}
+.box ul{padding-left:1.2rem;margin:.3rem 0;}
+.box li{margin-bottom:.3rem;font-size:13.5px;}
+
+.ana{background:#fffdf0;border:1.5px solid #e0d060;}
+.ana .bl{color:#8a7010;}
+.ana p{color:#4a3c00;}
+
+.note{background:#f0f7ff;border:1.5px solid #a0c8f0;}
+.note .bl{color:#1a4e80;}
+.note p,.note li{color:#102038;}
+
+.warn{background:#fff5f0;border:1.5px solid #f0a880;}
+.warn .bl{color:#a02808;}
+.warn p,.warn li{color:#501800;}
+
+.tip{background:#edfaf3;border:1.5px solid #70d090;}
+.tip .bl{color:#186030;}
+.tip p,.tip li{color:#0a2818;}
+
+.purple{background:#f5f0ff;border:1.5px solid #b898e8;}
+.purple .bl{color:#5020a0;}
+.purple p,.purple li{color:#280870;}
+
+.dark-box{background:var(--text);border-radius:10px;padding:1.2rem 1.5rem;margin:1rem 0;}
+.dark-box p{color:rgba(248,245,239,.75);font-size:13.5px;line-height:1.8;}
+.dark-box strong{color:rgba(255,200,80,.9);}
+
+/* ── CODE ── */
+pre{background:var(--code);color:var(--code-fg);font-family:'JetBrains Mono',monospace;font-size:12.5px;padding:1.3rem 1.5rem;border-radius:10px;margin:1rem 0;overflow-x:auto;line-height:1.78;display:block;white-space:pre;}
+code.il{font-family:'JetBrains Mono',monospace;font-size:12.5px;background:var(--s2);color:var(--red);padding:1px 6px;border-radius:4px;border:1px solid var(--border);}
+.kw{color:#c090e8;}.cm{color:#4a6068;font-style:italic;}.st{color:#a8e070;}.nu{color:#f09060;}.tp{color:#80b8ff;}.fn{color:#78c8f8;}.an{color:#ffc870;}.ky{color:#80d8f8;}.op{color:#80d8f8;}
+
+/* ── TABLES ── */
+table{width:100%;border-collapse:collapse;font-size:13.5px;margin:1rem 0;border-radius:8px;overflow:hidden;}
+th{background:var(--text);color:var(--bg);padding:9px 14px;text-align:left;font-weight:600;font-size:12.5px;}
+td{padding:9px 14px;border:1px solid var(--border);}
+tr:nth-child(even) td{background:var(--s2);}
+td code.il{font-size:12px;}
+
+/* ── DIFF ── */
+.diff{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:1rem 0;}
+.dc{background:var(--s2);border:1.5px solid var(--border);border-radius:10px;padding:1.1rem 1.2rem;}
+.dc h4{font-size:13px;font-weight:700;margin-bottom:8px;padding-bottom:7px;border-bottom:1px solid var(--border);}
+.dc.a h4{color:var(--blue);}
+.dc.b h4{color:var(--green);}
+.dc ul{padding-left:1.1rem;font-size:13px;color:var(--muted);}
+.dc li{margin-bottom:.35rem;line-height:1.65;}
+.dc li strong{color:var(--text);}
+
+/* ── STEPS ── */
+.steps{margin:1rem 0;}
+.step{display:flex;gap:12px;margin-bottom:1rem;align-items:flex-start;}
+.sn{width:30px;height:30px;border-radius:50%;background:var(--text);color:var(--bg);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'JetBrains Mono',monospace;margin-top:1px;}
+.sb2 h5{font-size:13.5px;font-weight:700;margin-bottom:3px;}
+.sb2 p{font-size:13px;color:var(--muted);line-height:1.7;}
+
+/* ── PILL ROW ── */
+.pills{display:flex;gap:7px;flex-wrap:wrap;margin:.6rem 0;}
+.pill{font-size:12px;padding:3px 12px;border-radius:20px;font-family:'JetBrains Mono',monospace;border:1px solid var(--border);background:var(--s2);}
+.pg{background:#edfaf3;border-color:#80d0a0;color:#186030;}
+.pr{background:#fff0ea;border-color:#f0a888;color:#b03010;}
+.pb{background:#f0f7ff;border-color:#90c0f0;color:#1a4e80;}
+.py{background:#fffaec;border-color:#e0c060;color:#806010;}
+.pp{background:#f5f0ff;border-color:#b898e8;color:#5020a0;}
+
+/* ── MEMORY BOXES ── */
+.mems{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:10px;margin:1rem 0;}
+.mem{border-radius:8px;padding:.9rem 1rem;border:1.5px solid;}
+.mem h5{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:5px;}
+.mem p{font-size:12px;line-height:1.6;}
+.m1{background:#fff0ea;border-color:#f0a888;}.m1 h5{color:var(--red);}
+.m2{background:#f0f7ff;border-color:#90c0f0;}.m2 h5{color:var(--blue);}
+.m3{background:#f5f0ff;border-color:#b898e8;}.m3 h5{color:var(--purple);}
+.m4{background:#edfaf3;border-color:#70d090;}.m4 h5{color:var(--green);}
+.m5{background:#fffaec;border-color:#e0c060;}.m5 h5{color:var(--amber);}
+
+/* ── TIMELINE ── */
+.tl{border-left:2.5px solid var(--border);padding-left:1.5rem;margin:1rem 0;}
+.tl-i{position:relative;margin-bottom:1.2rem;}
+.tl-i:last-child{margin-bottom:0;}
+.tl-i::before{content:'';width:12px;height:12px;background:var(--red);border-radius:50%;position:absolute;left:-1.93rem;top:4px;border:2px solid var(--bg);}
+.tl-i h5{font-size:13.5px;font-weight:700;margin-bottom:3px;}
+.tl-i p{font-size:13px;color:var(--muted);line-height:1.7;}
+
+/* ── INTERVIEW READY BOX ── */
+.ir{background:var(--text);color:var(--bg);border-radius:12px;padding:1.3rem 1.5rem;margin:1.2rem 0;}
+.ir .ir-label{font-size:9.5px;text-transform:uppercase;letter-spacing:2.5px;font-weight:700;color:rgba(255,200,80,.8);margin-bottom:.6rem;display:block;}
+.ir p{font-size:13.5px;color:rgba(248,245,239,.8);line-height:1.82;}
+.ir strong{color:rgba(255,200,80,.9);}
+
+@media(max-width:860px){
+  .sb{display:none;}
+  .content{padding:1.5rem;}
+  .hero{padding:2rem 1.5rem;}
+  .diff{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+<div class="layout">
+<nav class="sb">
+  <div class="sb-logo">
+    <h2>Java Backend<br>Interview Master</h2>
+    <p>10 LPA Deep Guide • All Topics</p>
+  </div>
+  <span class="sb-sec">All Topics</span>
+  <a href="#jvm"><span class="dot">☕</span>JVM / JRE / JDK</a>
+  <a href="#java8"><span class="dot">⚡</span>Java 8 Features</a>
+  <a href="#collections"><span class="dot">📦</span>Collections</a>
+  <a href="#exceptions"><span class="dot">🔴</span>Exception Handling</a>
+  <a href="#strings"><span class="dot">🔤</span>Strings</a>
+  <a href="#multithreading"><span class="dot">🧵</span>Multithreading</a>
+  <a href="#spring"><span class="dot">🌱</span>Spring Boot</a>
+  <a href="#rest"><span class="dot">🌐</span>REST APIs</a>
+  <a href="#jpa"><span class="dot">🗄️</span>JPA / Hibernate</a>
+  <a href="#sql"><span class="dot">📊</span>SQL / Database</a>
+  <a href="#ms"><span class="dot">🔗</span>Microservices</a>
+</nav>
+<div class="main">
+<div class="hero">
+  <div class="hero-tag">dhruvtechbytes — complete 10 lpa deep dive</div>
+  <h1>Java Backend<br>Interview <em>Master Guide</em></h1>
+  <p>Every topic explained like you're sitting with an interviewer. Plain English first, then deep technical detail, then the code. Freshers read this once and walk in with confidence.</p>
+  <div class="stats">
+    <div class="stat"><div class="n">11</div><div class="l">Topics</div></div>
+    <div class="stat"><div class="n">130+</div><div class="l">Questions</div></div>
+    <div class="stat"><div class="n">60+</div><div class="l">Code Samples</div></div>
+    <div class="stat"><div class="n">10 LPA</div><div class="l">Target</div></div>
+  </div>
+</div>
+<div class="content">
+<!-- ═══════════════════════════════════════ JVM ═══════════════════════════════════════ -->
+<div class="ch" id="jvm">
+<div class="ch-head">
+  <div class="ch-n">01</div>
+  <div class="ch-info">
+    <div class="ch-title">JVM / JRE / JDK</div>
+    <div class="ch-sub">Architecture, memory areas, GC, volatile, JMM — the foundation of every Java interview</div>
+    <div class="ch-tags"><span class="ctag hot">🔥 Always Asked</span><span class="ctag med">Deep Concepts</span></div>
+  </div>
+</div>
+
+<!-- Q1 -->
+<div class="qa" onclick="toggle(this)">
+  <div class="qa-q"><span class="qn">Q1</span><span class="qt">What is JVM? Difference between JVM, JRE, and JDK?</span><span class="qa-arr">▾</span></div>
+  <div class="qa-body">
+    <div class="ana"><span class="bl">🍳 Real World Analogy</span><p>Think of writing a recipe (Java source code). The <strong>JDK</strong> is your full kitchen — oven, knives, pans, the recipe book — everything to cook AND eat. The <strong>JRE</strong> is just the dining table and microwave — enough to heat food (run programs) but you can't cook fresh food (compile code). The <strong>JVM</strong> is just the microwave itself — it only executes already-prepared (compiled) bytecode.</p></div>
+    <p>When you write a Java program, it goes through this process:</p>
+<pre><span class="cm">// The Java execution pipeline</span>
+
+Java Source Code (.java)
+        ↓  javac (compiler in JDK)
+Bytecode (.class files)
+        ↓  JVM
+Machine Code (specific to OS/CPU)
+        ↓
+Program Runs</pre>
+    <p><strong>JVM (Java Virtual Machine)</strong> is the engine that reads bytecode and converts it to machine-level instructions your CPU understands. It is platform-specific — there is a different JVM for Windows, Linux, and macOS. But the bytecode is the same everywhere. This is the "Write Once, Run Anywhere" guarantee.</p>
+    <p><strong>JRE (Java Runtime Environment)</strong> contains the JVM plus all the standard libraries (java.lang, java.util, java.io etc.). If a user just wants to RUN a Java application, JRE is enough. They don't need compilers.</p>
+    <p><strong>JDK (Java Development Kit)</strong> is the full package for developers. It contains JRE + compiler (javac) + debugger (jdb) + jar tool + javadoc + many more tools. If you're writing code, you need JDK.</p>
+    <table>
+      <tr><th>Component</th><th>Contains</th><th>Used by</th><th>Includes compiler?</th></tr>
+      <tr><td><strong>JVM</strong></td><td>Bytecode executor, GC, JIT</td><td>Everyone (internally)</td><td>❌</td></tr>
+      <tr><td><strong>JRE</strong></td><td>JVM + Standard libraries</td><td>End users running apps</td><td>❌</td></tr>
+      <tr><td><strong>JDK</strong></td><td>JRE + Dev tools</td><td>Developers writing code</td><td>✅</td></tr>
+    </table>
+    <div class="ir"><span class="ir-label">🎤 Say this in the interview</span><p>"JDK is used for development — it contains the compiler and debugger. JRE is just for running Java programs — it has the JVM and standard libraries. JVM is the runtime engine that actually executes the bytecode and makes Java platform independent."</p></div>
+  </div>
+</div>
+
+<!-- Q2 -->
+<div class="qa" onclick="toggle(this)">
+  <div class="qa-q"><span class="qn">Q2</span><span class="qt">Explain JVM Architecture — Class Loader, Runtime Data Areas, Execution Engine</span><span class="qa-arr">▾</span></div>
+  <div class="qa-body">
+    <p>The JVM has three major subsystems that work together to run your program:</p>
+<pre><span class="cm">// JVM Architecture Overview</span>
+
+Your .class files
+      ↓
+┌──────────────────────────────────────┐
+│         CLASS LOADER SUBSYSTEM       │
+│  Bootstrap → Extension → Application │
+└──────────────────────────────────────┘
+      ↓
+┌──────────────────────────────────────┐
+│         RUNTIME DATA AREAS           │
+│  Heap | Stack | Metaspace | PC | NMS │
+└──────────────────────────────────────┘
+      ↓
+┌──────────────────────────────────────┐
+│         EXECUTION ENGINE             │
+│  Interpreter | JIT Compiler | GC     │
+└──────────────────────────────────────┘</pre>
+    <h4>1. Class Loader Subsystem</h4>
+    <p>Loads your <code class="il">.class</code> files from disk into JVM memory. This happens in 3 phases:</p>
+    <div class="steps">
+      <div class="step"><div class="sn">1</div><div class="sb2"><h5>Loading</h5><p>Reads the .class file binary data. Checks if the class is already loaded (to avoid duplicates).</p></div></div>
+      <div class="step"><div class="sn">2</div><div class="sb2"><h5>Linking</h5><p>Verifies bytecode is valid and not tampered (Verification). Allocates memory for static variables and sets default values (Preparation). Replaces symbolic references with actual memory references (Resolution).</p></div></div>
+      <div class="step"><div class="sn">3</div><div class="sb2"><h5>Initialization</h5><p>Runs static initializer blocks and assigns values to static variables. This is when <code class="il">static { ... }</code> blocks execute.</p></div></div>
+    </div>
+    <p>There are 3 built-in class loaders and they follow the <strong>Parent Delegation Model</strong> — when a class needs to be loaded, it always asks the parent loader first before trying itself. Bootstrap ClassLoader loads core Java classes (java.lang.*). Extension ClassLoader loads from ext directory. Application ClassLoader loads your application classes.</p>
+    <h4>2. Runtime Data Areas</h4>
+    <div class="mems">
+      <div class="mem m1"><h5>Heap</h5><p>All objects and arrays. Shared by all threads. Where GC runs.</p></div>
+      <div class="mem m2"><h5>Stack</h5><p>Per-thread. Method call frames. Local variables. Auto-cleaned when method ends.</p></div>
+      <div class="mem m3"><h5>Metaspace</h5><p>Class definitions, method names. Native memory. Grows dynamically.</p></div>
+      <div class="mem m4"><h5>Code Cache</h5><p>JIT-compiled native code stored here for reuse.</p></div>
+      <div class="mem m5"><h5>PC Register</h5><p>Per-thread pointer to currently executing instruction.</p></div>
+    </div>
+    <h4>3. Execution Engine</h4>
+    <p>The part that actually runs your code. It has three components:</p>
+    <ul>
+      <li><strong>Interpreter</strong> — reads and executes bytecode one instruction at a time. Simple but slow — same bytecode is re-interpreted every time it runs.</li>
+      <li><strong>JIT Compiler (Just-In-Time)</strong> — detects "hot" code (methods called many times) and compiles them to native machine code. Stores in Code Cache. Next time that code runs, it uses the fast native version instead of interpreting. This is why Java gets faster the longer it runs.</li>
+      <li><strong>Garbage Collector</strong> — automatically frees heap memory occupied by objects that are no longer reachable.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- Q3 -->
+<div class="qa" onclick="toggle(this)">
+  <div class="qa-q"><span class="qn">Q3</span><span class="qt">Thread-specific runtime data areas — what are they and what do they store?</span><span class="qa-arr">▾</span></div>
+  <div class="qa-body">
+    <p>When you create a new thread in Java, the JVM allocates three private memory regions just for that thread. Nobody else can see or touch them.</p>
+    <h4>Thread-Private Areas</h4>
+    <p><strong>JVM Stack</strong> — This is the most important one to understand. Every time a method is called, a new "stack frame" is pushed onto this stack. The frame contains: local variables (int x=5, String name etc.), operand stack (for intermediate calculations), and a reference to the constant pool. When the method returns, its frame is popped. If you call too many methods without returning (deep recursion), the stack grows until it hits its limit and you get <code class="il">StackOverflowError</code>.</p>
+<pre><span class="cm">// Stack grows with each method call</span>
+<span class="kw">void</span> <span class="fn">main</span>() {
+    methodA();                   <span class="cm">// Frame 1 pushed</span>
+}
+<span class="kw">void</span> <span class="fn">methodA</span>() {
+    <span class="tp">int</span> x = 5;                   <span class="cm">// x lives in methodA's frame</span>
+    methodB();                   <span class="cm">// Frame 2 pushed</span>
+}                                <span class="cm">// Frame 2 popped when methodA returns</span>
+<span class="kw">void</span> <span class="fn">methodB</span>() {
+    <span class="cm">// Frame 3 on stack</span>
+}                                <span class="cm">// Frame 3 popped</span></pre>
+    <p><strong>PC Register (Program Counter)</strong> — A tiny pointer that says "this thread is currently executing instruction number X." Each thread needs its own because threads run independently and can be at completely different points in execution at the same time.</p>
+    <p><strong>Native Method Stack</strong> — Same concept as JVM Stack but for native (C/C++) methods called through JNI (Java Native Interface).</p>
+    <h4>Shared Areas (Across All Threads)</h4>
+    <p><strong>Heap</strong> and <strong>Metaspace</strong> are shared. This is why you need synchronization when multiple threads access the same object — they're both reading/writing the same heap memory.</p>
+    <div class="note"><span class="bl">📋 Key Insight for Interviews</span><p>Local variables on the stack are automatically thread-safe because each thread has its own stack. Instance variables on the heap are NOT thread-safe because all threads share the heap. This is the root cause of most concurrency bugs.</p></div>
+    <p><strong>Memory impact of thread creation:</strong> Each new thread allocates a fresh JVM Stack — default size is 512KB to 1MB depending on JVM settings. If you create 1000 threads, that's up to 1GB just for stacks! This is why thread pools (ExecutorService) and virtual threads (Java 21) are preferred over creating raw threads.</p>
+  </div>
+</div>
+
+<!-- Q4 -->
+<div class="qa" onclick="toggle(this)">
+  <div class="qa-q"><span class="qn">Q4</span><span class="qt">Java Memory Model (JMM) and Happens-Before relationships — explain in detail</span><span class="qa-arr">▾</span></div>
+  <div class="qa-body">
+    <div class="ana"><span class="bl">🍳 Analogy</span><p>Imagine two people (threads) editing a shared Google Doc (main memory) but each person has their own offline notepad (CPU cache). Person A writes "meeting at 3pm" on their notepad. Until they hit sync, Person B's notepad still shows the old value. The JMM defines the rules: <strong>when must a person sync their notepad to the shared doc so others can see the update?</strong></p></div>
+    <p>Modern CPUs don't read/write directly to RAM every time — they use caches (L1, L2, L3) for performance. This means a value written by Thread A might sit in A's CPU cache and Thread B reading the same variable from its own cache sees the old value. This is the <strong>visibility problem</strong>.</p>
+    <p>The <strong>Java Memory Model</strong> is a specification that defines exactly when writes made by one thread are guaranteed to be visible to another thread. Without these guarantees, you could write correct-looking code that fails randomly depending on CPU behavior.</p>
+    <h4>Happens-Before (HB) — The Core Concept</h4>
+    <p>If action A <em>happens-before</em> action B, then all effects of A (memory writes) are guaranteed visible to B. The JMM defines these specific HB rules:</p>
+    <div class="tl">
+      <div class="tl-i"><h5>Program Order Rule</h5><p>Each statement in a single thread HB the next statement in that same thread. Within one thread, code always appears to execute in order.</p></div>
+      <div class="tl-i"><h5>Monitor Lock Rule</h5><p>Releasing a synchronized lock (monitorexit) HB any subsequent acquisition of that same lock (monitorenter). So when Thread A leaves a synchronized block, all its writes become visible to Thread B when B enters the same synchronized block.</p></div>
+      <div class="tl-i"><h5>Volatile Variable Rule</h5><p>A write to a volatile variable HB every subsequent read of that variable. This is the cheapest way to ensure visibility without full synchronization.</p></div>
+      <div class="tl-i"><h5>Thread Start Rule</h5><p>Thread.start() HB any action in the started thread. Everything done before starting a thread is visible to that thread when it begins.</p></div>
+      <div class="tl-i"><h5>Thread Join Rule</h5><p>All actions in a thread HB the return of join() on that thread. After join() returns, you can safely read values written by the joined thread.</p></div>
+    </div>
+<pre><span class="cm">// Without HB guarantee — this is BROKEN</span>
+<span class="kw">boolean</span> ready = <span class="ky">false</span>;
+<span class="tp">String</span> message = <span class="ky">null</span>;
+
+<span class="cm">// Thread A</span>
+message = <span class="st">"hello"</span>;   <span class="cm">// write to message</span>
+ready = <span class="ky">true</span>;        <span class="cm">// write to ready</span>
+
+<span class="cm">// Thread B (may see ready=true but message=null!)</span>
+<span class="kw">if</span> (ready) {
+    System.out.println(message); <span class="cm">// could print null!</span>
+}
+
+<span class="cm">// Fix with volatile — establishes HB</span>
+<span class="kw">volatile boolean</span> ready = <span class="ky">false</span>;
+<span class="cm">// Now volatile write to ready HB volatile read of ready</span>
+<span class="cm">// Thread B is guaranteed to see message="hello" when ready=true</span></pre>
+  </div>
+</div>
+
+<!-- Q5 -->
+<div class="qa" onclick="toggle(this)">
+  <div class="qa-q"><span class="qn">Q5</span><span class="qt">volatile keyword — what does it solve? What does it NOT solve?</span><span class="qa-arr">▾</span></div>
+  <div class="qa-body">
+    <p><code class="il">volatile</code> is a keyword you put on a variable to make two guarantees:</p>
+    <p><strong>Guarantee 1 — Visibility:</strong> Every read of a volatile variable goes directly to main memory. Every write to a volatile variable flushes directly to main memory. No CPU caching. This means if Thread A writes to a volatile variable, Thread B will always see the latest value.</p>
+    <p><strong>Guarantee 2 — No reordering:</strong> The JVM/CPU will not reorder instructions around a volatile read/write. This prevents subtle ordering bugs.</p>
+<pre><span class="cm">// GOOD use of volatile — simple flag</span>
+<span class="kw">class</span> <span class="tp">Worker</span> <span class="kw">implements</span> <span class="tp">Runnable</span> {
+    <span class="kw">private volatile boolean</span> running = <span class="ky">true</span>;
+    
+    <span class="kw">public void</span> <span class="fn">run</span>() {
+        <span class="kw">while</span> (running) {        <span class="cm">// always reads fresh value from memory</span>
+            doWork();
+        }
+    }
+    
+    <span class="kw">public void</span> <span class="fn">stop</span>() {
+        running = <span class="ky">false</span>;          <span class="cm">// immediately visible to the running thread</span>
+    }
+}</pre>
+    <div class="warn"><span class="bl">⚠️ What volatile does NOT solve</span><p>volatile does NOT guarantee atomicity. The operation <code class="il">count++</code> looks like one step but is actually three: READ the value → INCREMENT it → WRITE it back. If two threads do this simultaneously, both might read the same value and both write the same incremented value, losing one increment. For this, use <code class="il">AtomicInteger</code> or <code class="il">synchronized</code>.</p></div>
+<pre><span class="cm">// BROKEN — volatile doesn't fix this</span>
+<span class="kw">volatile int</span> count = <span class="nu">0</span>;
+count++; <span class="cm">// NOT atomic — still a race condition!</span>
+
+<span class="cm">// FIXED with AtomicInteger</span>
+<span class="tp">AtomicInteger</span> count = <span class="kw">new</span> <span class="tp">AtomicInteger</span>(<span class="nu">0</span>);
+count.incrementAndGet(); <span class="cm">// atomic — uses CAS (Compare-And-Swap)</span>
+
+<span class="cm">// FIXED with synchronized</span>
+<span class="kw">synchronized void</span> <span class="fn">increment</span>() {
+    count++; <span class="cm">// only one thread at a time</span>
+}</pre>
+    <div class="ir"><span class="ir-label">🎤 Perfect interview answer</span><p>"volatile solves the visibility problem — it ensures every thread sees the latest value from main memory without CPU caching. But it does not solve atomicity — for compound operations like count++, you need AtomicInteger or synchronized."</p></div>
+  </div>
+</div>
+
+<!-- Q6 -->
+<div class="qa" onclick="toggle(this)">
+  <div class="qa-q"><span class="qn">Q6</span><span class="qt">Production service has Full GC spikes causing response time delays — how do you analyse and fix?</span><span class="qa-arr">▾</span></div>
+  <div class="qa-body">
+    <p>This is a very common 10-12 LPA production scenario question. The interviewer wants to see if you understand GC, profiling tools, and can think like a senior engineer.</p>
+    <p><strong>What is Full GC?</strong> Full GC (or Major GC) is when the JVM pauses ALL application threads — called "Stop-The-World" — to clean up the entire heap including the Old Generation. During this pause, no requests are processed, causing response time spikes. A healthy app should rarely have Full GCs.</p>
+    <h4>Step-by-Step Investigation</h4>
+    <div class="steps">
+      <div class="step"><div class="sn">1</div><div class="sb2"><h5>Enable GC Logging</h5><p>Add to JVM startup: <code class="il">-Xlog:gc*:file=/logs/gc.log:time,uptime</code>. This captures every GC event with timestamps and duration.</p></div></div>
+      <div class="step"><div class="sn">2</div><div class="sb2"><h5>Analyse with GCEasy or GCViewer</h5><p>Upload the gc.log to GCEasy.io. It shows GC frequency, pause times, heap utilization over time, and tells you what's wrong.</p></div></div>
+      <div class="step"><div class="sn">3</div><div class="sb2"><h5>Check Heap Usage Pattern</h5><p>If heap usage keeps growing and never fully drops after GC → memory leak. If heap is always near max → increase Xmx or fix excessive object creation.</p></div></div>
+      <div class="step"><div class="sn">4</div><div class="sb2"><h5>Java Flight Recorder (JFR)</h5><p>Add <code class="il">-XX:+FlightRecorder</code>. JFR continuously records profiling data with very low overhead. Analyze with JDK Mission Control to find which classes are consuming most heap.</p></div></div>
+      <div class="step"><div class="sn">5</div><div class="sb2"><h5>Heap Dump Analysis</h5><p>Add <code class="il">-XX:+HeapDumpOnOutOfMemoryError</code>. When OOM occurs, a heap dump is saved. Open with Eclipse MAT (Memory Analyzer Tool) to find the objects holding most memory.</p></div></div>
+    </div>
+    <h4>Common Root Causes and Fixes</h4>
+    <table>
+      <tr><th>Root Cause</th><th>Symptom</th><th>Fix</th></tr>
+      <tr><td>Memory leak</td><td>Heap grows, never fully reclaimed</td><td>Fix object retention in static collections, caches, listeners</td></tr>
+      <tr><td>Heap too small</td><td>GC runs constantly</td><td>Increase -Xms/-Xmx (e.g. -Xmx4g)</td></tr>
+      <tr><td>Metaspace full</td><td>Full GC triggered for class unloading</td><td>Set -XX:MaxMetaspaceSize=512m</td></tr>
+      <tr><td>Wrong GC algo</td><td>Long pause times</td><td>Switch to G1GC or ZGC for lower latency</td></tr>
+      <tr><td>Large object allocation</td><td>Objects go directly to Old Gen</td><td>Reduce large temporary object creation</td></tr>
+    </table>
+<pre><span class="cm">// Recommended JVM flags for a Spring Boot production app</span>
+java -Xms1g -Xmx4g
+     -XX:+UseG1GC
+     -XX:MaxGCPauseMillis=200
+     -XX:+HeapDumpOnOutOfMemoryError
+     -XX:HeapDumpPath=/logs/heap.hprof
+     -Xlog:gc*:file=/logs/gc.log:time,uptime
+     -jar app.jar</pre>
+  </div>
+</div>
+
+<!-- Q7 -->
+<div class="qa" onclick="toggle(this)">
+  <div class="qa-q"><span class="qn">Q7</span><span class="qt">MetaSpace vs PermGen — what changed in Java 8 and why?</span><span class="qa-arr">▾</span></div>
+  <div class="qa-body">
+    <p>Before Java 8, the JVM had a special heap region called <strong>PermGen (Permanent Generation)</strong> that stored class metadata — class names, method definitions, the bytecode itself, constant pools. It was part of the Java heap, fixed in size (default ~64MB), and you had to guess the right size upfront.</p>
+    <p>The problem: modern applications (especially with frameworks like Spring, or apps that use dynamic class generation) load thousands of classes. If PermGen ran out, you got the dreaded <code class="il">OutOfMemoryError: PermGen space</code>. The fix was to keep tuning <code class="il">-XX:MaxPermSize</code> blindly.</p>
+    <p>Java 8 removed PermGen entirely and replaced it with <strong>Metaspace</strong>, which lives in <em>native memory</em> (the OS memory outside the Java heap). By default, Metaspace grows automatically as needed — no more hard limit. You can cap it with <code class="il">-XX:MaxMetaspaceSize</code> if you want to prevent unbounded growth.</p>
+    <table>
+      <tr><th>Feature</th><th>PermGen (Java 7 and below)</th><th>Metaspace (Java 8+)</th></tr>
+      <tr><td>Location</td><td>Inside Java Heap</td><td>Native OS Memory</td></tr>
+      <tr><td>Default size</td><td>Fixed ~64MB</td><td>Unlimited (auto-grows)</td></tr>
+      <tr><td>OOM risk</td><td>Very high with many classes</td><td>Much lower</td></tr>
+      <tr><td>GC impact</td><td>Collected with Full GC</td><td>Collected on class unload</td></tr>
+      <tr><td>Tuning flag</td><td>-XX:MaxPermSize</td><td>-XX:MaxMetaspaceSize</td></tr>
+    </table>
+    <div class="tip"><span class="bl">💡 Metaspace can still cause OOM</span><p>If your app dynamically generates classes (e.g. heavy use of proxies, Groovy scripts, JSP hot-reload in dev), Metaspace can grow unboundedly and eventually cause <code class="il">OutOfMemoryError: Metaspace</code>. Always set -XX:MaxMetaspaceSize in production as a safety net.</p></div>
+  </div>
+</div>
+</div>
+<!-- END JVM CHAPTER -->
+<!-- ═══════════════════════════════════════ JAVA 8 ═══════════════════════════════════════ -->
+<div class="ch" id="java8">
+<div class="ch-head">
+  <div class="ch-n">02</div>
+  <div class="ch-info">
+    <div class="ch-title">Java 8 Features</div>
+    <div class="ch-sub">Lambdas, Streams, Functional Interfaces, CompletableFuture, default methods</div>
+    <div class="ch-tags"><span class="ctag hot">🔥 Always Asked</span><span class="ctag hot">Write Code Live</span></div>
+  </div>
+</div>
+
+<div class="qa" onclick="toggle(this)">
+  <div class="qa-q"><span class="qn">Q1</span><span class="qt">What are Functional Interfaces? Why were they added in Java 8? Is @FunctionalInterface mandatory?</span><span class="qa-arr">▾</span></div>
+  <div class="qa-body">
+    <div class="ana"><span class="bl">🍳 Analogy</span><p>Before Java 8, to pass behaviour (a function) to another method, you had to write a full anonymous class — like hiring a full-time employee just to do one specific task once. Java 8's lambdas let you pass behaviour inline — like calling a freelancer for one job. A Functional Interface is the "job description" that says exactly one task is required.</p></div>
+    <p>A <strong>Functional Interface</strong> is simply an interface with <em>exactly one abstract method</em>. That one rule is all that matters. It can have any number of default or static methods — those don't count.</p>
+    <p>They were added to <strong>enable lambda expressions</strong>. Lambdas are anonymous functions. But Java is object-oriented — everything must be an object. So a lambda is secretly an instance of a functional interface. The single abstract method is what the lambda implements.</p>
+<pre><span class="cm">// Before Java 8 — verbose anonymous class just to pass behaviour</span>
+<span class="tp">Runnable</span> r = <span class="kw">new</span> <span class="tp">Runnable</span>() {
+    <span class="kw">public void</span> <span class="fn">run</span>() {
+        System.out.println(<span class="st">"Hello"</span>);
+    }
+};
+
+<span class="cm">// Java 8 with lambda — same thing, 1 line</span>
+<span class="tp">Runnable</span> r = () -> System.out.println(<span class="st">"Hello"</span>);
+
+<span class="cm">// Your own functional interface</span>
+<span class="an">@FunctionalInterface</span>
+<span class="kw">interface</span> <span class="tp">Adder</span> {
+    <span class="tp">int</span> <span class="fn">add</span>(<span class="tp">int</span> a, <span class="tp">int</span> b);   <span class="cm">// only ONE abstract method</span>
+    <span class="cm">// default and static methods can exist freely</span>
+    <span class="kw">default</span> <span class="tp">String</span> <span class="fn">describe</span>() { <span class="kw">return</span> <span class="st">"I add numbers"</span>; }
+}
+
+<span class="tp">Adder</span> sum = (a, b) -> a + b;
+System.out.println(sum.add(<span class="nu">3</span>, <span class="nu">5</span>)); <span class="cm">// 8</span>
+
+<span class="cm">// FizzBuzz using functional interface</span>
+<span class="an">@FunctionalInterface</span>
+<span class="kw">interface</span> <span class="tp">FizzBuzzCheck</span> {
+    <span class="tp">String</span> <span class="fn">check</span>(<span class="tp">int</span> n);
+}
+<span class="tp">FizzBuzzCheck</span> fb = n ->
+    n % <span class="nu">15</span> == <span class="nu">0</span> ? <span class="st">"FizzBuzz"</span> :
+    n % <span class="nu">3</span>  == <span class="nu">0</span> ? <span class="st">"Fizz"</span> :
+    n % <span class="nu">5</span>  == <span class="nu">0</span> ? <span class="st">"Buzz"</span> :
+    <span class="tp">String</span>.valueOf(n);
+System.out.println(fb.check(<span class="nu">15</span>)); <span class="cm">// FizzBuzz</span></pre>
+    <p><strong>Is @FunctionalInterface mandatory?</strong> No. Any interface with exactly one abstract method qualifies as a functional interface and can be used with lambdas — whether or not it has the annotation. But adding <code class="il">@FunctionalInterface</code> is strongly recommended because: 1) it makes your intent clear to other developers 2) the compiler will give you a compile-time error if you accidentally add a second abstract method.</p>
+  </div>
+</div>
+
+<div class="qa" onclick="toggle(this)">
+  <div class="qa-q"><span class="qn">Q2</span><span class="qt">Predicate vs Function vs Supplier vs Consumer — explain with examples</span><span class="qa-arr">▾</span></div>
+  <div class="qa-body">
+    <p>Java 8 ships with built-in functional interfaces in <code class="il">java.util.function</code> so you don't have to create your own for common patterns. The four core ones:</p>
+    <table>
+      <tr><th>Interface</th><th>Abstract Method</th><th>Input → Output</th><th>Use case</th></tr>
+      <tr><td><strong>Predicate&lt;T&gt;</strong></td><td>test(T t)</td><td>T → boolean</td><td>Filter / check a condition</td></tr>
+      <tr><td><strong>Function&lt;T,R&gt;</strong></td><td>apply(T t)</td><td>T → R</td><td>Transform / map one type to another</td></tr>
+      <tr><td><strong>Supplier&lt;T&gt;</strong></td><td>get()</td><td>nothing → T</td><td>Lazily produce a value, factory</td></tr>
+      <tr><td><strong>Consumer&lt;T&gt;</strong></td><td>accept(T t)</td><td>T → void</td><td>Side effects: print, save, send</td></tr>
+    </table>
+<pre><span class="cm">// Predicate — is this number even?</span>
+<span class="tp">Predicate</span>&lt;<span class="tp">Integer</span>&gt; isEven = n -> n % <span class="nu">2</span> == <span class="nu">0</span>;
+System.out.println(isEven.test(<span class="nu">4</span>));  <span class="cm">// true</span>
+System.out.println(isEven.test(<span class="nu">7</span>));  <span class="cm">// false</span>
+
+<span class="cm">// Chaining predicates</span>
+<span class="tp">Predicate</span>&lt;<span class="tp">Integer</span>&gt; isPositive = n -> n > <span class="nu">0</span>;
+<span class="tp">Predicate</span>&lt;<span class="tp">Integer</span>&gt; isEvenAndPositive = isEven.and(isPositive);
+<span class="tp">Predicate</span>&lt;<span class="tp">Integer</span>&gt; isEvenOrNegative  = isEven.or(isPositive.negate());
+
+<span class="cm">// Function — convert String to its length</span>
+<span class="tp">Function</span>&lt;<span class="tp">String</span>, <span class="tp">Integer</span>&gt; len = s -> s.length();
+System.out.println(len.apply(<span class="st">"hello"</span>)); <span class="cm">// 5</span>
+
+<span class="cm">// Chaining functions with andThen</span>
+<span class="tp">Function</span>&lt;<span class="tp">String</span>, <span class="tp">String</span>&gt; trim = String::trim;
+<span class="tp">Function</span>&lt;<span class="tp">String</span>, <span class="tp">String</span>&gt; upper = String::toUpperCase;
+<span class="tp">Function</span>&lt;<span class="tp">String</span>, <span class="tp">String</span>&gt; clean = trim.andThen(upper);
+System.out.println(clean.apply(<span class="st">"  hello  "</span>)); <span class="cm">// HELLO</span>
+
+<span class="cm">// Supplier — lazy date generation (only computed when .get() is called)</span>
+<span class="tp">Supplier</span>&lt;<span class="tp">LocalDate</span>&gt; today = LocalDate::now;
+System.out.println(today.get()); <span class="cm">// 2024-01-15</span>
+
+<span class="cm">// Consumer — print with formatting</span>
+<span class="tp">Consumer</span>&lt;<span class="tp">String</span>&gt; printer = s -> System.out.println("[LOG] " + s);
+printer.accept(<span class="st">"System started"</span>); <span class="cm">// [LOG] System started</span>
+
+<span class="cm">// BiFunction — two inputs, one output</span>
+<span class="tp">BiFunction</span>&lt;<span class="tp">Integer</span>, <span class="tp">Integer</span>, <span class="tp">String</span>&gt; add = 
+    (a, b) -> <span class="st">"Sum is: "</span> + (a + b);
+System.out.println(add.apply(<span class="nu">3</span>, <span class="nu">4</span>)); <span class="cm">// Sum is: 7</span></pre>
+  </div>
+</div>
+
+<div class="qa" onclick="toggle(this)">
+  <div class="qa-q"><span class="qn">Q3</span><span class="qt">Intermediate vs Terminal Stream operations — identify them in real code</span><span class="qa-arr">▾</span></div>
+  <div class="qa-body">
+    <p>Streams work in two phases. <strong>Intermediate operations</strong> are lazy — they don't execute immediately when called. They build up a pipeline. <strong>Terminal operations</strong> trigger the entire pipeline to run and produce a result or side effect.</p>
+    <div class="diff">
+      <div class="dc a"><h4>Intermediate (Lazy)</h4><ul><li><strong>filter()</strong> — keep elements matching predicate</li><li><strong>map()</strong> — transform each element</li><li><strong>flatMap()</strong> — flatten nested collections</li><li><strong>sorted()</strong> — sort elements</li><li><strong>distinct()</strong> — remove duplicates</li><li><strong>limit(n)</strong> — take first n elements</li><li><strong>skip(n)</strong> — skip first n elements</li><li><strong>peek()</strong> — debug/side effect without changing pipeline</li></ul></div>
+      <div class="dc b"><h4>Terminal (Eager, triggers execution)</h4><ul><li><strong>collect()</strong> — gather into collection</li><li><strong>forEach()</strong> — consume each element</li><li><strong>count()</strong> — count elements</li><li><strong>reduce()</strong> — fold to single value</li><li><strong>findFirst()</strong> / findAny()</li><li><strong>anyMatch()</strong> / allMatch() / noneMatch()</li><li><strong>min()</strong> / max()</li><li><strong>toArray()</strong></li></ul></div>
+    </div>
+<pre><span class="cm">// Real example: process a list of employees</span>
+List&lt;<span class="tp">Employee</span>&gt; employees = getEmployees();
+
+<span class="tp">List</span>&lt;<span class="tp">String</span>&gt; seniorDevNames = employees.stream()
+    .filter(e -> e.getRole().equals(<span class="st">"Developer"</span>))  <span class="cm">// intermediate</span>
+    .filter(e -> e.getExperience() > <span class="nu">5</span>)             <span class="cm">// intermediate</span>
+    .sorted(Comparator.comparing(Employee::getName)) <span class="cm">// intermediate</span>
+    .map(Employee::getName)                          <span class="cm">// intermediate</span>
+    .collect(Collectors.toList());                   <span class="cm">// TERMINAL — runs everything</span>
+
+<span class="cm">// Nothing above executed until collect() was called!</span>
+
+<span class="cm">// Grouping with collectors</span>
+Map&lt;<span class="tp">String</span>, List&lt;<span class="tp">Employee</span>&gt;&gt; byDept = employees.stream()
+    .collect(Collectors.groupingBy(Employee::getDepartment));
+
+<span class="cm">// Average salary per department</span>
+Map&lt;<span class="tp">String</span>, <span class="tp">Double</span>&gt; avgSalary = employees.stream()
+    .collect(Collectors.groupingBy(
+        Employee::getDepartment,
+        Collectors.averagingDouble(Employee::getSalary)
+    ));</pre>
+    <div class="warn"><span class="bl">⚠️ Common Parallel Stream Pitfalls</span><p>parallelStream() uses the common ForkJoinPool shared by the whole JVM. In a web server that already uses threads for requests, this can steal threads from request processing. It also has overhead for splitting and merging — for small lists it's actually slower than sequential. Never use it with mutable shared state without synchronization. Only use it for CPU-bound tasks on large data (10,000+ elements) in batch processing, never in web request handlers.</p></div>
+  </div>
+</div>
+
+<div class="qa" onclick="toggle(this)">
+  <div class="qa-q"><span class="qn">Q4</span><span class="qt">CompletableFuture — async programming, key methods, chaining</span><span class="qa-arr">▾</span></div>
+  <div class="qa-body">
+    <div class="ana"><span class="bl">🍳 Analogy</span><p>Old way: You go to a restaurant, order food, and STAND at the counter staring at the chef until your food is ready — blocking everything else. CompletableFuture: You order food, get a buzzer, go back to your table and do other things. When the buzzer goes off (future completes), you go pick it up. You can even say "when my food is ready, automatically bring it to my table" (thenAccept).</p></div>
+    <p>Without async programming, if your service calls a slow database or external API, the calling thread just sits and waits, doing nothing useful. CompletableFuture lets that thread be freed to handle other requests while the slow operation runs in the background.</p>
+<pre><span class="cm">// Basic async execution</span>
+<span class="tp">CompletableFuture</span>&lt;<span class="tp">String</span>&gt; future = 
+    <span class="tp">CompletableFuture</span>.supplyAsync(() -> {
+        <span class="cm">// runs in ForkJoinPool thread, NOT the calling thread</span>
+        <span class="kw">return</span> callSlowExternalAPI(); 
+    });
+
+<span class="cm">// Chain operations — each runs when previous completes</span>
+<span class="tp">CompletableFuture</span>&lt;<span class="tp">Void</span>&gt; pipeline = <span class="tp">CompletableFuture</span>
+    .supplyAsync(() -> fetchUserFromDB(userId))          <span class="cm">// async fetch</span>
+    .thenApply(user -> enrichWithProfile(user))          <span class="cm">// transform result</span>
+    .thenApply(user -> user.toResponseDTO())             <span class="cm">// transform again</span>
+    .thenAccept(dto -> sendToClient(dto))                <span class="cm">// consume result</span>
+    .exceptionally(ex -> {                               <span class="cm">// handle errors</span>
+        log.error(<span class="st">"Failed: "</span>, ex);
+        <span class="kw">return null</span>;
+    });
+
+<span class="cm">// Run two async tasks in PARALLEL and combine results</span>
+<span class="tp">CompletableFuture</span>&lt;<span class="tp">User</span>&gt;    userFuture    = <span class="tp">CompletableFuture</span>.supplyAsync(() -> fetchUser(id));
+<span class="tp">CompletableFuture</span>&lt;<span class="tp">Orders</span>&gt;  ordersFuture  = <span class="tp">CompletableFuture</span>.supplyAsync(() -> fetchOrders(id));
+
+<span class="cm">// thenCombine: wait for BOTH, then combine</span>
+<span class="tp">CompletableFuture</span>&lt;<span class="tp">UserProfile</span>&gt; profile = userFuture
+    .thenCombine(ordersFuture, (user, orders) -> 
+        <span class="kw">new</span> <span class="tp">UserProfile</span>(user, orders));
+
+<span class="cm">// allOf: wait for ALL to complete</span>
+<span class="tp">CompletableFuture</span>.allOf(userFuture, ordersFuture).join();
+
+<span class="cm">// Use custom thread pool (important in web apps — don't use common pool)</span>
+<span class="tp">ExecutorService</span> pool = Executors.newFixedThreadPool(<span class="nu">10</span>);
+<span class="tp">CompletableFuture</span>.supplyAsync(() -> slowTask(), pool);</pre>
+  </div>
+</div>
+
+<div class="qa" onclick="toggle(this)">
+  <div class="qa-q"><span class="qn">Q5</span><span class="qt">Method References — 4 types with examples. Sort a list ignoring case.</span><span class="qa-arr">▾</span></div>
+  <div class="qa-body">
+    <p>Method references are shorthand for lambdas that just call an existing method. Instead of <code class="il">x -> x.toLowerCase()</code> you write <code class="il">String::toLowerCase</code>. Syntax: <code class="il">ClassName::methodName</code></p>
+    <table>
+      <tr><th>Type</th><th>Syntax</th><th>Lambda Equivalent</th><th>Example</th></tr>
+      <tr><td>Static method</td><td>Class::method</td><td>x -> Class.method(x)</td><td>Integer::parseInt</td></tr>
+      <tr><td>Instance method (specific object)</td><td>obj::method</td><td>() -> obj.method()</td><td>System.out::println</td></tr>
+      <tr><td>Instance method (arbitrary object of type)</td><td>Class::method</td><td>x -> x.method()</td><td>String::toUpperCase</td></tr>
+      <tr><td>Constructor</td><td>Class::new</td><td>() -> new Class()</td><td>ArrayList::new</td></tr>
+    </table>
+<pre><span class="cm">// Sort strings ignoring case — interview question</span>
+<span class="tp">List</span>&lt;<span class="tp">String</span>&gt; names = Arrays.asList(<span class="st">"Banana"</span>, <span class="st">"apple"</span>, <span class="st">"Cherry"</span>, <span class="st">"date"</span>);
+
+<span class="cm">// Lambda version</span>
+names.sort((a, b) -> a.compareToIgnoreCase(b));
+
+<span class="cm">// Method reference version (cleaner)</span>
+names.sort(<span class="tp">String</span>::compareToIgnoreCase);
+
+System.out.println(names); <span class="cm">// [apple, Banana, Cherry, date]</span>
+
+<span class="cm">// More examples</span>
+list.forEach(System.out::println);         <span class="cm">// instance method on specific object</span>
+list.stream().map(Integer::parseInt);       <span class="cm">// static method</span>
+list.stream().map(String::toUpperCase);     <span class="cm">// instance method on type</span>
+list.stream().map(User::new);               <span class="cm">// constructor reference</span></pre>
+  </div>
+</div>
+</div>
+<!-- END JAVA 8 -->
+
+<!-- ═══════════════════════════════════════ COLLECTIONS ═══════════════════════════════════════ -->
+<div class="ch" id="collections">
+<div class="ch-head">
+  <div class="ch-n">03</div>
+  <div class="ch-info">
+    <div class="ch-title">Collections</div>
+    <div class="ch-sub">ArrayList, HashMap internals, ConcurrentHashMap, Comparator, immutability</div>
+    <div class="ch-tags"><span class="ctag hot">🔥 HashMap Always Asked</span><span class="ctag med">Deep Internals</span></div>
+  </div>
+</div>
+
+<div class="qa" onclick="toggle(this)">
+  <div class="qa-q"><span class="qn">Q1</span><span class="qt">Internal working of ArrayList — when is a new array created? How does resizing work?</span><span class="qa-arr">▾</span></div>
+  <div class="qa-body">
+    <div class="ana"><span class="bl">🍳 Analogy</span><p>Imagine a parking lot that starts with 10 parking spots. When all 10 are full and a new car arrives, the owner builds a new lot with 15 spots (50% bigger), drives all 10 cars from the old lot to the new one, parks the 11th car, and tears down the old lot. The driver didn't notice anything — the lot just got bigger.</p></div>
+    <p>ArrayList internally wraps a plain <code class="il">Object[]</code> array. This is why it gives O(1) random access by index — it's literally array indexing. The default initial capacity is <strong>10</strong>.</p>
+<pre><span class="cm">// Inside ArrayList source code (simplified)</span>
+<span class="kw">public class</span> <span class="tp">ArrayList</span>&lt;E&gt; {
+    <span class="kw">private</span> <span class="tp">Object</span>[] elementData; <span class="cm">// the backing array</span>
+    <span class="kw">private int</span> size;              <span class="cm">// how many elements currently stored</span>
+    
+    <span class="kw">public</span> <span class="fn">ArrayList</span>() {
+        elementData = <span class="kw">new</span> <span class="tp">Object</span>[<span class="nu">10</span>]; <span class="cm">// default capacity = 10</span>
+    }
+    
+    <span class="kw">public boolean</span> <span class="fn">add</span>(<span class="tp">E</span> element) {
+        <span class="kw">if</span> (size == elementData.length) {
+            <span class="cm">// Array is full — grow by 50%</span>
+            <span class="kw">int</span> newCap = elementData.length + (elementData.length >> <span class="nu">1</span>); <span class="cm">// * 1.5</span>
+            elementData = Arrays.copyOf(elementData, newCap); <span class="cm">// new array + copy</span>
+        }
+        elementData[size++] = element;
+        <span class="kw">return true</span>;
+    }
+}</pre>
+    <p>The key performance implication: if you know you'll add 1000 elements, pre-size the list with <code class="il">new ArrayList&lt;&gt;(1000)</code> to avoid 3-4 resize-and-copy cycles. Each copy is O(n), so multiple resizes on large lists wastes time.</p>
+    <p><strong>ArrayList vs LinkedList — when to use which?</strong></p>
+    <table>
+      <tr><th>Operation</th><th>ArrayList</th><th>LinkedList</th><th>Why</th></tr>
+      <tr><td>get(index)</td><td>O(1) ✅ fast</td><td>O(n) ❌ slow</td><td>ArrayList: direct array index. LinkedList: traverse from head.</td></tr>
+      <tr><td>add(end)</td><td>O(1) amortized</td><td>O(1)</td><td>Both fast at end</td></tr>
+      <tr><td>add(middle)</td><td>O(n) ❌ slow</td><td>O(1) after pointer</td><td>ArrayList must shift elements. LinkedList just rewires pointers.</td></tr>
+      <tr><td>Memory</td><td>Less overhead</td><td>More overhead</td><td>Each LinkedList node stores next/prev pointers</td></tr>
+    </table>
+    <p><strong>In practice:</strong> Use ArrayList almost always. LinkedList is only better when you're doing lots of insertions/deletions at the middle and rarely reading by index — which is rare in real applications.</p>
+  </div>
+</div>
+
+<div class="qa" onclick="toggle(this)">
+  <div class="qa-q"><span class="qn">Q2</span><span class="qt">HashMap internal working — hashing, buckets, collisions, Red-Black tree. What happens when you put a duplicate key?</span><span class="qa-arr">▾</span></div>
+  <div class="qa-body">
+    <div class="ana"><span class="bl">🍳 Analogy</span><p>A HashMap is like a large filing cabinet. Each drawer is a "bucket" (array index). When you file something, you first read the label (call hashCode), convert it to a drawer number (hash & capacity-1), open that drawer. If the drawer is empty, put it in. If the drawer already has something, check if it's the same label (equals). If yes — it's a duplicate key, replace the value. If different labels but same drawer — it's a collision, so you start a list of files in that drawer. In Java 8+, once a drawer has 8+ files, the list upgrades to a faster Red-Black tree for O(log n) search.</p></div>
+<pre><span class="cm">// Step-by-step: what happens when you call map.put("name", "Alice")</span>
+
+<span class="cm">// Step 1: compute hash</span>
+<span class="kw">int</span> hash = key.hashCode();           <span class="cm">// "name".hashCode() = some number</span>
+hash = hash ^ (hash >>> <span class="nu">16</span>);       <span class="cm">// secondary hash to spread better</span>
+
+<span class="cm">// Step 2: find bucket index</span>
+<span class="kw">int</span> index = hash & (capacity - <span class="nu">1</span>);  <span class="cm">// if capacity=16, index is 0-15</span>
+
+<span class="cm">// Step 3: check bucket</span>
+<span class="cm">// If empty → create new Node and place there</span>
+<span class="cm">// If occupied → traverse the linked list/tree</span>
+<span class="cm">//   → if key.equals(existingKey) → UPDATE the value (duplicate key!)</span>
+<span class="cm">//   → if key doesn't equal → add new Node to the chain (collision)</span>
+
+<span class="cm">// Step 4: check if resize needed</span>
+<span class="cm">// if (size > capacity * loadFactor) → double capacity, rehash everything</span>
+<span class="cm">// Default: 16 * 0.75 = 12 entries before resize to 32</span></pre>
+    <p><strong>When a duplicate key is put:</strong> The existing entry's value is overwritten with the new value. The key count does not increase. <code class="il">put()</code> returns the old value that was replaced.</p>
+    <p><strong>Collision resolution evolution:</strong></p>
+    <ul>
+      <li>Bucket has 0-7 entries → stored as a singly-linked list (Node)</li>
+      <li>Bucket reaches 8 entries AND total capacity ≥ 64 → upgraded to a Red-Black Tree (TreeNode) → O(log n) lookup instead of O(n)</li>
+      <li>If the tree shrinks back to 6 entries → converts back to linked list</li>
+    </ul>
+    <div class="note"><span class="bl">📋 Why override BOTH hashCode() and equals()?</span><p><strong>hashCode()</strong> determines WHICH bucket the key goes to. <strong>equals()</strong> determines WHICH entry within that bucket is the same key. If two objects are "equal" by your business logic but have different hashCodes, they'll land in different buckets and HashMap will treat them as different keys — completely broken. Always override both together.</p></div>
+<pre><span class="cm">// CORRECT custom key in HashMap</span>
+<span class="kw">class</span> <span class="tp">Employee</span> {
+    <span class="kw">int</span> id; <span class="tp">String</span> name;
+    
+    <span class="an">@Override</span>
+    <span class="kw">public int</span> <span class="fn">hashCode</span>() {
+        <span class="kw">return</span> Objects.hash(id, name); <span class="cm">// same fields as equals</span>
+    }
+    <span class="an">@Override</span>
+    <span class="kw">public boolean</span> <span class="fn">equals</span>(<span class="tp">Object</span> o) {
+        <span class="kw">if</span> (!(o <span class="kw">instanceof</span> <span class="tp">Employee</span>)) <span class="kw">return false</span>;
+        <span class="tp">Employee</span> e = (<span class="tp">Employee</span>) o;
+        <span class="kw">return</span> <span class="kw">this</span>.id == e.id && <span class="tp">Objects</span>.equals(<span class="kw">this</span>.name, e.name);
+    }
+}</pre>
+  </div>
+</div>
+
+<div class="qa" onclick="toggle(this)">
+  <div class="qa-q"><span class="qn">Q3</span><span class="qt">ConcurrentHashMap vs Hashtable vs Collections.synchronizedMap — which when?</span><span class="qa-arr">▾</span></div>
+  <div class="qa-body">
+    <p><strong>Hashtable</strong> — every single method (get, put, remove, size, containsKey) is synchronized on the entire Hashtable object. This means only ONE thread can do ANYTHING to it at a time. If Thread A is doing a get() on key "user123", Thread B cannot even do a get() on key "order456" even though they're completely separate entries. This is terrible performance.</p>
+    <p><strong>Collections.synchronizedMap()</strong> wraps any map with synchronized blocks. Similar to Hashtable — one lock for the whole map. Fine for simple use cases but iteration still needs external synchronization.</p>
+    <p><strong>ConcurrentHashMap (Java 8)</strong> uses a completely different approach:</p>
+    <ul>
+      <li>For reads (get) — <strong>no lock at all</strong>. Uses volatile reads. Multiple threads can read simultaneously.</li>
+      <li>For writes (put) — locks only the specific bucket being modified using CAS (Compare-And-Swap) or a synchronized block on just that bucket's Node. Two threads writing to completely different buckets proceed in parallel.</li>
+      <li>Result: near-HashMap performance with full thread safety.</li>
+    </ul>
+<pre><span class="cm">// DO NOT USE in multithreaded code</span>
+<span class="tp">Hashtable</span>&lt;<span class="tp">String</span>,<span class="tp">String</span>&gt; ht = <span class="kw">new</span> <span class="tp">Hashtable</span>&lt;&gt;(); <span class="cm">// one lock, slow</span>
+
+<span class="cm">// BETTER — but still one lock for whole map</span>
+<span class="tp">Map</span>&lt;<span class="tp">String</span>,<span class="tp">String</span>&gt; sm = Collections.synchronizedMap(<span class="kw">new</span> <span class="tp">HashMap</span>&lt;&gt;());
+
+<span class="cm">// BEST for concurrent access</span>
+<span class="tp">ConcurrentHashMap</span>&lt;<span class="tp">String</span>,<span class="tp">String</span>&gt; chm = <span class="kw">new</span> <span class="tp">ConcurrentHashMap</span>&lt;&gt;();
+chm.put(<span class="st">"k1"</span>, <span class="st">"v1"</span>);
+
+<span class="cm">// Atomic operations that are NOT possible with regular HashMap</span>
+chm.putIfAbsent(<span class="st">"k1"</span>, <span class="st">"newValue"</span>);  <span class="cm">// only put if key not present, atomically</span>
+chm.computeIfAbsent(<span class="st">"k2"</span>, k -> loadFromDB(k)); <span class="cm">// compute value if absent</span>
+chm.merge(<span class="st">"counter"</span>, <span class="nu">1</span>, Integer::sum);  <span class="cm">// atomic increment pattern</span></pre>
+    <div class="note"><span class="bl">📋 ConcurrentHashMap does NOT allow null keys or null values</span><p>HashMap allows one null key and null values. ConcurrentHashMap doesn't — because null creates ambiguity: if get("key") returns null, you can't tell if the key doesn't exist or if the value is null. In concurrent code, this ambiguity causes bugs.</p></div>
+  </div>
+</div>
+
+<div class="qa" onclick="toggle(this)">
+  <div class="qa-q"><span class="qn">Q4</span><span class="qt">Comparator vs Comparable — implement Employee sorting by descending salary</span><span class="qa-arr">▾</span></div>
+  <div class="qa-body">
+    <p><strong>Comparable</strong> — the class defines its own natural ordering. Think of it as "I know how to compare myself to others of my type." Implement <code class="il">compareTo()</code> in the class itself. Example: String, Integer, LocalDate all implement Comparable — that's why they sort naturally.</p>
+    <p><strong>Comparator</strong> — an external comparison strategy. Think of it as "a judge who compares two things by some criteria." You don't need to modify the class. You can have multiple Comparators for the same class (sort by salary, sort by name, sort by age — all different Comparators).</p>
+<pre><span class="cm">// Employee with Comparable (natural order = by id)</span>
+<span class="kw">class</span> <span class="tp">Employee</span> <span class="kw">implements</span> <span class="tp">Comparable</span>&lt;<span class="tp">Employee</span>&gt; {
+    <span class="kw">int</span> id;
+    <span class="tp">String</span> name;
+    <span class="kw">int</span> age;
+    <span class="kw">double</span> salary;
+    
+    <span class="cm">// Natural order: by id ascending</span>
+    <span class="an">@Override</span>
+    <span class="kw">public int</span> <span class="fn">compareTo</span>(<span class="tp">Employee</span> other) {
+        <span class="kw">return</span> <span class="tp">Integer</span>.compare(<span class="kw">this</span>.id, other.id);
+    }
+}
+
+<span class="cm">// Multiple Comparators for different sorting needs</span>
+<span class="tp">Comparator</span>&lt;<span class="tp">Employee</span>&gt; bySalaryDesc = 
+    <span class="tp">Comparator</span>.comparingDouble(<span class="tp">Employee</span>::getSalary).reversed();
+
+<span class="tp">Comparator</span>&lt;<span class="tp">Employee</span>&gt; byNameAsc = 
+    <span class="tp">Comparator</span>.comparing(<span class="tp">Employee</span>::getName);
+
+<span class="cm">// Chain comparators: sort by salary desc, then by name if salary is same</span>
+<span class="tp">Comparator</span>&lt;<span class="tp">Employee</span>&gt; combined = bySalaryDesc.thenComparing(byNameAsc);
+
+employees.sort(combined);
+
+<span class="cm">// Using streams</span>
+<span class="tp">List</span>&lt;<span class="tp">Employee</span>&gt; sorted = employees.stream()
+    .sorted(<span class="tp">Comparator</span>.comparingDouble(<span class="tp">Employee</span>::getSalary).reversed())
+    .collect(Collectors.toList());</pre>
+  </div>
+</div>
+
+<div class="qa" onclick="toggle(this)">
+  <div class="qa-q"><span class="qn">Q5</span><span class="qt">How to create an Immutable class? Why are they needed? Deep cloning?</span><span class="qa-arr">▾</span></div>
+  <div class="qa-body">
+    <p>An immutable class is one whose state cannot change after the object is created. String is the most famous example. Benefits: automatically thread-safe (no synchronization needed), safe as HashMap keys (hashCode won't change), simpler reasoning about program state.</p>
+    <div class="note"><span class="bl">📋 Recipe for an Immutable Class</span>
+    <ul>
+      <li>Mark the class <code class="il">final</code> — prevents subclasses from adding mutability</li>
+      <li>Make all fields <code class="il">private final</code></li>
+      <li>No setters anywhere</li>
+      <li>Initialize all fields in the constructor only</li>
+      <li>For mutable fields (List, Date, arrays): accept a <strong>deep copy</strong> in the constructor, return a <strong>deep copy</strong> in getters — never the original reference</li>
+    </ul></div>
+<pre><span class="kw">public final class</span> <span class="tp">ImmutableEmployee</span> {
+    <span class="kw">private final int</span> id;
+    <span class="kw">private final</span> <span class="tp">String</span> name;
+    <span class="kw">private final</span> <span class="tp">List</span>&lt;<span class="tp">String</span>&gt; skills;  <span class="cm">// mutable — needs defensive copy!</span>
+    <span class="kw">private final</span> <span class="tp">Date</span> joiningDate;     <span class="cm">// mutable — needs defensive copy!</span>
+    
+    <span class="kw">public</span> <span class="fn">ImmutableEmployee</span>(<span class="kw">int</span> id, <span class="tp">String</span> name, 
+                              List&lt;<span class="tp">String</span>&gt; skills, <span class="tp">Date</span> joiningDate) {
+        <span class="kw">this</span>.id = id;
+        <span class="kw">this</span>.name = name;
+        <span class="cm">// Defensive copy of mutable list</span>
+        <span class="kw">this</span>.skills = <span class="tp">List</span>.copyOf(skills); <span class="cm">// Java 10+, or new ArrayList&lt;&gt;(skills)</span>
+        <span class="cm">// Defensive copy of mutable Date</span>
+        <span class="kw">this</span>.joiningDate = <span class="kw">new</span> <span class="tp">Date</span>(joiningDate.getTime());
+    }
+    
+    <span class="kw">public</span> List&lt;<span class="tp">String</span>&gt; <span class="fn">getSkills</span>() {
+        <span class="kw">return</span> Collections.unmodifiableList(skills); <span class="cm">// or new copy</span>
+    }
+    
+    <span class="kw">public</span> <span class="tp">Date</span> <span class="fn">getJoiningDate</span>() {
+        <span class="kw">return new</span> <span class="tp">Date</span>(joiningDate.getTime()); <span class="cm">// defensive copy on get too</span>
+    }
+    <span class="cm">// No setters! Only getters.</span>
+}
+
+<span class="cm">// Shallow vs Deep Clone</span>
+<span class="cm">// Shallow: copies references — both original and clone share nested objects</span>
+<span class="tp">Employee</span> clone = original.clone(); <span class="cm">// shallow — skills list is shared!</span>
+clone.getSkills().add(<span class="st">"Hacking"</span>);  <span class="cm">// also modifies original.skills!</span>
+
+<span class="cm">// Deep: duplicates all nested objects — fully independent</span>
+<span class="cm">// Manual deep copy or use serialization trick:</span>
+<span class="tp">Employee</span> deepClone = deserialize(serialize(original)); <span class="cm">// fully independent</span></pre>
+  </div>
+</div>
+</div>
+<!-- END COLLECTIONS -->
+<!-- ═══════════════════════════════════════ EXCEPTIONS ═══════════════════════════════════════ -->
+<div class="ch" id="exceptions">
+<div class="ch-head">
+  <div class="ch-n">04</div>
+  <div class="ch-info">
+    <div class="ch-title">Exception Handling</div>
+    <div class="ch-sub">Checked vs unchecked, finally, try-with-resources, custom exceptions, propagation</div>
+    <div class="ch-tags"><span class="ctag med">Output Questions</span><span class="ctag ok">Moderate</span></div>
+  </div>
+</div>
+
+<div class="qa" onclick="toggle(this)">
+  <div class="qa-q"><span class="qn">Q1</span><span class="qt">Throwable hierarchy? Checked vs Unchecked exceptions with examples?</span><span class="qa-arr">▾</span></div>
+  <div class="qa-body">
+<pre><span class="cm">// Java exception hierarchy</span>
+<span class="tp">Throwable</span>
+├── <span class="tp">Error</span>                  <span class="cm">// JVM-level catastrophic failures</span>
+│   ├── <span class="tp">OutOfMemoryError</span>
+│   ├── <span class="tp">StackOverflowError</span>
+│   └── <span class="tp">VirtualMachineError</span>
+└── <span class="tp">Exception</span>             <span class="cm">// Application-level problems</span>
+    ├── <span class="tp">IOException</span>        <span class="cm">// CHECKED — compiler forces you to handle</span>
+    ├── <span class="tp">SQLException</span>       <span class="cm">// CHECKED</span>
+    ├── <span class="tp">ClassNotFoundException</span>
+    └── <span class="tp">RuntimeException</span>   <span class="cm">// UNCHECKED — compiler doesn't force handling</span>
+        ├── <span class="tp">NullPointerException</span>
+        ├── <span class="tp">ArrayIndexOutOfBoundsException</span>
+        ├── <span class="tp">IllegalArgumentException</span>
+        └── <span class="tp">ArithmeticException</span></pre>
+    <div class="ana"><span class="bl">🍳 Analogy</span><p><strong>Checked exception</strong>: You're going on a road trip. Your GPS warns you "Road closed ahead — plan a detour before you leave." The compiler (GPS) forces you to handle it before the program runs. <strong>Unchecked exception</strong>: You're driving and suddenly get a flat tire — unexpected, no advance warning, happens at runtime. You can choose to handle it or let it propagate.</p></div>
+    <p><strong>Checked Exceptions</strong> — Extend <code class="il">Exception</code> (not RuntimeException). The compiler forces you to either catch them with try-catch or declare them with <code class="il">throws</code>. Designed for situations that are expected and recoverable. Examples: FileNotFoundException (file might not exist), SQLException (DB might be down), IOException.</p>
+    <p><strong>Unchecked Exceptions</strong> — Extend <code class="il">RuntimeException</code>. Compiler doesn't force handling. Usually indicate programming bugs: NullPointerException (you forgot to null-check), ArrayIndexOutOfBoundsException (wrong index), IllegalArgumentException (invalid input). You should fix the bug, not catch the exception.</p>
+    <p><strong>Errors</strong> — Not meant to be caught or recovered from. OutOfMemoryError, StackOverflowError are JVM-level issues that your application cannot meaningfully handle.</p>
+<pre><span class="cm">// Checked — compiler forces you to handle</span>
+<span class="kw">public void</span> <span class="fn">readFile</span>(<span class="tp">String</span> path) <span class="kw">throws</span> <span class="tp">IOException</span> {  <span class="cm">// must declare</span>
+    <span class="kw">try</span> {
+        <span class="tp">FileReader</span> reader = <span class="kw">new</span> <span class="tp">FileReader</span>(path);
+    } <span class="kw">catch</span> (<span class="tp">FileNotFoundException</span> e) {     <span class="cm">// or must catch</span>
+        System.out.println(<span class="st">"File not found: "</span> + e.getMessage());
+    }
+}
+
+<span class="cm">// Unchecked — no compiler enforcement (but can catch if needed)</span>
+<span class="kw">public void</span> <span class="fn">process</span>(<span class="tp">String</span> input) {
+    <span class="cm">// NullPointerException happens at runtime if input is null</span>
+    System.out.println(input.length());
+    
+    <span class="cm">// Better — validate early and throw meaningful exception</span>
+    <span class="kw">if</span> (input == <span class="ky">null</span>) {
+        <span class="kw">throw new</span> <span class="tp">IllegalArgumentException</span>(<span class="st">"Input must not be null"</span>);
+    }
+}</pre>
+  </div>
+</div>
+
+<div class="qa" onclick="toggle(this)">
+  <div class="qa-q"><span class="qn">Q2</span><span class="qt">Output of finally block with return? When does finally NOT execute?</span><span class="qa-arr">▾</span></div>
+  <div class="qa-body">
+    <p>The output of the code in the question is:</p>
+<pre>In try block
+In finally block
+Result: 30</pre>
+    <p><strong>Why 30?</strong> The finally block <em>always executes</em> before the method actually returns. When both try and finally have <code class="il">return</code> statements, the finally's return wins and completely replaces the try's return value. The <code class="il">return 10</code> in try was about to return, but finally intercepted it, executed, and returned 30 instead. This is why <strong>you should NEVER put a return statement inside a finally block</strong> — it can also silently swallow exceptions:</p>
+<pre><span class="kw">try</span> {
+    <span class="kw">throw new</span> <span class="tp">RuntimeException</span>(<span class="st">"something failed"</span>);
+} <span class="kw">finally</span> {
+    <span class="kw">return</span> <span class="nu">42</span>; <span class="cm">// SWALLOWS the exception! Caller never knows it failed!</span>
+}</pre>
+    <p>The finally block does NOT execute in these scenarios:</p>
+    <ul>
+      <li><code class="il">System.exit()</code> is called — JVM terminates immediately</li>
+      <li>JVM crashes or is killed with kill -9</li>
+      <li>The thread running the try block is forcibly stopped</li>
+      <li>The try block contains an infinite loop with no exit condition</li>
+    </ul>
+    <div class="tip"><span class="bl">✅ Best Practice</span><p>Use finally only for cleanup (close resources, release locks). For resource cleanup specifically, prefer try-with-resources instead — it's cleaner and handles exceptions properly.</p></div>
+  </div>
+</div>
+
+<div class="qa" onclick="toggle(this)">
+  <div class="qa-q"><span class="qn">Q3</span><span class="qt">Try-with-resources — how it works, Java 9 change, when to use?</span><span class="qa-arr">▾</span></div>
+  <div class="qa-body">
+    <p>Try-with-resources (Java 7) automatically calls <code class="il">close()</code> on any resource that implements <code class="il">AutoCloseable</code> when the try block exits — whether normally or due to an exception. No more forgetting to close in finally.</p>
+<pre><span class="cm">// OLD WAY — easy to forget close, messy error handling</span>
+<span class="tp">Connection</span> conn = <span class="ky">null</span>;
+<span class="tp">PreparedStatement</span> stmt = <span class="ky">null</span>;
+<span class="kw">try</span> {
+    conn = dataSource.getConnection();
+    stmt = conn.prepareStatement(<span class="st">"SELECT ..."</span>);
+    <span class="cm">// use stmt</span>
+} <span class="kw">catch</span> (<span class="tp">SQLException</span> e) {
+    e.printStackTrace();
+} <span class="kw">finally</span> {
+    <span class="kw">try</span> { <span class="kw">if</span> (stmt != <span class="ky">null</span>) stmt.close(); } <span class="kw">catch</span> (<span class="tp">SQLException</span> e) {}
+    <span class="kw">try</span> { <span class="kw">if</span> (conn != <span class="ky">null</span>) conn.close(); } <span class="kw">catch</span> (<span class="tp">SQLException</span> e) {}
+}
+
+<span class="cm">// JAVA 7 try-with-resources — auto-closes in REVERSE declaration order</span>
+<span class="kw">try</span> (<span class="tp">Connection</span> conn = dataSource.getConnection();
+     <span class="tp">PreparedStatement</span> stmt = conn.prepareStatement(<span class="st">"SELECT ..."</span>)) {
+    <span class="cm">// use stmt and conn</span>
+} <span class="kw">catch</span> (<span class="tp">SQLException</span> e) {
+    e.printStackTrace();
+}
+<span class="cm">// stmt.close() called first, then conn.close() — automatically!</span>
+
+<span class="cm">// JAVA 9 improvement — use existing effectively-final variable</span>
+<span class="tp">Connection</span> conn = dataSource.getConnection();
+<span class="kw">try</span> (conn) {   <span class="cm">// Java 9+: just reference the variable</span>
+    <span class="cm">// use conn</span>
+}</pre>
+    <p>Try-with-resources also handles the tricky case where both the try body AND the close() method throw exceptions. The close() exception is "suppressed" (attached to the main exception) instead of replacing it, so you don't lose the original error.</p>
+  </div>
+</div>
+
+<div class="qa" onclick="toggle(this)">
+  <div class="qa-q"><span class="qn">Q4</span><span class="qt">Exception propagation + overriding method and additional exceptions rule</span><span class="qa-arr">▾</span></div>
+  <div class="qa-body">
+    <p><strong>Exception Propagation</strong> — When an exception is thrown and not caught in a method, it propagates to the caller, then to the caller's caller, all the way up the call stack. If nobody catches it and it reaches <code class="il">main()</code>, the program prints the stack trace and terminates.</p>
+<pre><span class="kw">void</span> <span class="fn">methodC</span>() { <span class="kw">throw new</span> <span class="tp">RuntimeException</span>(<span class="st">"oops"</span>); }  <span class="cm">// thrown here</span>
+<span class="kw">void</span> <span class="fn">methodB</span>() { methodC(); }    <span class="cm">// not caught — propagates UP to methodA</span>
+<span class="kw">void</span> <span class="fn">methodA</span>() {
+    <span class="kw">try</span> {
+        methodB();
+    } <span class="kw">catch</span> (<span class="tp">RuntimeException</span> e) {
+        System.out.println(<span class="st">"Caught here: "</span> + e.getMessage()); <span class="cm">// caught!</span>
+    }
+}</pre>
+    <p><strong>Rules for overriding methods and exceptions:</strong></p>
+    <div class="note"><span class="bl">📋 The Overriding Exception Rules</span><ul>
+      <li>Child can throw <strong>fewer checked exceptions</strong> than parent — ✅ fine</li>
+      <li>Child can throw <strong>narrower checked exceptions</strong> (subclass) — ✅ fine</li>
+      <li>Child can throw <strong>new or broader checked exceptions</strong> — ❌ compile error</li>
+      <li>Child can throw any <strong>unchecked (RuntimeException)</strong> — ✅ always allowed</li>
+    </ul></div>
+<pre><span class="kw">class</span> <span class="tp">Parent</span> {
+    <span class="kw">void</span> <span class="fn">method</span>() <span class="kw">throws</span> <span class="tp">IOException</span> { }
+}
+
+<span class="kw">class</span> <span class="tp">Child</span> <span class="kw">extends</span> <span class="tp">Parent</span> {
+    <span class="kw">void</span> <span class="fn">method</span>() <span class="kw">throws</span> <span class="tp">FileNotFoundException</span> { }  <span class="cm">// ✅ narrower</span>
+    <span class="cm">// void method() throws Exception { }            ❌ broader — won't compile</span>
+    <span class="cm">// void method() throws SQLException { }         ❌ new checked exception</span>
+    <span class="cm">// void method() throws RuntimeException { }     ✅ unchecked, always OK</span>
+}</pre>
+  </div>
+</div>
+</div>
+<!-- END EXCEPTIONS -->
+
+<!-- ═══════════════════════════════════════ STRINGS ═══════════════════════════════════════ -->
+<div class="ch" id="strings">
+<div class="ch-head">
+  <div class="ch-n">05</div>
+  <div class="ch-info">
+    <div class="ch-title">Strings</div>
+    <div class="ch-sub">Immutability, String Pool, interning, == vs equals, StringBuilder performance</div>
+    <div class="ch-tags"><span class="ctag hot">🔥 Output Traps</span><span class="ctag med">Object Count Questions</span></div>
+  </div>
+</div>
+
+<div class="qa" onclick="toggle(this)">
+  <div class="qa-q"><span class="qn">Q1</span><span class="qt">Why is String immutable? How many objects are created — new String("Shiv") vs "Shiv" vs "Shiv"?</span><span class="qa-arr">▾</span></div>
+  <div class="qa-body">
+    <p>String's internal character data is stored in a <code class="il">private final byte[]</code> array (since Java 9). No method in String class ever modifies this array — every operation that seems to modify a String (like toUpperCase, concat, replace) actually creates and returns a new String object.</p>
+    <p><strong>Why immutable?</strong></p>
+    <ul>
+      <li><strong>String Pool / caching</strong> — Since strings can't change, the JVM can safely have multiple references point to the same String object in the pool. If strings were mutable, one reference changing "hello" to "HELLO" would affect everyone pointing to it.</li>
+      <li><strong>Security</strong> — Strings are used for class names, file paths, database passwords, hostnames. If they were mutable, malicious code could change these after a security check passes.</li>
+      <li><strong>Thread safety</strong> — Immutable objects are automatically thread-safe. No synchronization needed when sharing strings between threads.</li>
+      <li><strong>HashCode caching</strong> — String caches its hashCode the first time it's calculated. Since the value can't change, this is safe and makes HashMap lookups fast.</li>
+    </ul>
+    <p><strong>Object count questions — how many objects are created?</strong></p>
+<pre><span class="cm">// Case 1</span>
+<span class="tp">String</span> s = <span class="kw">new</span> <span class="tp">String</span>(<span class="st">"Shiv"</span>);
+<span class="cm">// 2 objects: 1 in String Pool (the literal "Shiv"), 1 on heap (the new String)</span>
+<span class="cm">// BUT if "Shiv" was already in pool from before, only 1 new object (on heap)</span>
+
+<span class="tp">String</span> s1 = <span class="st">"Shiv"</span>;  <span class="cm">// 0 new objects — reuses existing pool entry</span>
+<span class="tp">String</span> s2 = <span class="st">"Shiv"</span>;  <span class="cm">// 0 new objects — reuses same pool entry</span>
+<span class="cm">// s1 == s2 is TRUE — both point to the same pool object</span>
+<span class="cm">// s  == s1 is FALSE — s is a separate heap object</span>
+
+<span class="cm">// Case 2: How many objects?</span>
+<span class="tp">String</span> s1 = <span class="st">"abc"</span>;                <span class="cm">// 1 object in pool (if not already there)</span>
+<span class="tp">String</span> s2 = <span class="kw">new</span> <span class="tp">String</span>(<span class="st">"abc"</span>);   <span class="cm">// 1 new heap object (pool already has "abc")</span>
+<span class="tp">String</span> s3 = s2.toUpperCase();      <span class="cm">// 1 new heap object "ABC"</span>
+<span class="cm">// Total new objects in this code block: 3 (or 2 if "abc" was pre-existing)</span></pre>
+  </div>
+</div>
+
+<div class="qa" onclick="toggle(this)">
+  <div class="qa-q"><span class="qn">Q2</span><span class="qt">String interning? Output of == comparisons? Why does s.concat("World") not change s?</span><span class="qa-arr">▾</span></div>
+  <div class="qa-body">
+<pre><span class="tp">String</span> s1 = <span class="st">"Java"</span>;
+<span class="tp">String</span> s2 = <span class="st">"Java"</span>;
+<span class="tp">String</span> s3 = <span class="kw">new</span> <span class="tp">String</span>(<span class="st">"Java"</span>);
+<span class="tp">String</span> s4 = s3.intern();
+
+System.out.println(s1 == s2);   <span class="cm">// TRUE  — same pool reference</span>
+System.out.println(s1 == s3);   <span class="cm">// FALSE — s3 is on heap, not pool</span>
+System.out.println(s1 == s4);   <span class="cm">// TRUE  — intern() returns pool ref</span>
+System.out.println(s3 == s4);   <span class="cm">// FALSE — s3 heap, s4 pool</span></pre>
+    <p><strong>intern()</strong> manually checks if the string exists in the pool. If yes, returns the pool reference. If no, adds it to the pool and returns the pool reference. Useful to save memory when you have millions of duplicate strings (e.g., city names read from a database).</p>
+<pre><span class="tp">String</span> s = <span class="st">"Hello"</span>;
+s.concat(<span class="st">"World"</span>);
+System.out.println(s); <span class="cm">// prints: Hello</span>
+<span class="cm">// concat() creates a NEW String "HelloWorld" but you discarded it!</span>
+<span class="cm">// s still points to "Hello" — immutability means s cannot change</span>
+
+<span class="cm">// Correct way:</span>
+s = s.concat(<span class="st">"World"</span>); <span class="cm">// reassign s to the new String</span>
+System.out.println(s); <span class="cm">// HelloWorld</span></pre>
+    <p><strong>== vs equals() for Strings:</strong> <code class="il">==</code> compares object references (memory addresses) — are these two variables pointing to the exact same object? <code class="il">equals()</code> compares the actual character content — do these two strings contain the same characters? Always use <code class="il">equals()</code> for string comparison in business logic.</p>
+  </div>
+</div>
+
+<div class="qa" onclick="toggle(this)">
+  <div class="qa-q"><span class="qn">Q3</span><span class="qt">String vs StringBuffer vs StringBuilder — efficiency order with real benchmark reasoning</span><span class="qa-arr">▾</span></div>
+  <div class="qa-body">
+    <p>Efficiency order for string building operations: <strong>StringBuilder > StringBuffer > String concatenation with +</strong></p>
+    <table>
+      <tr><th>Class</th><th>Mutable?</th><th>Thread-safe?</th><th>Performance</th><th>Use when</th></tr>
+      <tr><td><strong>String</strong></td><td>❌ No</td><td>✅ Yes (immutable)</td><td>Slowest for concat</td><td>Single string, sharing across threads</td></tr>
+      <tr><td><strong>StringBuffer</strong></td><td>✅ Yes</td><td>✅ Yes (synchronized)</td><td>Medium</td><td>Building string in multi-threaded code</td></tr>
+      <tr><td><strong>StringBuilder</strong></td><td>✅ Yes</td><td>❌ No</td><td>Fastest</td><td>Building string in single-threaded code</td></tr>
+    </table>
+<pre><span class="cm">// BAD — creates many String objects in loop</span>
+<span class="tp">String</span> result = <span class="st">""</span>;
+<span class="kw">for</span> (<span class="tp">String</span> s : words) {
+    result += s;  <span class="cm">// creates new String every iteration!</span>
+}               <span class="cm">// N iterations = N temporary String objects garbage collected</span>
+
+<span class="cm">// GOOD — StringBuilder reuses internal char buffer</span>
+<span class="tp">StringBuilder</span> sb = <span class="kw">new</span> <span class="tp">StringBuilder</span>();
+<span class="kw">for</span> (<span class="tp">String</span> s : words) {
+    sb.append(s);  <span class="cm">// modifies the same object, no garbage</span>
+}
+<span class="tp">String</span> result = sb.toString(); <span class="cm">// one final String created</span></pre>
+    <p><strong>Note:</strong> The Java compiler automatically converts simple one-line <code class="il">+</code> concatenation to StringBuilder: <code class="il">String s = "Hello" + " " + name</code> is compiled to StringBuilder internally. But it does NOT do this inside loops — each loop iteration creates a new StringBuilder. That's why you must explicitly use StringBuilder in loops.</p>
+  </div>
+</div>
+</div>
+<!-- END STRINGS -->
+
+<!-- ═══════════════════════════════════════ MULTITHREADING ═══════════════════════════════════════ -->
+<div class="ch" id="multithreading">
+<div class="ch-head">
+  <div class="ch-n">06</div>
+  <div class="ch-info">
+    <div class="ch-title">Multithreading</div>
+    <div class="ch-sub">synchronized, ReentrantLock, wait/notify, thread pools, volatile, race conditions</div>
+    <div class="ch-tags"><span class="ctag hot">🔥 Most Tricky Section</span><span class="ctag hot">Deep Concepts</span></div>
+  </div>
+</div>
+
+<div class="qa" onclick="toggle(this)">
+  <div class="qa-q"><span class="qn">Q1</span><span class="qt">Thread vs Runnable? Different ways to create threads? Runnable as lambda?</span><span class="qa-arr">▾</span></div>
+  <div class="qa-body">
+<pre><span class="cm">// Way 1: Extend Thread class</span>
+<span class="kw">class</span> <span class="tp">MyThread</span> <span class="kw">extends</span> <span class="tp">Thread</span> {
+    <span class="kw">public void</span> <span class="fn">run</span>() { System.out.println(<span class="st">"Thread running"</span>); }
+}
+<span class="kw">new</span> <span class="tp">MyThread</span>().start(); <span class="cm">// .start() creates new OS thread, then calls .run()</span>
+
+<span class="cm">// Way 2: Implement Runnable interface</span>
+<span class="kw">class</span> <span class="tp">MyTask</span> <span class="kw">implements</span> <span class="tp">Runnable</span> {
+    <span class="kw">public void</span> <span class="fn">run</span>() { System.out.println(<span class="st">"Task running"</span>); }
+}
+<span class="kw">new</span> <span class="tp">Thread</span>(<span class="kw">new</span> <span class="tp">MyTask</span>()).start();
+
+<span class="cm">// Way 3: Lambda (since Runnable is a FI)</span>
+<span class="kw">new</span> <span class="tp">Thread</span>(() -> System.out.println(<span class="st">"Lambda thread"</span>)).start();
+
+<span class="cm">// Way 4: Callable (can return a result and throw checked exceptions)</span>
+<span class="tp">Callable</span>&lt;<span class="tp">Integer</span>&gt; task = () -> { <span class="kw">return</span> computeAnswer(); };
+<span class="tp">Future</span>&lt;<span class="tp">Integer</span>&gt; future = executor.submit(task);
+<span class="tp">Integer</span> result = future.get(); <span class="cm">// blocks until done</span>
+
+<span class="cm">// Way 5: ExecutorService (ALWAYS prefer this in production)</span>
+<span class="tp">ExecutorService</span> pool = Executors.newFixedThreadPool(<span class="nu">4</span>);
+pool.submit(() -> doWork());
+pool.shutdown();</pre>
+    <p><strong>Why prefer Runnable over extending Thread?</strong></p>
+    <ul>
+      <li>Java has single inheritance — if you extend Thread, you can't extend any other class. Implementing Runnable leaves you free to extend whatever you need.</li>
+      <li>Separates the task (what to do) from the execution mechanism (how/when to run it). Runnable can be submitted to any ExecutorService, scheduled, run in a pool — you're not locked to a specific Thread instance.</li>
+      <li>Better resource management through ExecutorService thread pools — no raw thread creation.</li>
+    </ul>
+  </div>
+</div>
+
+<div class="qa" onclick="toggle(this)">
+  <div class="qa-q"><span class="qn">Q2</span><span class="qt">synchronized keyword — method vs block, instance vs static, internal working (monitorenter/exit)</span><span class="qa-arr">▾</span></div>
+  <div class="qa-body">
+    <p>Every Java object has a built-in lock called a <strong>monitor</strong> (or intrinsic lock). <code class="il">synchronized</code> tells the JVM: acquire this monitor before entering, release it when exiting. Only one thread can hold a monitor at a time.</p>
+<pre><span class="cm">// Synchronized instance method — lock is 'this' (the object instance)</span>
+<span class="kw">class</span> <span class="tp">Counter</span> {
+    <span class="kw">private int</span> count = <span class="nu">0</span>;
+    
+    <span class="kw">public synchronized void</span> <span class="fn">increment</span>() {  <span class="cm">// lock = this Counter object</span>
+        count++;
+    }
+    
+    <span class="kw">public synchronized void</span> <span class="fn">decrement</span>() {  <span class="cm">// SAME lock as increment()</span>
+        count--;                               <span class="cm">// If thread holds lock in increment,</span>
+    }                                          <span class="cm">// no thread can enter decrement either!</span>
+}
+
+<span class="cm">// Synchronized STATIC method — lock is Counter.class (the Class object)</span>
+<span class="kw">public synchronized static void</span> <span class="fn">staticMethod</span>() {
+    <span class="cm">// lock = Counter.class — shared across ALL instances</span>
+}
+
+<span class="cm">// Synchronized block — you choose the lock object, minimize critical section</span>
+<span class="kw">private final</span> <span class="tp">Object</span> lock1 = <span class="kw">new</span> <span class="tp">Object</span>();
+<span class="kw">private final</span> <span class="tp">Object</span> lock2 = <span class="kw">new</span> <span class="tp">Object</span>();
+
+<span class="kw">public void</span> <span class="fn">updateBalance</span>() {
+    doSomeNonCriticalWork();    <span class="cm">// no lock needed here</span>
+    <span class="kw">synchronized</span>(lock1) {      <span class="cm">// only lock what needs protection</span>
+        balance += amount;
+    }
+    doMoreNonCriticalWork();    <span class="cm">// no lock needed here</span>
+}</pre>
+    <p><strong>Internally</strong> — the JVM inserts <code class="il">monitorenter</code> bytecode at the start of a synchronized block and <code class="il">monitorexit</code> at every exit point (normal exit AND exception). Modern JVMs optimize aggressively: if only one thread ever accesses an object, they use <em>biased locking</em> (no actual lock operation). Under moderate contention, <em>lightweight/spin locking</em> with CAS. Only under heavy contention do they fall back to OS-level mutex (heaviest).</p>
+    <div class="note"><span class="bl">📋 Key Trap: Two threads, two synchronized methods on SAME object</span><p>If Thread A is inside synchronized method <code class="il">increment()</code>, Thread B CANNOT enter synchronized method <code class="il">decrement()</code> on the same object — even though they're different methods. Both use the same lock (this). They would block each other.</p></div>
+  </div>
+</div>
+
+<div class="qa" onclick="toggle(this)">
+  <div class="qa-q"><span class="qn">Q3</span><span class="qt">wait(), notify(), notifyAll() — why in Object class? wait() vs sleep()?</span><span class="qa-arr">▾</span></div>
+  <div class="qa-body">
+    <p>These methods are in the <code class="il">Object</code> class, not in <code class="il">Thread</code>. Why? Because they operate on the <strong>object's monitor lock</strong>, not on threads. In Java, <em>any object</em> can be used as a lock. So the ability to wait and notify must belong to every object, not just to Thread objects.</p>
+<pre><span class="cm">// Classic producer-consumer with wait/notify</span>
+<span class="kw">class</span> <span class="tp">SharedBuffer</span> {
+    <span class="kw">private</span> <span class="tp">Queue</span>&lt;<span class="tp">Integer</span>&gt; buffer = <span class="kw">new</span> <span class="tp">LinkedList</span>&lt;&gt;();
+    <span class="kw">private final int</span> MAX_SIZE = <span class="nu">5</span>;
+    
+    <span class="kw">public synchronized void</span> <span class="fn">produce</span>(<span class="kw">int</span> item) <span class="kw">throws</span> <span class="tp">InterruptedException</span> {
+        <span class="kw">while</span> (buffer.size() == MAX_SIZE) {
+            wait(); <span class="cm">// buffer full — release lock, wait for consumer</span>
+        }          <span class="cm">// use while not if — guard against spurious wakeups</span>
+        buffer.add(item);
+        notifyAll(); <span class="cm">// wake up consumers waiting for items</span>
+    }
+    
+    <span class="kw">public synchronized int</span> <span class="fn">consume</span>() <span class="kw">throws</span> <span class="tp">InterruptedException</span> {
+        <span class="kw">while</span> (buffer.isEmpty()) {
+            wait(); <span class="cm">// buffer empty — release lock, wait for producer</span>
+        }
+        <span class="kw">int</span> item = buffer.poll();
+        notifyAll(); <span class="cm">// wake up producers waiting for space</span>
+        <span class="kw">return</span> item;
+    }
+}</pre>
+    <table>
+      <tr><th>Feature</th><th>wait()</th><th>sleep()</th></tr>
+      <tr><td>Class</td><td>Object</td><td>Thread</td></tr>
+      <tr><td>Releases lock?</td><td>✅ YES — releases the monitor</td><td>❌ NO — holds the lock while sleeping</td></tr>
+      <tr><td>Must be in synchronized?</td><td>✅ YES — throws IllegalMonitorStateException if not</td><td>❌ NO — can be called anywhere</td></tr>
+      <tr><td>Woken by</td><td>notify() / notifyAll() / interrupt()</td><td>Timeout expires / interrupt()</td></tr>
+      <tr><td>Use case</td><td>Thread coordination / inter-thread communication</td><td>Pause execution for a time</td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="qa" onclick="toggle(this)">
+  <div class="qa-q"><span class="qn">Q4</span><span class="qt">ReentrantLock vs synchronized — differences, fairness, tryLock? What does "reentrant" mean?</span><span class="qa-arr">▾</span></div>
+  <div class="qa-body">
+    <p><strong>Reentrant</strong> means a thread that already holds the lock can acquire it again without deadlocking itself. If method A (synchronized) calls method B (also synchronized) on the same object, the same thread can enter B because it already owns the lock. Count is incremented. It decrements when each synchronized block exits. Both synchronized and ReentrantLock are reentrant.</p>
+<pre><span class="tp">ReentrantLock</span> lock = <span class="kw">new</span> <span class="tp">ReentrantLock</span>(<span class="ky">true</span>); <span class="cm">// true = fair lock</span>
+
+<span class="kw">public void</span> <span class="fn">doWork</span>() {
+    lock.lock();  <span class="cm">// acquire — blocks until available</span>
+    <span class="kw">try</span> {
+        <span class="cm">// critical section</span>
+    } <span class="kw">finally</span> {
+        lock.unlock(); <span class="cm">// MUST be in finally — don't forget!</span>
+    }
+}
+
+<span class="cm">// tryLock() — don't block if not available, move on</span>
+<span class="kw">if</span> (lock.tryLock()) {
+    <span class="kw">try</span> { doWork(); } <span class="kw">finally</span> { lock.unlock(); }
+} <span class="kw">else</span> {
+    doAlternativeWork(); <span class="cm">// didn't wait — handled gracefully</span>
+}
+
+<span class="cm">// tryLock with timeout</span>
+<span class="kw">if</span> (lock.tryLock(<span class="nu">500</span>, TimeUnit.MILLISECONDS)) { ... }
+
+<span class="cm">// Condition variables — more flexible than wait/notify</span>
+<span class="tp">Condition</span> notFull  = lock.newCondition();
+<span class="tp">Condition</span> notEmpty = lock.newCondition();
+<span class="cm">// You can have MULTIPLE conditions on one lock!</span>
+<span class="cm">// notFull.await()   — producer waits when buffer full</span>
+<span class="cm">// notEmpty.signal() — producer signals when item added</span></pre>
+    <table>
+      <tr><th>Feature</th><th>synchronized</th><th>ReentrantLock</th></tr>
+      <tr><td>Syntax</td><td>Built-in keyword</td><td>Explicit lock/unlock (in finally)</td></tr>
+      <tr><td>Fairness</td><td>Not fair — any waiting thread can win</td><td>Can be fair: new ReentrantLock(true)</td></tr>
+      <tr><td>tryLock()</td><td>❌ Not available</td><td>✅ Yes — non-blocking attempt</td></tr>
+      <tr><td>Multiple conditions</td><td>❌ One wait set per lock</td><td>✅ Multiple Condition objects</td></tr>
+      <tr><td>Interruptible wait</td><td>Limited</td><td>✅ lockInterruptibly()</td></tr>
+      <tr><td>Performance</td><td>Good (JVM optimized)</td><td>Similar or slightly worse</td></tr>
+    </table>
+    <p><strong>ReentrantReadWriteLock</strong> is the advanced version — allows multiple concurrent readers OR one exclusive writer. Use when reads are much more frequent than writes (e.g., a configuration cache read thousands of times, updated rarely).</p>
+  </div>
+</div>
+
+<div class="qa" onclick="toggle(this)">
+  <div class="qa-q"><span class="qn">Q5</span><span class="qt">ExecutorService — types of thread pools, sizing considerations, Callable vs Runnable</span><span class="qa-arr">▾</span></div>
+  <div class="qa-body">
+<pre><span class="cm">// Fixed pool — N threads, tasks queue if all busy. Use for CPU-bound work.</span>
+<span class="tp">ExecutorService</span> fixed = Executors.newFixedThreadPool(<span class="nu">4</span>);
+
+<span class="cm">// Cached — creates threads on demand, reuses idle ones, removes after 60s</span>
+<span class="cm">// Use for I/O-bound short-lived tasks. RISK: unbounded threads under load!</span>
+<span class="tp">ExecutorService</span> cached = Executors.newCachedThreadPool();
+
+<span class="cm">// Single — 1 thread, tasks execute strictly sequentially</span>
+<span class="tp">ExecutorService</span> single = Executors.newSingleThreadExecutor();
+
+<span class="cm">// Scheduled — for periodic or delayed tasks</span>
+<span class="tp">ScheduledExecutorService</span> sched = Executors.newScheduledThreadPool(<span class="nu">2</span>);
+sched.scheduleAtFixedRate(() -> sendHeartbeat(), <span class="nu">0</span>, <span class="nu">30</span>, TimeUnit.SECONDS);
+
+<span class="cm">// BEST PRACTICE: Use ThreadPoolExecutor directly for production</span>
+<span class="tp">ExecutorService</span> pool = <span class="kw">new</span> <span class="tp">ThreadPoolExecutor</span>(
+    <span class="nu">5</span>,                              <span class="cm">// corePoolSize</span>
+    <span class="nu">20</span>,                             <span class="cm">// maximumPoolSize</span>
+    <span class="nu">60</span>, TimeUnit.SECONDS,           <span class="cm">// keepAliveTime for excess threads</span>
+    <span class="kw">new</span> <span class="tp">ArrayBlockingQueue</span>&lt;&gt;(<span class="nu">100</span>), <span class="cm">// BOUNDED queue — prevents OOM!</span>
+    <span class="kw">new</span> <span class="tp">ThreadPoolExecutor</span>.<span class="tp">CallerRunsPolicy</span>() <span class="cm">// rejection policy</span>
+);</pre>
+    <p><strong>Thread pool sizing rules of thumb:</strong></p>
+    <ul>
+      <li><strong>CPU-bound tasks</strong> (heavy computation): <code class="il">pool size = number of CPU cores</code>. More threads than cores means context switching overhead with no benefit.</li>
+      <li><strong>I/O-bound tasks</strong> (DB calls, HTTP requests, file operations): Threads spend most time waiting. Formula: <code class="il">pool size = cores × (1 + wait_time / compute_time)</code>. If a DB call takes 100ms and processing takes 10ms, ratio = 11, so 8 cores → 88 threads.</li>
+    </ul>
+    <div class="warn"><span class="bl">⚠️ Executors.newFixedThreadPool uses UNBOUNDED queue</span><p>Under heavy load, tasks pile up in the queue. With 10,000 waiting tasks each holding request data, you'll get OutOfMemoryError. Always use ThreadPoolExecutor with a bounded ArrayBlockingQueue and an appropriate rejection policy in production.</p></div>
+    <p><strong>Runnable vs Callable:</strong> Runnable's run() returns void and cannot throw checked exceptions. Callable's call() returns a value (wrapped in Future) and CAN throw checked exceptions. Use Callable when you need the result or need to propagate checked exceptions.</p>
+  </div>
+</div>
+
+<div class="qa" onclick="toggle(this)">
+  <div class="qa-q"><span class="qn">Q6</span><span class="qt">CyclicBarrier vs CountDownLatch — difference with real examples</span><span class="qa-arr">▾</span></div>
+  <div class="qa-body">
+    <div class="ana"><span class="bl">🍳 Analogy</span><p><strong>CountDownLatch</strong>: A rocket launch countdown. The control room waits until all 5 systems report "ready" (countDown() × 5). Once count reaches 0, the launch (await()) proceeds. The countdown can only happen once. <strong>CyclicBarrier</strong>: A group of friends agree to meet at a restaurant. Everyone waits until all 5 friends arrive (await()). Then they go in together. Next week, the same 5 friends can do this again (reusable = cyclic).</p></div>
+<pre><span class="cm">// CountDownLatch — one-time gate, main thread waits for workers</span>
+<span class="tp">CountDownLatch</span> latch = <span class="kw">new</span> <span class="tp">CountDownLatch</span>(<span class="nu">3</span>); <span class="cm">// wait for 3 threads</span>
+
+<span class="kw">for</span> (<span class="kw">int</span> i = <span class="nu">0</span>; i &lt; <span class="nu">3</span>; i++) {
+    executor.submit(() -> {
+        loadData();
+        latch.countDown(); <span class="cm">// decrement — one worker done</span>
+    });
+}
+latch.await(); <span class="cm">// main thread BLOCKS until count = 0</span>
+processAllData(); <span class="cm">// runs only after all 3 workers finish</span>
+
+<span class="cm">// CyclicBarrier — reusable, workers wait for each other</span>
+<span class="tp">CyclicBarrier</span> barrier = <span class="kw">new</span> <span class="tp">CyclicBarrier</span>(<span class="nu">3</span>, 
+    () -> System.out.println(<span class="st">"All threads reached barrier!"</span>)
+);
+
+<span class="kw">for</span> (<span class="kw">int</span> i = <span class="nu">0</span>; i &lt; <span class="nu">3</span>; i++) {
+    executor.submit(() -> {
+        doPhase1Work();
+        barrier.await();   <span class="cm">// wait for ALL threads to complete phase 1</span>
+        doPhase2Work();    <span class="cm">// all proceed to phase 2 together</span>
+        barrier.await();   <span class="cm">// REUSABLE — same barrier, round 2</span>
+        doPhase3Work();
+    });
+}</span></pre>
+    <table>
+      <tr><th>Feature</th><th>CountDownLatch</th><th>CyclicBarrier</th></tr>
+      <tr><td>Reusable?</td><td>❌ One-time use</td><td>✅ Can be reset and reused</td></tr>
+      <tr><td>Who waits?</td><td>One (or few) threads wait for others to finish</td><td>All N threads wait for each other</td></tr>
+      <tr><td>Trigger action</td><td>Not supported</td><td>Optional Runnable when all arrive</td></tr>
+      <tr><td>Use case</td><td>Service startup, test setup waiting for workers</td><td>Parallel phases in computation</td></tr>
+    </table>
+  </div>
+</div>
+</div>
+<!-- END MULTITHREADING -->
+<!-- ═══════════════════════════════════════ SPRING BOOT ═══════════════════════════════════════ -->
+<div class="ch" id="spring">
+<div class="ch-head">
+  <div class="ch-n">07</div>
+  <div class="ch-info">
+    <div class="ch-title">Spring / Spring Boot</div>
+    <div class="ch-sub">IoC, DI, bean lifecycle, autoconfiguration, caching, security, exception handling</div>
+    <div class="ch-tags"><span class="ctag hot">🔥 Most Important</span><span class="ctag hot">10 LPA Core</span></div>
+  </div>
+</div>
+
+<div class="qa" onclick="toggle(this)">
+  <div class="qa-q"><span class="qn">Q1</span><span class="qt">IoC (Inversion of Control) — purpose, benefits, types of Dependency Injection</span><span class="qa-arr">▾</span></div>
+  <div class="qa-body">
+    <div class="ana"><span class="bl">🍳 Analogy</span><p>Old way (no IoC): You're cooking. You personally go to the store, buy the ingredients, prepare everything. Your cooking code is tightly coupled to the ingredient-getting code. IoC: You're a chef at a restaurant. A manager (Spring container) brings you all the ingredients you need — you just say "I need eggs and flour" and they appear. Your cooking code only cares about cooking, not about getting ingredients.</p></div>
+    <p><strong>IoC (Inversion of Control)</strong> is a design principle: instead of your code creating the objects it needs (<code class="il">new PaymentService()</code>), you declare what you need and a container creates and provides them. The "control" of object creation is inverted — from your code to the container.</p>
+    <p><strong>Dependency Injection</strong> is the implementation of IoC — the container "injects" your dependencies into your class.</p>
+    <p><strong>Three types of DI:</strong></p>
+<pre><span class="cm">// 1. Constructor Injection — RECOMMENDED BEST PRACTICE</span>
+<span class="an">@Service</span>
+<span class="kw">public class</span> <span class="tp">OrderService</span> {
+    <span class="kw">private final</span> <span class="tp">PaymentService</span> paymentService;  <span class="cm">// final!</span>
+    <span class="kw">private final</span> <span class="tp">InventoryService</span> inventoryService;
+    
+    <span class="cm">// Spring auto-detects single constructor — @Autowired optional</span>
+    <span class="kw">public</span> <span class="fn">OrderService</span>(<span class="tp">PaymentService</span> ps, <span class="tp">InventoryService</span> is) {
+        <span class="kw">this</span>.paymentService = ps;
+        <span class="kw">this</span>.inventoryService = is;
+    }
+}
+<span class="cm">// Benefits: fields can be final (truly immutable), easy to test (just pass mocks),</span>
+<span class="cm">// dependencies visible in constructor signature</span>
+
+<span class="cm">// 2. Setter Injection — for optional dependencies</span>
+<span class="an">@Service</span>
+<span class="kw">public class</span> <span class="tp">EmailService</span> {
+    <span class="kw">private</span> <span class="tp">SpamFilter</span> spamFilter; <span class="cm">// optional — might not be configured</span>
+    
+    <span class="an">@Autowired</span>(required = <span class="ky">false</span>)
+    <span class="kw">public void</span> <span class="fn">setSpamFilter</span>(<span class="tp">SpamFilter</span> filter) {
+        <span class="kw">this</span>.spamFilter = filter;
+    }
+}
+
+<span class="cm">// 3. Field Injection — convenient but NOT recommended</span>
+<span class="an">@Service</span>
+<span class="kw">public class</span> <span class="tp">UserService</span> {
+    <span class="an">@Autowired</span>
+    <span class="kw">private</span> <span class="tp">UserRepository</span> userRepo; <span class="cm">// can't be final, hard to test, hides deps</span>
+}</pre>
+  </div>
+</div>
+
+<div class="qa" onclick="toggle(this)">
+  <div class="qa-q"><span class="qn">Q2</span><span class="qt">Spring bean lifecycle — from creation to destruction?</span><span class="qa-arr">▾</span></div>
+  <div class="qa-body">
+    <p>When Spring creates a bean, it goes through a well-defined lifecycle:</p>
+    <div class="tl">
+      <div class="tl-i"><h5>1. Instantiation</h5><p>Spring calls the bean's constructor to create the object.</p></div>
+      <div class="tl-i"><h5>2. Dependency Injection</h5><p>Spring injects all dependencies (constructor, setter, or field injection happens here).</p></div>
+      <div class="tl-i"><h5>3. BeanNameAware, BeanFactoryAware etc.</h5><p>If the bean implements Aware interfaces, Spring calls their setter methods.</p></div>
+      <div class="tl-i"><h5>4. BeanPostProcessor.postProcessBeforeInitialization()</h5><p>Spring's AOP proxies and other post-processors can modify the bean here.</p></div>
+      <div class="tl-i"><h5>5. @PostConstruct / InitializingBean.afterPropertiesSet()</h5><p>Your custom initialization code runs here. Use @PostConstruct to run setup code after all dependencies are injected (e.g., pre-warm a cache, open a connection pool).</p></div>
+      <div class="tl-i"><h5>6. Bean is ready — used by application</h5><p>Normal usage phase.</p></div>
+      <div class="tl-i"><h5>7. @PreDestroy / DisposableBean.destroy() — on shutdown</h5><p>Cleanup code: close connections, flush caches, release resources.</p></div>
+    </div>
+<pre><span class="an">@Component</span>
+<span class="kw">public class</span> <span class="tp">CacheWarmer</span> {
+    <span class="an">@Autowired</span>
+    <span class="kw">private</span> <span class="tp">ProductService</span> productService;
+    
+    <span class="an">@PostConstruct</span>
+    <span class="kw">public void</span> <span class="fn">init</span>() {
+        <span class="cm">// productService is fully injected here — safe to use</span>
+        productService.warmCache();
+        System.out.println(<span class="st">"Cache warmed up!"</span>);
+    }
+    
+    <span class="an">@PreDestroy</span>
+    <span class="kw">public void</span> <span class="fn">cleanup</span>() {
+        productService.flushCache();
+        System.out.println(<span class="st">"Cache flushed on shutdown"</span>);
+    }
+}</pre>
+  </div>
+</div>
+
+<div class="qa" onclick="toggle(this)">
+  <div class="qa-q"><span class="qn">Q3</span><span class="qt">@SpringBootApplication — what 3 annotations does it combine? How does AutoConfiguration work?</span><span class="qa-arr">▾</span></div>
+  <div class="qa-body">
+<pre><span class="cm">// @SpringBootApplication is a meta-annotation combining:</span>
+
+<span class="an">@SpringBootConfiguration</span>  <span class="cm">// = @Configuration: this class can define @Bean methods</span>
+<span class="an">@EnableAutoConfiguration</span>  <span class="cm">// Spring Boot's magic — scan classpath and auto-create beans</span>
+<span class="an">@ComponentScan</span>             <span class="cm">// scan this package + subpackages for @Component, @Service etc.</span>
+<span class="kw">public</span> @interface <span class="tp">SpringBootApplication</span> { }</pre>
+    <p><strong>@EnableAutoConfiguration — how the magic works:</strong></p>
+    <p>Spring Boot ships with <code class="il">spring-boot-autoconfigure.jar</code>. Inside it, there's a file called <code class="il">META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports</code> listing hundreds of AutoConfiguration classes.</p>
+    <p>Each AutoConfiguration class has <code class="il">@Conditional</code> annotations that say "only activate me if certain conditions are met." For example:</p>
+    <ul>
+      <li>DataSourceAutoConfiguration activates only if a JDBC driver class is on the classpath</li>
+      <li>JpaRepositoriesAutoConfiguration activates only if Spring Data JPA classes are present AND a DataSource bean exists</li>
+      <li>SecurityAutoConfiguration activates only if Spring Security is on the classpath</li>
+    </ul>
+    <p>You override autoconfiguration simply by defining your own beans — if you define a <code class="il">DataSource</code> bean, Spring Boot's autoconfigured DataSource steps back (<code class="il">@ConditionalOnMissingBean</code>).</p>
+    <p><strong>@ComponentScan without a package argument</strong> scans from the package of the class where <code class="il">@SpringBootApplication</code> is declared, and all its sub-packages. This is why your main class should be in the root package above all others.</p>
+  </div>
+</div>
+
+<div class="qa" onclick="toggle(this)">
+  <div class="qa-q"><span class="qn">Q4</span><span class="qt">@Autowired conflict — two beans of same type, how to resolve? @Primary vs @Qualifier</span><span class="qa-arr">▾</span></div>
+  <div class="qa-body">
+<pre><span class="kw">interface</span> <span class="tp">NotificationService</span> { <span class="kw">void</span> <span class="fn">send</span>(<span class="tp">String</span> msg); }
+
+<span class="an">@Service</span>
+<span class="kw">class</span> <span class="tp">EmailNotificationService</span> <span class="kw">implements</span> <span class="tp">NotificationService</span> { ... }
+
+<span class="an">@Service</span>
+<span class="kw">class</span> <span class="tp">SMSNotificationService</span> <span class="kw">implements</span> <span class="tp">NotificationService</span> { ... }
+
+<span class="cm">// ❌ Spring doesn't know which one to inject — NoUniqueBeanDefinitionException</span>
+<span class="an">@Autowired</span> <span class="tp">NotificationService</span> notificationService;
+
+<span class="cm">// ✅ Solution 1: @Primary — mark one as the default when no qualifier specified</span>
+<span class="an">@Primary</span>
+<span class="an">@Service</span>
+<span class="kw">class</span> <span class="tp">EmailNotificationService</span> <span class="kw">implements</span> <span class="tp">NotificationService</span> { ... }
+
+<span class="cm">// ✅ Solution 2: @Qualifier — explicitly name which bean you want</span>
+<span class="an">@Autowired</span>
+<span class="an">@Qualifier</span>(<span class="st">"SMSNotificationService"</span>)
+<span class="tp">NotificationService</span> notificationService;
+
+<span class="cm">// ✅ Solution 3: Variable name matching — Spring matches by bean name</span>
+<span class="an">@Autowired</span>
+<span class="tp">NotificationService</span> emailNotificationService; <span class="cm">// matches bean named "emailNotificationService"</span>
+
+<span class="cm">// ✅ Solution 4: Inject all implementations as a list</span>
+<span class="an">@Autowired</span>
+List&lt;<span class="tp">NotificationService</span>&gt; allNotifiers; <span class="cm">// gets both Email and SMS</span></pre>
+  </div>
+</div>
+
+<div class="qa" onclick="toggle(this)">
+  <div class="qa-q"><span class="qn">Q5</span><span class="qt">Spring caching — @Cacheable, @CachePut, @CacheEvict. How does it work internally?</span><span class="qa-arr">▾</span></div>
+  <div class="qa-body">
+    <p>Spring caching uses <strong>AOP (Aspect-Oriented Programming) proxies</strong>. When you call a <code class="il">@Cacheable</code> method, you're actually calling a proxy that wraps your method. The proxy checks the cache first using CacheManager → Cache → key lookup. If there's a cache hit, it returns the cached value and your method never executes. If miss, it calls your real method, stores the result, and returns it.</p>
+<pre><span class="an">@Service</span>
+<span class="kw">public class</span> <span class="tp">UserService</span> {
+    
+    <span class="cm">// Check cache first. Call method only on cache miss. Cache the result.</span>
+    <span class="an">@Cacheable</span>(value = <span class="st">"users"</span>, key = <span class="st">"#id"</span>)
+    <span class="kw">public</span> <span class="tp">User</span> <span class="fn">findUser</span>(<span class="tp">Long</span> id) {
+        <span class="kw">return</span> userRepository.findById(id).orElseThrow();
+    }
+    
+    <span class="cm">// Always call method AND update cache. Use after update operations.</span>
+    <span class="an">@CachePut</span>(value = <span class="st">"users"</span>, key = <span class="st">"#user.id"</span>)
+    <span class="kw">public</span> <span class="tp">User</span> <span class="fn">updateUser</span>(<span class="tp">User</span> user) {
+        <span class="kw">return</span> userRepository.save(user); <span class="cm">// fresh result goes back to cache</span>
+    }
+    
+    <span class="cm">// Remove from cache. Use after delete operations.</span>
+    <span class="an">@CacheEvict</span>(value = <span class="st">"users"</span>, key = <span class="st">"#id"</span>)
+    <span class="kw">public void</span> <span class="fn">deleteUser</span>(<span class="tp">Long</span> id) {
+        userRepository.deleteById(id);
+    }
+    
+    <span class="cm">// Conditional caching — only cache if result is not null</span>
+    <span class="an">@Cacheable</span>(value = <span class="st">"users"</span>, key = <span class="st">"#email"</span>, 
+               condition = <span class="st">"#email != null"</span>, 
+               unless = <span class="st">"#result == null"</span>)  <span class="cm">// unless: don't cache if result is null</span>
+    <span class="kw">public</span> <span class="tp">User</span> <span class="fn">findByEmail</span>(<span class="tp">String</span> email) { ... }
+}
+
+<span class="cm">// Enable caching in your config</span>
+<span class="an">@SpringBootApplication</span>
+<span class="an">@EnableCaching</span>  <span class="cm">// activates the caching infrastructure</span>
+<span class="kw">public class</span> <span class="tp">Application</span> { ... }</pre>
+    <p><strong>Caching in clustered environments:</strong> In-memory caches (Caffeine, EhCache) are local to each JVM instance. In a cluster of 3 pods, each has its own cache — they can serve stale or inconsistent data. Use <strong>Redis</strong> as a distributed cache so all instances share one cache. Add <code class="il">spring-boot-starter-data-redis</code> and set <code class="il">spring.cache.type=redis</code> — Spring Boot auto-configures the rest.</p>
+  </div>
+</div>
+
+<div class="qa" onclick="toggle(this)">
+  <div class="qa-q"><span class="qn">Q6</span><span class="qt">@ExceptionHandler vs @RestControllerAdvice — global exception handling pattern</span><span class="qa-arr">▾</span></div>
+  <div class="qa-body">
+<pre><span class="cm">// Step 1: Create your custom exception</span>
+<span class="kw">public class</span> <span class="tp">UserNotFoundException</span> <span class="kw">extends</span> <span class="tp">RuntimeException</span> {
+    <span class="kw">public</span> <span class="fn">UserNotFoundException</span>(<span class="tp">Long</span> id) {
+        <span class="kw">super</span>(<span class="st">"User not found with id: "</span> + id);
+    }
+}
+
+<span class="cm">// Step 2: Standard error response DTO</span>
+<span class="kw">public class</span> <span class="tp">ErrorResponse</span> {
+    <span class="kw">private</span> <span class="tp">String</span> message;
+    <span class="kw">private int</span> status;
+    <span class="kw">private</span> <span class="tp">LocalDateTime</span> timestamp;
+    <span class="cm">// constructor, getters...</span>
+}
+
+<span class="cm">// Step 3: Global exception handler — catches from ALL controllers</span>
+<span class="an">@RestControllerAdvice</span>  <span class="cm">// = @ControllerAdvice + @ResponseBody</span>
+<span class="kw">public class</span> <span class="tp">GlobalExceptionHandler</span> {
+    
+    <span class="an">@ExceptionHandler</span>(<span class="tp">UserNotFoundException</span>.class)
+    <span class="an">@ResponseStatus</span>(<span class="tp">HttpStatus</span>.NOT_FOUND)
+    <span class="kw">public</span> <span class="tp">ErrorResponse</span> <span class="fn">handleNotFound</span>(<span class="tp">UserNotFoundException</span> ex) {
+        <span class="kw">return new</span> <span class="tp">ErrorResponse</span>(ex.getMessage(), <span class="nu">404</span>, LocalDateTime.now());
+    }
+    
+    <span class="cm">// Handle Spring's validation exception — @Valid failures</span>
+    <span class="an">@ExceptionHandler</span>(<span class="tp">MethodArgumentNotValidException</span>.class)
+    <span class="kw">public</span> <span class="tp">ResponseEntity</span>&lt;Map&lt;<span class="tp">String</span>,<span class="tp">String</span>&gt;&gt; <span class="fn">handleValidation</span>(
+            <span class="tp">MethodArgumentNotValidException</span> ex) {
+        Map&lt;<span class="tp">String</span>,<span class="tp">String</span>&gt; errors = <span class="kw">new</span> HashMap&lt;&gt;();
+        ex.getBindingResult().getFieldErrors()
+          .forEach(e -> errors.put(e.getField(), e.getDefaultMessage()));
+        <span class="kw">return</span> ResponseEntity.badRequest().body(errors);
+    }
+    
+    <span class="cm">// Catch-all for unexpected exceptions</span>
+    <span class="an">@ExceptionHandler</span>(<span class="tp">Exception</span>.class)
+    <span class="an">@ResponseStatus</span>(<span class="tp">HttpStatus</span>.INTERNAL_SERVER_ERROR)
+    <span class="kw">public</span> <span class="tp">ErrorResponse</span> <span class="fn">handleGeneral</span>(<span class="tp">Exception</span> ex) {
+        <span class="cm">// Log the full stack trace here!</span>
+        log.error(<span class="st">"Unexpected error"</span>, ex);
+        <span class="kw">return new</span> <span class="tp">ErrorResponse</span>(<span class="st">"Internal server error"</span>, <span class="nu">500</span>, LocalDateTime.now());
+    }
+}</pre>
+  </div>
+</div>
+</div>
+<!-- END SPRING -->
+
+<!-- ═══════════════════════════════════════ REST APIs ═══════════════════════════════════════ -->
+<div class="ch" id="rest">
+<div class="ch-head">
+  <div class="ch-n">08</div>
+  <div class="ch-info">
+    <div class="ch-title">REST APIs</div>
+    <div class="ch-sub">HTTP methods, idempotency, request annotations, JWT security, validation</div>
+    <div class="ch-tags"><span class="ctag hot">🔥 Must Know</span><span class="ctag med">JWT Common</span></div>
+  </div>
+</div>
+
+<div class="qa" onclick="toggle(this)">
+  <div class="qa-q"><span class="qn">Q1</span><span class="qt">HTTP methods — GET, POST, PUT, PATCH, DELETE — which are idempotent?</span><span class="qa-arr">▾</span></div>
+  <div class="qa-body">
+    <div class="ana"><span class="bl">🍳 Analogy</span><p><strong>Idempotent</strong> means "doing it multiple times gives the same result as doing it once." Pressing a floor button in an elevator is idempotent — pressing 5 ten times still takes you to floor 5. Clicking "Place Order" is NOT idempotent — you'd place 10 orders!</p></div>
+    <table>
+      <tr><th>Method</th><th>Purpose</th><th>Idempotent?</th><th>Safe?</th><th>Has Body?</th></tr>
+      <tr><td><strong>GET</strong></td><td>Retrieve data</td><td>✅ Yes</td><td>✅ Yes (no side effects)</td><td>No</td></tr>
+      <tr><td><strong>POST</strong></td><td>Create new resource</td><td>❌ No (creates duplicate)</td><td>❌ No</td><td>Yes</td></tr>
+      <tr><td><strong>PUT</strong></td><td>Replace entire resource</td><td>✅ Yes (same result each time)</td><td>❌ No</td><td>Yes</td></tr>
+      <tr><td><strong>PATCH</strong></td><td>Partial update</td><td>⚠️ Depends on implementation</td><td>❌ No</td><td>Yes</td></tr>
+      <tr><td><strong>DELETE</strong></td><td>Delete resource</td><td>✅ Yes (already gone on repeat)</td><td>❌ No</td><td>No</td></tr>
+    </table>
+<pre><span class="cm">// REST endpoint best practices</span>
+<span class="an">@RestController</span>
+<span class="an">@RequestMapping</span>(<span class="st">"/api/v1/users"</span>)   <span class="cm">// plural nouns, versioned</span>
+<span class="kw">public class</span> <span class="tp">UserController</span> {
+    
+    <span class="an">@GetMapping</span>                        <span class="cm">// GET /api/v1/users (list)</span>
+    <span class="kw">public</span> List&lt;<span class="tp">UserDTO</span>&gt; <span class="fn">getAllUsers</span>() { ... }
+    
+    <span class="an">@GetMapping</span>(<span class="st">"/{id}"</span>)               <span class="cm">// GET /api/v1/users/42 (single)</span>
+    <span class="kw">public</span> <span class="tp">UserDTO</span> <span class="fn">getUser</span>(<span class="an">@PathVariable</span> <span class="tp">Long</span> id) { ... }
+    
+    <span class="an">@PostMapping</span>                       <span class="cm">// POST /api/v1/users (create)</span>
+    <span class="an">@ResponseStatus</span>(<span class="tp">HttpStatus</span>.CREATED) <span class="cm">// 201 not 200</span>
+    <span class="kw">public</span> <span class="tp">UserDTO</span> <span class="fn">createUser</span>(<span class="an">@Valid</span> <span class="an">@RequestBody</span> <span class="tp">CreateUserRequest</span> req) { ... }
+    
+    <span class="an">@PutMapping</span>(<span class="st">"/{id}"</span>)               <span class="cm">// PUT /api/v1/users/42 (replace)</span>
+    <span class="kw">public</span> <span class="tp">UserDTO</span> <span class="fn">replaceUser</span>(<span class="an">@PathVariable</span> <span class="tp">Long</span> id, 
+                                   <span class="an">@Valid</span> <span class="an">@RequestBody</span> <span class="tp">UpdateUserRequest</span> req) { ... }
+    
+    <span class="an">@PatchMapping</span>(<span class="st">"/{id}/status"</span>)     <span class="cm">// PATCH for partial update</span>
+    <span class="kw">public</span> <span class="tp">UserDTO</span> <span class="fn">updateStatus</span>(<span class="an">@PathVariable</span> <span class="tp">Long</span> id, 
+                                      <span class="an">@RequestParam</span> <span class="tp">String</span> status) { ... }
+    
+    <span class="an">@DeleteMapping</span>(<span class="st">"/{id}"</span>)            <span class="cm">// DELETE /api/v1/users/42</span>
+    <span class="an">@ResponseStatus</span>(<span class="tp">HttpStatus</span>.NO_CONTENT) <span class="cm">// 204</span>
+    <span class="kw">public void</span> <span class="fn">deleteUser</span>(<span class="an">@PathVariable</span> <span class="tp">Long</span> id) { ... }
+}</pre>
+  </div>
+</div>
+
+<div class="qa" onclick="toggle(this)">
+  <div class="qa-q"><span class="qn">Q2</span><span class="qt">JWT — structure, lifecycle, secure REST API with Spring Security</span><span class="qa-arr">▾</span></div>
+  <div class="qa-body">
+    <p>JWT (JSON Web Token) is a compact, self-contained way to transmit authentication information. The server doesn't need to store sessions — all info is in the token. Perfect for stateless REST APIs and microservices.</p>
+<pre><span class="cm">// JWT structure: header.payload.signature</span>
+<span class="cm">// Each part is Base64Url encoded</span>
+
+<span class="cm">// Header — algorithm and token type</span>
+{
+  "alg": "HS256",
+  "typ": "JWT"
+}
+
+<span class="cm">// Payload — claims (NOT encrypted — don't put passwords here!)</span>
+{
+  "sub": "user123",           <span class="cm">// subject (user id)</span>
+  "email": "john@example.com",
+  "roles": ["USER", "ADMIN"],
+  "iat": 1700000000,          <span class="cm">// issued at (unix timestamp)</span>
+  "exp": 1700003600           <span class="cm">// expires at (1 hour later)</span>
+}
+
+<span class="cm">// Signature — proves token wasn't tampered</span>
+HMACSHA256(base64(header) + "." + base64(payload), secretKey)</pre>
+    <div class="steps">
+      <div class="step"><div class="sn">1</div><div class="sb2"><h5>Login</h5><p>User sends credentials (username/password) to POST /auth/login</p></div></div>
+      <div class="step"><div class="sn">2</div><div class="sb2"><h5>Token Generation</h5><p>Server validates credentials, creates JWT with user info and expiry, signs it with secret key, returns JWT to client</p></div></div>
+      <div class="step"><div class="sn">3</div><div class="sb2"><h5>Subsequent Requests</h5><p>Client sends JWT in header: <code class="il">Authorization: Bearer eyJhbG...</code></p></div></div>
+      <div class="step"><div class="sn">4</div><div class="sb2"><h5>Validation</h5><p>Server filter intercepts every request, extracts token, verifies signature with secret key, checks expiry, sets SecurityContext — all without hitting DB</p></div></div>
+    </div>
+<pre><span class="cm">// JwtAuthenticationFilter — runs on every request</span>
+<span class="an">@Component</span>
+<span class="kw">public class</span> <span class="tp">JwtAuthFilter</span> <span class="kw">extends</span> <span class="tp">OncePerRequestFilter</span> {
+    <span class="an">@Override</span>
+    <span class="kw">protected void</span> <span class="fn">doFilterInternal</span>(<span class="tp">HttpServletRequest</span> req, 
+                                      <span class="tp">HttpServletResponse</span> res,
+                                      <span class="tp">FilterChain</span> chain) <span class="kw">throws</span> ... {
+        <span class="tp">String</span> header = req.getHeader(<span class="st">"Authorization"</span>);
+        <span class="kw">if</span> (header != <span class="ky">null</span> && header.startsWith(<span class="st">"Bearer "</span>)) {
+            <span class="tp">String</span> token = header.substring(<span class="nu">7</span>);
+            <span class="tp">String</span> username = jwtUtil.extractUsername(token);
+            
+            <span class="kw">if</span> (username != <span class="ky">null</span> && jwtUtil.isTokenValid(token)) {
+                <span class="tp">UsernamePasswordAuthenticationToken</span> auth = 
+                    <span class="kw">new</span> <span class="tp">UsernamePasswordAuthenticationToken</span>(
+                        username, <span class="ky">null</span>, jwtUtil.extractRoles(token));
+                SecurityContextHolder.getContext().setAuthentication(auth);
+            }
+        }
+        chain.doFilter(req, res); <span class="cm">// proceed to next filter / controller</span>
+    }
+}</pre>
+  </div>
+</div>
+
+<div class="qa" onclick="toggle(this)">
+  <div class="qa-q"><span class="qn">Q3</span><span class="qt">@Valid vs @Validated — request validation, nested objects, custom validators</span><span class="qa-arr">▾</span></div>
+  <div class="qa-body">
+<pre><span class="cm">// Request DTO with validation annotations</span>
+<span class="kw">public class</span> <span class="tp">CreateUserRequest</span> {
+    <span class="an">@NotBlank</span>(message = <span class="st">"Name is required"</span>)
+    <span class="an">@Size</span>(min = <span class="nu">2</span>, max = <span class="nu">50</span>)
+    <span class="kw">private</span> <span class="tp">String</span> name;
+    
+    <span class="an">@Email</span>(message = <span class="st">"Invalid email format"</span>)
+    <span class="an">@NotBlank</span>
+    <span class="kw">private</span> <span class="tp">String</span> email;
+    
+    <span class="an">@Min</span>(<span class="nu">18</span>) <span class="an">@Max</span>(<span class="nu">120</span>)
+    <span class="kw">private int</span> age;
+    
+    <span class="an">@Valid</span>  <span class="cm">// cascade validation to nested object</span>
+    <span class="an">@NotNull</span>
+    <span class="kw">private</span> <span class="tp">Address</span> address;
+}
+
+<span class="cm">// Controller — @Valid triggers validation before method executes</span>
+<span class="an">@PostMapping</span>
+<span class="kw">public</span> <span class="tp">UserDTO</span> <span class="fn">createUser</span>(<span class="an">@Valid</span> <span class="an">@RequestBody</span> <span class="tp">CreateUserRequest</span> req) {
+    <span class="cm">// If validation fails, MethodArgumentNotValidException is thrown BEFORE reaching here</span>
+    <span class="kw">return</span> userService.create(req);
+}
+
+<span class="cm">// Custom validator annotation</span>
+<span class="an">@Constraint</span>(validatedBy = <span class="tp">AgeRangeValidator</span>.class)
+<span class="an">@Target</span>(<span class="tp">ElementType</span>.FIELD)
+<span class="kw">public</span> @interface <span class="tp">ValidAge</span> {
+    <span class="tp">String</span> message() <span class="kw">default</span> <span class="st">"Age must be between 18 and 120"</span>;
+    <span class="tp">Class</span>&lt;?&gt;[] groups() <span class="kw">default</span> {};
+    <span class="tp">Class</span>&lt;? <span class="kw">extends</span> <span class="tp">Payload</span>&gt;[] payload() <span class="kw">default</span> {};
+}
+
+<span class="kw">public class</span> <span class="tp">AgeRangeValidator</span> <span class="kw">implements</span> <span class="tp">ConstraintValidator</span>&lt;<span class="tp">ValidAge</span>, <span class="tp">Integer</span>&gt; {
+    <span class="kw">public boolean</span> <span class="fn">isValid</span>(<span class="tp">Integer</span> age, <span class="tp">ConstraintValidatorContext</span> ctx) {
+        <span class="kw">return</span> age != <span class="ky">null</span> && age >= <span class="nu">18</span> && age <= <span class="nu">120</span>;
+    }
+}</pre>
+    <p><strong>@Valid vs @Validated:</strong> <code class="il">@Valid</code> is from Java standard (javax.validation). <code class="il">@Validated</code> is Spring's extension — it additionally supports <strong>validation groups</strong> (different validation rules for create vs update) and enables method-level validation on service beans (not just controllers).</p>
+  </div>
+</div>
+</div>
+<!-- END REST -->
+<!-- ═══════════════════════════════════════ JPA ═══════════════════════════════════════ -->
+<div class="ch" id="jpa">
+<div class="ch-head">
+  <div class="ch-n">09</div>
+  <div class="ch-info">
+    <div class="ch-title">JPA / Hibernate</div>
+    <div class="ch-sub">Entities, relationships, N+1 problem, transactions, optimistic/pessimistic locking</div>
+    <div class="ch-tags"><span class="ctag hot">🔥 N+1 Always Asked</span><span class="ctag med">Deep ORM</span></div>
+  </div>
+</div>
+
+<div class="qa" onclick="toggle(this)">
+  <div class="qa-q"><span class="qn">Q1</span><span class="qt">JPA vs Hibernate vs Spring Data JPA — what is the difference?</span><span class="qa-arr">▾</span></div>
+  <div class="qa-body">
+    <div class="ana"><span class="bl">🍳 Analogy</span><p><strong>JPA</strong> is like a job description for a "Database Access Layer" — it defines what APIs must exist (EntityManager, @Entity, @Query etc.) but doesn't implement them. <strong>Hibernate</strong> is the actual employee who does the job — it implements JPA and does the real SQL generation and connection management. <strong>Spring Data JPA</strong> is a smarter manager who takes Hibernate's work and makes it even easier — you just write an interface with method names like <code class="il">findByEmailAndActiveTrue()</code> and Spring generates the implementation.</p></div>
+    <table>
+      <tr><th>Layer</th><th>Description</th><th>Your interaction</th></tr>
+      <tr><td><strong>JPA</strong></td><td>javax.persistence specification — just annotations and interfaces, no implementation</td><td>@Entity, @Id, @OneToMany, EntityManager</td></tr>
+      <tr><td><strong>Hibernate</strong></td><td>Most popular JPA implementation — generates SQL, manages sessions, first-level cache, second-level cache</td><td>Can use Hibernate-specific features like @Formula, @NaturalId</td></tr>
+      <tr><td><strong>Spring Data JPA</strong></td><td>Spring's abstraction layer on top of JPA — repository pattern, method name queries, @Query, pagination</td><td>Extend JpaRepository, write method names</td></tr>
+    </table>
+<pre><span class="cm">// Spring Data JPA — magic method name queries</span>
+<span class="kw">public interface</span> <span class="tp">UserRepository</span> <span class="kw">extends</span> <span class="tp">JpaRepository</span>&lt;<span class="tp">User</span>, <span class="tp">Long</span>&gt; {
+    
+    <span class="cm">// Spring generates SQL: SELECT * FROM user WHERE email = ?</span>
+    <span class="tp">Optional</span>&lt;<span class="tp">User</span>&gt; <span class="fn">findByEmail</span>(<span class="tp">String</span> email);
+    
+    <span class="cm">// SELECT * FROM user WHERE age > ? AND active = true ORDER BY name</span>
+    List&lt;<span class="tp">User</span>&gt; <span class="fn">findByAgeGreaterThanAndActiveTrueOrderByName</span>(<span class="kw">int</span> age);
+    
+    <span class="cm">// Custom JPQL query</span>
+    <span class="an">@Query</span>(<span class="st">"SELECT u FROM User u WHERE u.dept = :dept AND u.salary > :minSal"</span>)
+    List&lt;<span class="tp">User</span>&gt; <span class="fn">findHighEarnersByDept</span>(<span class="an">@Param</span>(<span class="st">"dept"</span>) <span class="tp">String</span> dept, 
+                                      <span class="an">@Param</span>(<span class="st">"minSal"</span>) <span class="kw">double</span> minSal);
+    
+    <span class="cm">// Pagination and sorting built in</span>
+    <span class="tp">Page</span>&lt;<span class="tp">User</span>&gt; <span class="fn">findByActive</span>(<span class="kw">boolean</span> active, <span class="tp">Pageable</span> pageable);
+}</pre>
+  </div>
+</div>
+
+<div class="qa" onclick="toggle(this)">
+  <div class="qa-q"><span class="qn">Q2</span><span class="qt">EAGER vs LAZY loading, N+1 query problem — how does it happen, how to solve?</span><span class="qa-arr">▾</span></div>
+  <div class="qa-body">
+    <p><strong>EAGER loading</strong> — Related entities are loaded immediately along with the parent. <code class="il">@ManyToOne</code> and <code class="il">@OneToOne</code> default to EAGER.</p>
+    <p><strong>LAZY loading</strong> — Related entities are loaded only when you first access them (via a Hibernate proxy). <code class="il">@OneToMany</code> and <code class="il">@ManyToMany</code> default to LAZY. More efficient for large collections you might not always need.</p>
+    <p><strong>N+1 Problem</strong> — The most common Hibernate performance killer. Classic scenario: You fetch 100 Orders. Each Order has a Customer relationship. When your code accesses each order's customer, Hibernate fires a separate SQL per order. That's 1 (for orders) + 100 (for customers) = 101 queries for what could be done in 1 JOIN.</p>
+<pre><span class="cm">// ❌ N+1 happening — this looks innocent but fires 101 SQL queries</span>
+List&lt;<span class="tp">Order</span>&gt; orders = orderRepo.findAll();    <span class="cm">// 1 query</span>
+<span class="kw">for</span> (<span class="tp">Order</span> o : orders) {
+    System.out.println(o.getCustomer().getName()); <span class="cm">// 1 query PER order!</span>
+}
+
+<span class="cm">// ✅ Fix 1: JOIN FETCH — one query with a JOIN</span>
+<span class="an">@Query</span>(<span class="st">"SELECT o FROM Order o JOIN FETCH o.customer WHERE o.status = :status"</span>)
+List&lt;<span class="tp">Order</span>&gt; <span class="fn">findWithCustomers</span>(<span class="an">@Param</span>(<span class="st">"status"</span>) <span class="tp">String</span> status);
+<span class="cm">// Generates: SELECT o.*, c.* FROM orders o INNER JOIN customer c ON ...</span>
+
+<span class="cm">// ✅ Fix 2: @EntityGraph — declarative, no JPQL</span>
+<span class="an">@EntityGraph</span>(attributePaths = {<span class="st">"customer"</span>, <span class="st">"items"</span>})
+List&lt;<span class="tp">Order</span>&gt; <span class="fn">findAll</span>();
+
+<span class="cm">// ✅ Fix 3: @BatchSize — fetch in batches instead of one-by-one</span>
+<span class="an">@OneToMany</span>(mappedBy = <span class="st">"order"</span>)
+<span class="an">@BatchSize</span>(size = <span class="nu">50</span>) <span class="cm">// fetches 50 at once instead of 1 at a time</span>
+<span class="kw">private</span> List&lt;<span class="tp">OrderItem</span>&gt; items;</pre>
+    <div class="warn"><span class="bl">⚠️ How to detect N+1 in development</span><p>Add <code class="il">spring.jpa.show-sql=true</code> and <code class="il">logging.level.org.hibernate.SQL=DEBUG</code> to application.properties. You'll see every SQL query in the logs. If you see the same query repeating with different IDs — you have N+1. In production, use Hibernate Statistics or a tool like Datasource-Proxy to count queries per request.</p></div>
+  </div>
+</div>
+
+<div class="qa" onclick="toggle(this)">
+  <div class="qa-q"><span class="qn">Q3</span><span class="qt">@Transactional, @Modifying — when required? Optimistic vs Pessimistic locking?</span><span class="qa-arr">▾</span></div>
+  <div class="qa-body">
+<pre><span class="cm">// @Modifying + @Transactional required for write JPQL queries</span>
+<span class="an">@Modifying</span>           <span class="cm">// signals: this is INSERT/UPDATE/DELETE, not SELECT</span>
+<span class="an">@Transactional</span>       <span class="cm">// wraps in a transaction — rollback if exception</span>
+<span class="an">@Query</span>(<span class="st">"UPDATE Employee e SET e.salary = e.salary * 1.1 WHERE e.dept = :dept"</span>)
+<span class="kw">int</span> <span class="fn">giveRaise</span>(<span class="an">@Param</span>(<span class="st">"dept"</span>) <span class="tp">String</span> dept); <span class="cm">// returns number of rows affected</span>
+
+<span class="cm">// OPTIMISTIC LOCKING — best for low contention</span>
+<span class="an">@Entity</span>
+<span class="kw">class</span> <span class="tp">Product</span> {
+    <span class="an">@Id</span> <span class="an">@GeneratedValue</span>
+    <span class="kw">private</span> <span class="tp">Long</span> id;
+    <span class="kw">private int</span> stock;
+    
+    <span class="an">@Version</span>
+    <span class="kw">private</span> <span class="tp">Long</span> version; <span class="cm">// JPA auto-increments on every UPDATE</span>
+}
+<span class="cm">// When updating: UPDATE product SET stock=?, version=? WHERE id=? AND version=oldVersion</span>
+<span class="cm">// If another thread already updated (version changed) → OptimisticLockException → retry</span>
+
+<span class="cm">// PESSIMISTIC LOCKING — best for high contention (inventory, balance)</span>
+<span class="an">@Lock</span>(<span class="tp">LockModeType</span>.PESSIMISTIC_WRITE)  <span class="cm">// issues SELECT ... FOR UPDATE</span>
+<span class="an">@Query</span>(<span class="st">"SELECT p FROM Product p WHERE p.id = :id"</span>)
+<span class="tp">Optional</span>&lt;<span class="tp">Product</span>&gt; <span class="fn">findByIdForUpdate</span>(<span class="an">@Param</span>(<span class="st">"id"</span>) <span class="tp">Long</span> id);
+<span class="cm">// DB row is physically locked — no other transaction can read/write it</span>
+<span class="cm">// Released when your transaction commits or rolls back</span></pre>
+    <table>
+      <tr><th>Feature</th><th>Optimistic (@Version)</th><th>Pessimistic (@Lock)</th></tr>
+      <tr><td>DB lock held?</td><td>❌ No lock in DB</td><td>✅ Actual DB row lock</td></tr>
+      <tr><td>Performance</td><td>Better — no lock contention</td><td>Worse — blocks other transactions</td></tr>
+      <tr><td>Conflict handling</td><td>Detect at commit, retry needed</td><td>Conflicts wait in queue</td></tr>
+      <tr><td>Use when</td><td>Low contention, read-heavy</td><td>High contention, must prevent concurrent updates</td></tr>
+    </table>
+  </div>
+</div>
+</div>
+<!-- END JPA -->
+
+<!-- ═══════════════════════════════════════ SQL ═══════════════════════════════════════ -->
+<div class="ch" id="sql">
+<div class="ch-head">
+  <div class="ch-n">10</div>
+  <div class="ch-info">
+    <div class="ch-title">SQL / Database</div>
+    <div class="ch-sub">ACID, joins, indexes, execution order, window functions, partitioning</div>
+    <div class="ch-tags"><span class="ctag hot">🔥 Live Coding</span><span class="ctag med">Window Functions</span></div>
+  </div>
+</div>
+
+<div class="qa" onclick="toggle(this)">
+  <div class="qa-q"><span class="qn">Q1</span><span class="qt">ACID properties — explain each with real example</span><span class="qa-arr">▾</span></div>
+  <div class="qa-body">
+    <div class="ana"><span class="bl">🍳 Analogy — Bank Transfer</span><p>You transfer ₹1000 from Account A to Account B. ACID ensures this doesn't go wrong in any scenario.</p></div>
+    <ul>
+      <li><strong>Atomicity</strong> — "All or nothing." Deducting ₹1000 from A and adding ₹1000 to B happen as one unit. If the server crashes between the two operations, the whole transaction rolls back — no money disappears or appears from nowhere.</li>
+      <li><strong>Consistency</strong> — Data goes from one valid state to another valid state. If A has ₹500 and you try to deduct ₹1000, the transaction is rejected (violates constraint). The database remains consistent.</li>
+      <li><strong>Isolation</strong> — Concurrent transactions don't interfere. If two people transfer from A simultaneously, they don't see each other's partial updates. Isolation levels (Read Uncommitted → Read Committed → Repeatable Read → Serializable) control how much concurrent transactions affect each other.</li>
+      <li><strong>Durability</strong> — Once a transaction commits, it persists even if the server crashes immediately after. The DB writes to disk/WAL (Write-Ahead Log) before acknowledging commit.</li>
+    </ul>
+  </div>
+</div>
+
+<div class="qa" onclick="toggle(this)">
+  <div class="qa-q"><span class="qn">Q2</span><span class="qt">SQL execution order. WHERE vs HAVING. Complex queries — 2nd salary, top 3 per dept.</span><span class="qa-arr">▾</span></div>
+  <div class="qa-body">
+    <p>SQL clauses are written in one order but executed in a different order. This explains why you can't use a SELECT alias in WHERE.</p>
+<pre><span class="cm">-- Execution order (NOT the writing order)</span>
+<span class="cm">-- 1. FROM — identify the tables</span>
+<span class="cm">-- 2. JOIN — combine tables</span>
+<span class="cm">-- 3. WHERE — filter rows (BEFORE grouping)</span>
+<span class="cm">-- 4. GROUP BY — group remaining rows</span>
+<span class="cm">-- 5. HAVING — filter groups (AFTER grouping, can use aggregates)</span>
+<span class="cm">-- 6. SELECT — choose columns (aliases created here)</span>
+<span class="cm">-- 7. ORDER BY — sort results</span>
+<span class="cm">-- 8. LIMIT/OFFSET — paginate</span>
+
+<span class="cm">-- WHERE vs HAVING — the key difference</span>
+SELECT dept, COUNT(*), AVG(salary)
+FROM employee
+WHERE salary > 30000          <span class="cm">-- filter rows BEFORE group (no aggregates)</span>
+GROUP BY dept
+HAVING COUNT(*) > 5           <span class="cm">-- filter groups AFTER (can use COUNT)</span>
+ORDER BY AVG(salary) DESC;</pre>
+<pre><span class="cm">-- 2nd highest salary (without window functions)</span>
+SELECT MAX(salary) AS second_highest
+FROM employee
+WHERE salary &lt; (SELECT MAX(salary) FROM employee);
+
+<span class="cm">-- Nth highest salary using window function (better, handles ties)</span>
+SELECT name, salary
+FROM (
+    SELECT name, salary,
+           DENSE_RANK() OVER (ORDER BY salary DESC) AS rnk
+    FROM employee
+) ranked
+WHERE rnk = 2;
+
+<span class="cm">-- Top 3 highest paid per department</span>
+SELECT dept, name, salary
+FROM (
+    SELECT dept, name, salary,
+           ROW_NUMBER() OVER (
+               PARTITION BY dept       <span class="cm">-- reset ranking per department</span>
+               ORDER BY salary DESC    <span class="cm">-- highest salary = rank 1</span>
+           ) AS row_num
+    FROM employee
+) ranked
+WHERE row_num &lt;= 3
+ORDER BY dept, salary DESC;
+
+<span class="cm">-- Employees earning more than avg salary of their own department</span>
+SELECT e.name, e.salary, e.dept
+FROM employee e
+WHERE e.salary > (
+    SELECT AVG(salary) 
+    FROM employee e2 
+    WHERE e2.dept = e.dept     <span class="cm">-- correlated subquery: re-runs for each row</span>
+);
+
+<span class="cm">-- Better version using window function (single scan)</span>
+SELECT name, salary, dept
+FROM (
+    SELECT name, salary, dept,
+           AVG(salary) OVER (PARTITION BY dept) AS dept_avg
+    FROM employee
+) t
+WHERE salary > dept_avg;</pre>
+  </div>
+</div>
+
+<div class="qa" onclick="toggle(this)">
+  <div class="qa-q"><span class="qn">Q3</span><span class="qt">Indexing — when to use, advantages, disadvantages, impact on INSERT/UPDATE</span><span class="qa-arr">▾</span></div>
+  <div class="qa-body">
+    <div class="ana"><span class="bl">🍳 Analogy</span><p>An index is like the index at the back of a textbook. Without it, to find "HashMap" you read every page (full table scan). With it, you jump to the page directly. Creating the index takes time and space, and every time you add a new page to the book you also update the index (write overhead).</p></div>
+    <p><strong>When to add indexes:</strong></p>
+    <ul>
+      <li>Columns frequently used in WHERE clauses: <code class="il">WHERE email = ?</code>, <code class="il">WHERE status = 'ACTIVE'</code></li>
+      <li>Foreign key columns used in JOINs</li>
+      <li>Columns used in ORDER BY for large result sets</li>
+      <li>High-cardinality columns (many distinct values — email, phone — make good index candidates; boolean columns don't)</li>
+    </ul>
+    <p><strong>Disadvantages and trade-offs:</strong></p>
+    <ul>
+      <li><strong>Write overhead</strong> — Every INSERT, UPDATE, DELETE must also update the index. A table with 5 indexes on it takes ~5x longer to insert into than an unindexed table.</li>
+      <li><strong>Storage space</strong> — Indexes consume disk space, sometimes significant.</li>
+      <li><strong>Maintenance</strong> — Indexes can become fragmented and need periodic rebuilding.</li>
+      <li>Over-indexing is a real problem — some systems have tables with 20 indexes making writes painfully slow.</li>
+    </ul>
+<pre><span class="cm">-- Create an index in SQL</span>
+CREATE INDEX idx_employee_email ON employee(email);
+CREATE INDEX idx_emp_dept_salary ON employee(dept, salary); <span class="cm">-- composite index</span>
+
+-- In JPA/Hibernate
+@Entity
+@Table(indexes = {
+    @Index(name = "idx_email", columnList = "email"),
+    @Index(name = "idx_dept_sal", columnList = "dept, salary")
+})
+public class Employee { ... }</pre>
+  </div>
+</div>
+</div>
+<!-- END SQL -->
+
+<!-- ═══════════════════════════════════════ MICROSERVICES ═══════════════════════════════════════ -->
+<div class="ch" id="ms">
+<div class="ch-head">
+  <div class="ch-n">11</div>
+  <div class="ch-info">
+    <div class="ch-title">Microservices</div>
+    <div class="ch-sub">Communication, Saga, Circuit Breaker, CQRS, service discovery, CAP theorem</div>
+    <div class="ch-tags"><span class="ctag hot">🔥 Architecture Level</span><span class="ctag hot">10 LPA Senior</span></div>
+  </div>
+</div>
+
+<div class="qa" onclick="toggle(this)">
+  <div class="qa-q"><span class="qn">Q1</span><span class="qt">Microservices vs Monolith — benefits, downsides, communication patterns</span><span class="qa-arr">▾</span></div>
+  <div class="qa-body">
+    <div class="ana"><span class="bl">🍳 Analogy</span><p><strong>Monolith</strong>: A Swiss Army knife — everything in one tool. Simple, reliable for small tasks, but if the blade breaks the whole knife is out of service, and you can't scale just the scissors without buying a whole new knife. <strong>Microservices</strong>: A full kitchen with specialized tools. Each tool does one thing brilliantly. If the blender breaks, you can still cook. You can buy 3 more blenders if smoothies are in high demand.</p></div>
+    <div class="diff">
+      <div class="dc a"><h4>Monolith — Pros</h4><ul><li>Simple to develop initially</li><li>Single deployment</li><li>No network latency between components</li><li>Easy to test end-to-end</li><li>Good for small teams and startups</li></ul></div>
+      <div class="dc b"><h4>Monolith — Cons</h4><ul><li>Scale the whole app even if only DB is the bottleneck</li><li>One bug can crash everything</li><li>Long build/deploy cycles</li><li>Tech stack locked — hard to experiment</li></ul></div>
+    </div>
+    <div class="diff">
+      <div class="dc a"><h4>Microservices — Pros</h4><ul><li>Independent deployment per service</li><li>Scale only what needs scaling</li><li>Team autonomy — each team owns a service</li><li>Technology flexibility per service</li><li>Fault isolation</li></ul></div>
+      <div class="dc b"><h4>Microservices — Cons</h4><ul><li>Distributed system complexity</li><li>Network latency and partial failures</li><li>Data consistency challenges</li><li>Operational overhead (k8s, monitoring, tracing)</li><li>Testing end-to-end is harder</li></ul></div>
+    </div>
+    <p><strong>Communication Patterns:</strong></p>
+    <table>
+      <tr><th>Pattern</th><th>Protocol</th><th>When to use</th></tr>
+      <tr><td>Synchronous</td><td>REST/HTTP, gRPC</td><td>When caller needs immediate response</td></tr>
+      <tr><td>Asynchronous</td><td>Kafka, RabbitMQ</td><td>When decoupling is more important than immediate result</td></tr>
+      <tr><td>Event-Driven</td><td>Kafka topics</td><td>Multiple consumers need the same event, eventual consistency ok</td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="qa" onclick="toggle(this)">
+  <div class="qa-q"><span class="qn">Q2</span><span class="qt">Saga Pattern — Choreography vs Orchestration, compensating transactions, failure handling</span><span class="qa-arr">▾</span></div>
+  <div class="qa-body">
+    <p>In microservices, you can't use a traditional database transaction across multiple services — each service has its own database. The <strong>Saga pattern</strong> solves distributed transactions by breaking them into a sequence of local transactions, each with a compensating transaction for rollback.</p>
+    <div class="diff">
+      <div class="dc a"><h4>Choreography-based Saga</h4><ul><li>No central coordinator</li><li>Each service publishes an event when its step completes</li><li>Next service listens for that event and does its step</li><li>If something fails, a failure event triggers compensation backwards</li><li><strong>Good</strong>: decoupled, no single point of failure</li><li><strong>Bad</strong>: hard to track overall flow, debugging is complex</li></ul></div>
+      <div class="dc b"><h4>Orchestration-based Saga</h4><ul><li>Central Saga Orchestrator tells each service what to do next</li><li>Orchestrator tracks state and decides next step based on responses</li><li><strong>Good</strong>: easy to visualize and monitor the flow</li><li><strong>Bad</strong>: orchestrator can become a bottleneck or single point of failure</li></ul></div>
+    </div>
+<pre><span class="cm">// Example: Place Order Saga (Orchestration)</span>
+<span class="cm">// Steps: 1. Reserve Inventory → 2. Process Payment → 3. Schedule Delivery</span>
+<span class="cm">// If Payment fails:</span>
+<span class="cm">// Compensating transaction: Release Inventory (undo step 1)</span>
+<span class="cm">// If Delivery fails:</span>
+<span class="cm">// Compensating: Refund Payment, Release Inventory (undo steps 2 and 1)</span>
+
+<span class="kw">class</span> <span class="tp">OrderSaga</span> {
+    <span class="kw">void</span> <span class="fn">execute</span>(<span class="tp">Order</span> order) {
+        <span class="kw">try</span> {
+            inventoryService.reserve(order);        <span class="cm">// Step 1</span>
+            paymentService.charge(order);           <span class="cm">// Step 2</span>
+            deliveryService.schedule(order);        <span class="cm">// Step 3</span>
+        } <span class="kw">catch</span> (<span class="tp">PaymentException</span> e) {
+            inventoryService.release(order);        <span class="cm">// Compensate step 1</span>
+        } <span class="kw">catch</span> (<span class="tp">DeliveryException</span> e) {
+            paymentService.refund(order);           <span class="cm">// Compensate step 2</span>
+            inventoryService.release(order);        <span class="cm">// Compensate step 1</span>
+        }
+    }
+}</pre>
+    <p><strong>Idempotency in Saga steps is crucial</strong> — if a step is retried (network timeout, crash), it must be safe to execute multiple times. Use idempotency keys (unique operation ID) to detect and skip already-processed requests.</p>
+  </div>
+</div>
+
+<div class="qa" onclick="toggle(this)">
+  <div class="qa-q"><span class="qn">Q3</span><span class="qt">Circuit Breaker — states, implementation with Resilience4j, retry with exponential backoff</span><span class="qa-arr">▾</span></div>
+  <div class="qa-body">
+    <div class="ana"><span class="bl">🍳 Analogy</span><p>Exactly like an electrical circuit breaker. When current (failures) is too high, the breaker trips (OPEN) to protect the circuit. After a cool-down period, it half-opens to test if things are normal. If yes, it resets to CLOSED. This prevents a failing downstream service from causing a cascade failure in your service.</p></div>
+<pre><span class="cm">// application.yml — Resilience4j circuit breaker config</span>
+resilience4j:
+  circuitbreaker:
+    instances:
+      paymentService:
+        failureRateThreshold: 50        <span class="cm"># open if 50% of calls fail</span>
+        waitDurationInOpenState: 10000  <span class="cm"># wait 10s before trying half-open</span>
+        slidingWindowSize: 10           <span class="cm"># evaluate last 10 calls</span>
+        permittedNumberOfCallsInHalfOpenState: 3
+  retry:
+    instances:
+      paymentService:
+        maxAttempts: 3
+        waitDuration: 1000             <span class="cm"># 1s between retries</span>
+        enableExponentialBackoff: true  <span class="cm"># 1s, 2s, 4s... </span>
+        exponentialBackoffMultiplier: 2</pre>
+<pre><span class="cm">// Usage in service</span>
+<span class="an">@CircuitBreaker</span>(name = <span class="st">"paymentService"</span>, fallbackMethod = <span class="st">"paymentFallback"</span>)
+<span class="an">@Retry</span>(name = <span class="st">"paymentService"</span>)
+<span class="an">@TimeLimiter</span>(name = <span class="st">"paymentService"</span>)  <span class="cm">// timeout</span>
+<span class="kw">public</span> <span class="tp">CompletableFuture</span>&lt;<span class="tp">PaymentResult</span>&gt; <span class="fn">processPayment</span>(<span class="tp">PaymentRequest</span> req) {
+    <span class="kw">return</span> CompletableFuture.supplyAsync(() -> paymentClient.pay(req));
+}
+
+<span class="kw">public</span> <span class="tp">CompletableFuture</span>&lt;<span class="tp">PaymentResult</span>&gt; <span class="fn">paymentFallback</span>(<span class="tp">PaymentRequest</span> req, <span class="tp">Exception</span> ex) {
+    log.warn(<span class="st">"Payment service unavailable, using fallback"</span>, ex);
+    <span class="kw">return</span> CompletableFuture.completedFuture(<span class="tp">PaymentResult</span>.pending(req.getId()));
+}</pre>
+    <p><strong>Circuit Breaker states:</strong></p>
+    <ul>
+      <li><strong>CLOSED</strong> — Normal operation. All requests pass through. Failure rate is tracked.</li>
+      <li><strong>OPEN</strong> — Failure rate exceeded threshold. ALL requests immediately get the fallback response without calling the downstream service. This gives the downstream time to recover.</li>
+      <li><strong>HALF-OPEN</strong> — After the wait duration, a few test requests are allowed. If they succeed → back to CLOSED. If they fail → back to OPEN.</li>
+    </ul>
+  </div>
+</div>
+
+<div class="qa" onclick="toggle(this)">
+  <div class="qa-q"><span class="qn">Q4</span><span class="qt">CAP Theorem — what is it? Which do you choose? 12-Factor App?</span><span class="qa-arr">▾</span></div>
+  <div class="qa-body">
+    <p><strong>CAP Theorem</strong> states that a distributed system can only guarantee 2 of these 3 properties simultaneously:</p>
+    <div class="mems">
+      <div class="mem m1"><h5>C — Consistency</h5><p>Every read gets the most recent write or an error. All nodes see the same data at the same time.</p></div>
+      <div class="mem m2"><h5>A — Availability</h5><p>Every request gets a response (not guaranteed to be the latest data). System never rejects requests.</p></div>
+      <div class="mem m4"><h5>P — Partition Tolerance</h5><p>System continues operating despite network partitions (nodes can't communicate).</p></div>
+    </div>
+    <p>Since network partitions are a reality in distributed systems, <strong>P is always required</strong>. So your real choice is between CP and AP:</p>
+    <table>
+      <tr><th>Choice</th><th>Examples</th><th>When to use</th></tr>
+      <tr><td><strong>CP</strong> (Consistent + Partition-tolerant)</td><td>ZooKeeper, HBase, MongoDB</td><td>Banking, inventory — you'd rather fail than show wrong data</td></tr>
+      <tr><td><strong>AP</strong> (Available + Partition-tolerant)</td><td>Cassandra, Couchbase, DynamoDB</td><td>Social feed, product catalog — stale data ok, must stay available</td></tr>
+    </table>
+    <p><strong>12-Factor App</strong> — Best practices for cloud-native, scalable apps:</p>
+    <div class="pills">
+      <span class="pill pg">1. One codebase</span>
+      <span class="pill pg">2. Explicit dependencies</span>
+      <span class="pill pg">3. Config in environment</span>
+      <span class="pill pb">4. Backing services as attached resources</span>
+      <span class="pill pb">5. Separate build/release/run</span>
+      <span class="pill pb">6. Stateless processes</span>
+      <span class="pill py">7. Port binding</span>
+      <span class="pill py">8. Horizontal scaling</span>
+      <span class="pill py">9. Fast startup and graceful shutdown</span>
+      <span class="pill pr">10. Dev/prod parity</span>
+      <span class="pill pr">11. Logs as event streams</span>
+      <span class="pill pr">12. Admin tasks as one-off processes</span>
+    </div>
+    <p>The most important for interviews: <strong>#3 Config in environment</strong> (no hardcoded DB passwords, use env vars or Spring Cloud Config), <strong>#6 Stateless processes</strong> (don't store session in memory — use Redis), <strong>#9 Fast startup</strong> (enables auto-scaling and rolling deploys).</p>
+  </div>
+</div>
+
+<div class="qa" onclick="toggle(this)">
+  <div class="qa-q"><span class="qn">Q5</span><span class="qt">Service Discovery — what and why? Distributed Tracing — traceId/spanId propagation?</span><span class="qa-arr">▾</span></div>
+  <div class="qa-body">
+    <p><strong>Service Discovery</strong> — In microservices running on Kubernetes or cloud, service instances start and stop constantly (scaling, crashes, deployments). Their IP addresses change. You can't hardcode IPs. Service discovery lets services find each other by name.</p>
+    <ul>
+      <li><strong>Client-side discovery (Eureka)</strong> — Services register with a service registry on startup. When ServiceA wants to call ServiceB, it asks the registry for ServiceB's current instances and does the load balancing itself (using Ribbon/Spring Cloud LoadBalancer).</li>
+      <li><strong>Server-side discovery (Kubernetes)</strong> — The platform handles routing. ServiceA calls "http://payment-service/pay" and Kubernetes DNS resolves it and routes to a healthy pod. No client-side library needed.</li>
+    </ul>
+    <p><strong>Distributed Tracing</strong> — When a user request touches 8 microservices, if something fails or is slow, which service is responsible? Distributed tracing assigns a <code class="il">traceId</code> at the entry point (API Gateway) and propagates it through every service call. Each service creates a <code class="il">spanId</code> for its own processing. Tools like Zipkin or Jaeger collect all spans and show you the full request timeline visually.</p>
+<pre><span class="cm">// With Spring Cloud Sleuth (or Micrometer Tracing in modern Spring Boot)</span>
+<span class="cm">// Add dependency: spring-cloud-starter-sleuth + spring-cloud-sleuth-zipkin</span>
+
+<span class="cm">// Sleuth automatically:</span>
+<span class="cm">// - Adds traceId/spanId to every log line</span>
+<span class="cm">// - Propagates via HTTP headers (X-B3-TraceId, X-B3-SpanId)</span>
+<span class="cm">// - Propagates via Kafka message headers</span>
+<span class="cm">// - Sends spans to Zipkin</span>
+
+<span class="cm">// Your logs automatically look like:</span>
+<span class="cm">// [order-service, abc123traceId, def456spanId] Processing order 42</span>
+<span class="cm">// [payment-service, abc123traceId, 789spanId] Charging card for order 42</span>
+<span class="cm">// Same traceId across all services — one timeline in Zipkin!</span>
+
+<span class="cm">// When calling another service via Feign/RestTemplate, headers are auto-propagated</span>
+<span class="cm">// No manual header passing needed with Sleuth</span></pre>
+  </div>
+</div>
+</div>
+<!-- END MICROSERVICES -->
+
+<!-- ═══════════════════════════════════════ CLOSING ═══════════════════════════════════════ -->
+<div class="ch" style="margin-bottom:2rem;">
+<div class="ch-head">
+  <div class="ch-n">★</div>
+  <div class="ch-info">
+    <div class="ch-title">Final Interview Tips</div>
+    <div class="ch-sub">How to answer, common traps, what separates 10 LPA from 6 LPA candidates</div>
+  </div>
+</div>
+<div class="qa" onclick="toggle(this)">
+  <div class="qa-q"><span class="qn">READ</span><span class="qt">How to answer in interviews — the exact framework that gets you hired</span><span class="qa-arr">▾</span></div>
+  <div class="qa-body">
+    <p><strong>The 3-Part Answer Framework:</strong></p>
+    <div class="steps">
+      <div class="step"><div class="sn">1</div><div class="sb2"><h5>Plain English First (5–10 seconds)</h5><p>Start with a one-sentence plain English explanation. "HashMap is a key-value data structure that gives you O(1) lookups using hashing." This immediately signals you understand it conceptually.</p></div></div>
+      <div class="step"><div class="sn">2</div><div class="sb2"><h5>How it works internally</h5><p>Explain the mechanism. "Internally it uses an array of buckets. The key's hashCode() determines which bucket, then equals() resolves the actual entry within that bucket."</p></div></div>
+      <div class="step"><div class="sn">3</div><div class="sb2"><h5>Edge cases or caveats</h5><p>Mention the smart stuff. "In Java 8, once a bucket has 8+ entries it converts to a Red-Black Tree for O(log n) instead of O(n) lookup. And if you use custom keys, you must override both hashCode and equals together."</p></div></div>
+    </div>
+    <div class="ir"><span class="ir-label">★ The Top Differentiators for 10 LPA</span>
+      <p>1. <strong>HashMap internals</strong> — Know hashing, bucket index, collision, TreeNode, load factor, resizing. Most interviewers stop here.<br>
+      2. <strong>N+1 problem</strong> — Every JPA interview asks this. Know JOIN FETCH and Entity Graphs.<br>
+      3. <strong>synchronized vs volatile vs AtomicInteger</strong> — Know what each solves and what they don't.<br>
+      4. <strong>CompletableFuture</strong> — Know thenApply vs thenCompose, thenCombine, allOf.<br>
+      5. <strong>Circuit Breaker</strong> — Three states, why it exists, Resilience4j usage.<br>
+      6. <strong>JWT</strong> — Structure, why stateless, validation flow.<br>
+      7. <strong>Progressive optimization</strong> — Always answer: "Brute force → Better → Optimal. Here's why each step improves."</p>
+    </div>
+  </div>
+</div>
+</div>
+
+</div><!-- /content -->
+</div><!-- /main -->
+</div><!-- /layout -->
+
+<script>
+function toggle(el) { el.classList.toggle('open'); }
+
+// Active sidebar link on scroll
+const chs = document.querySelectorAll('.ch');
+const links = document.querySelectorAll('.sb a');
+window.addEventListener('scroll', () => {
+  let cur = '';
+  chs.forEach(c => { if (window.scrollY >= c.offsetTop - 220) cur = c.id; });
+  links.forEach(l => l.classList.toggle('on', l.getAttribute('href') === '#' + cur));
+}, { passive: true });
+</script>
+</body>
+</html>
