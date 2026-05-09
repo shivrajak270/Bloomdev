@@ -6,12 +6,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 @Entity
 @Table
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class Medicine {
+public class Medicine implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE,

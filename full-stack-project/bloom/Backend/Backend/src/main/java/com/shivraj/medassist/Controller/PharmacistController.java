@@ -36,9 +36,9 @@ public class PharmacistController {
 
     @GetMapping("/stockscheck")
     public ResponseEntity<?>getstock(@AuthenticationPrincipal UserPrincipal user){
-      String username=user.getUsername();
+        String username=user.getUsername();
         List<StockViewDTO>listofstocks=parmaService.allstocks(username);
-      return new ResponseEntity<>(listofstocks,HttpStatus.OK);
+        return new ResponseEntity<>(listofstocks,HttpStatus.OK);
 
     }
 
