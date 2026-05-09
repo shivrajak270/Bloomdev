@@ -15,6 +15,7 @@ import com.shivraj.medassist.Repository.ShopMedicineRepo;
 import com.shivraj.medassist.Repository.UsersRepo;
 import com.shivraj.medassist.Service.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -90,7 +91,7 @@ public class UsersServiceImpl implements UsersService {
         }
 
     }
-
+    @Cacheable(value = "medicines")
     @Override
     public List<Medicine> searchmedicine() {
         List<Medicine>allmedines=new ArrayList<>();
@@ -112,8 +113,8 @@ public class UsersServiceImpl implements UsersService {
         List<ShopMedicineStock>shopList=shopMedicineRepo.findByMedicineIdlist(id);
         List<ShopDto>shopDtoList=new ArrayList<>();
         for(ShopMedicineStock shop:shopList){
-             long shopId=shop.getShopId();
-             Pharmacists pharma=pharmasistRepo.findByShopId(shopId);
+            long shopId=shop.getShopId();
+            Pharmacists pharma=pharmasistRepo.findByShopId(shopId);
             Optional<Users> user=usersRepo.findById(pharma.getUserId());
 
             ShopDto dto=new ShopDto();

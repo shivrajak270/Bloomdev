@@ -19,6 +19,8 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -63,6 +65,7 @@ public class PharmaServiceImpl implements ParmaService {
 
     }
 
+    @Cacheable(value = "stocks", key = "#username")
     @Override
     public List<StockViewDTO> allstocks(String username) {
         long id= userRepo.findByUsername(username).getId();
@@ -81,6 +84,7 @@ public class PharmaServiceImpl implements ParmaService {
         return result;
     }
 
+    @CacheEvict(value = "stocks", key = "#username")
     @Override
     public StockViewDTO addmedicine(String username,StockViewDTO stockViewDTO) {
 
@@ -108,10 +112,11 @@ public class PharmaServiceImpl implements ParmaService {
         result.setMedicine_name(stockViewDTO.getMedicine_name());
         result.setQuantity(stockViewDTO.getQuantity());
         result.setPrice(stockViewDTO.getPrice());
-       return result;
+        return result;
 
     }
 
+    @CacheEvict(value = "stocks", key = "#username")
     @Override
     public StockViewDTO updateStocks(String username, StockViewDTO stockViewDTO) {
         long id= userRepo.findByUsername(username).getId();
@@ -120,13 +125,13 @@ public class PharmaServiceImpl implements ParmaService {
         long medicineId=medicine.getMedicine_id();
         ShopMedicineStock shopMedicineStock=shopMedicineRepo.findByShopIdAndMedicineId(shopId,medicineId);
         if(shopMedicineStock.getQuantity()!=stockViewDTO.getQuantity())
-            {
+        {
             shopMedicineStock.setQuantity(stockViewDTO.getQuantity());
-            }
+        }
         if(shopMedicineStock.getPrice()!=stockViewDTO.getPrice())
-            {
+        {
             shopMedicineStock.setPrice(stockViewDTO.getPrice());
-            }
+        }
         try {
             shopMedicineRepo.save(shopMedicineStock);
         }catch (Exception e){
@@ -139,6 +144,7 @@ public class PharmaServiceImpl implements ParmaService {
         return result;
     }
 
+    @CacheEvict(value = "stocks", key = "#username")
     @Override
     @Transactional
     public String deletestocks(String username, StockViewDTO stockViewDTO) {

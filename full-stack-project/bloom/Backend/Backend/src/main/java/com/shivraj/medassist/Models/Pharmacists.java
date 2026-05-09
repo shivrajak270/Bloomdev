@@ -4,12 +4,14 @@ package com.shivraj.medassist.Models;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.io.Serializable;
+
 @Table
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Pharmacists {
+public class Pharmacists implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "shop_id")
