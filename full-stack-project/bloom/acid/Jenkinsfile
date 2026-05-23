@@ -1,0 +1,15 @@
+pipeline{
+    agent any
+    stages{
+        stage('Checkout code'){
+            steps{
+                git 'https://github.com/shivrajak270/Bloomdev.git'
+            }
+        }
+        stage{
+            steps{
+                 sh 'mvn clean install -DskipTests'
+            }
+        }
+    }
+}
