@@ -6,7 +6,7 @@ pipeline{
                 git 'https://github.com/shivrajak270/Bloomdev.git'
             }
         }
-        stage {
+        stage('Build') {
             steps {
                 dir('full-stack-project/bloom/Backend/Backend') {
                     sh 'mvn clean install -DskipTests'
