@@ -17,6 +17,16 @@ pipeline{
                 }
             }
         }
+        stage('Build react') {
+            steps {
+                dir('full-stack-project/bloom/Frontend') {
+                    sh '''
+                           npm install
+                           npm run build
+                       '''
+                }
+            }
+        }
         stage('Deploy to vm'){
             steps{
                 sshagent(credentials: ['vm-ssh-key']){
