@@ -53,7 +53,7 @@ pipeline{
                 sshagent(credentials: ['vm-ssh-key']) {
 
                       sh '''
-                        ssh -t -o StrictHostKeyChecking=no shivraj@192.168.64.5 "
+                        ssh -tt -o StrictHostKeyChecking=no shivraj@192.168.64.5 "
                         sudo systemctl restart backend
                         "
                         '''
