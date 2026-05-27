@@ -1,6 +1,8 @@
 package com.shivraj.medassist.Service;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.shivraj.medassist.Dto.MailDTO;
 import com.shivraj.medassist.Dto.PharmasistDTO;
 import com.shivraj.medassist.Dto.ShopDto;
 import com.shivraj.medassist.Dto.UsersDTO;
@@ -20,4 +22,6 @@ public interface UsersService {
     List<Medicine> searchmedicine();
 
     List<ShopDto> searchShop(long id, String medicine_name);
+
+    String sendReserve(String username, MailDTO dto) throws JsonProcessingException;
 }

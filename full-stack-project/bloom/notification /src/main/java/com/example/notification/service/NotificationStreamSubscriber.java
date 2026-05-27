@@ -80,6 +80,12 @@ public class NotificationStreamSubscriber
             MapRecord<String, String, String> message
     ) {
 
+        System.out.println("\n================================");
+        System.out.println("NOTIFICATION SERVICE HIT");
+        System.out.println("MESSAGE ID: " + message.getId());
+        System.out.println("RAW MESSAGE: " + message);
+        System.out.println("================================");
+
         try {
 
             String json =
@@ -92,6 +98,8 @@ public class NotificationStreamSubscriber
                     );
 
             System.out.println(dto);
+            System.out.println("JSON: " + json);
+            System.out.println("DTO: " + dto);
 
             System.out.println(
                     "Message Received"
@@ -104,11 +112,11 @@ public class NotificationStreamSubscriber
             System.out.println(response);
 
             // ACKNOWLEDGE MESSAGE
-//            redisTemplate.opsForStream().acknowledge(
-//                    "notification-stream",
-//                    "notification-group",
-//                    message.getId()
-//            );
+            redisTemplate.opsForStream().acknowledge(
+                    "notification-stream",
+                    "notification-group",
+                    message.getId()
+            );
 
             System.out.println(
                     "Message Acknowledged"
