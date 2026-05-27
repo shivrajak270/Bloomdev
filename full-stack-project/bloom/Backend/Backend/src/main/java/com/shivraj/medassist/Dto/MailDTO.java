@@ -13,6 +13,7 @@ public class MailDTO implements Serializable {
     private String to;
     private String medicineName;
     private String userName;
+    private String userEmail;
 
 }
 

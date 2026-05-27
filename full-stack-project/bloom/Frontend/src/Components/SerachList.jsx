@@ -62,7 +62,7 @@ const SerachList = ({ results ,clear}) => {
         
         {response.length > 0 && 
           response.map((data) => (
-            <ResultCard className="resultcard" results={data}></ResultCard>
+            <ResultCard className="resultcard" results={data} medicinename={medicinename}></ResultCard>
           ))}
       </div>
     </div>

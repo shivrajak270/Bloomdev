@@ -18,7 +18,7 @@ public class MailService {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(mailDTO.getTo());
         message.setSubject("someone tried to reach you");
-        message.setText("the following user "+mailDTO.getUserName()+" wants to reserve  the medicine "+mailDTO.getMedicineName());
+        message.setText("the following user "+mailDTO.getUserName()+" wants to reserve  the medicine "+mailDTO.getMedicineName() +"you can contact him by this  email"+mailDTO.getUserEmail());
         try {
             mailSender.send(message);
             return "SUCCESS";

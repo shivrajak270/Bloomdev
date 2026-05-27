@@ -1,7 +1,9 @@
 package com.shivraj.medassist.ServiceImpl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.shivraj.medassist.Converters.PharmacistsConverter;
 import com.shivraj.medassist.Converters.UsersToDTOconverter;
+import com.shivraj.medassist.Dto.MailDTO;
 import com.shivraj.medassist.Dto.PharmasistDTO;
 import com.shivraj.medassist.Dto.ShopDto;
 import com.shivraj.medassist.Dto.UsersDTO;
@@ -57,6 +59,9 @@ public class UsersServiceImpl implements UsersService {
 
     @Autowired
     private JwtServiceImpl jwtServiceImpl;
+
+    @Autowired
+     private NotificationPublisher notificationPublisher;
 
 
     BCryptPasswordEncoder bCryptPasswordEncoder=new BCryptPasswordEncoder(10);
@@ -116,7 +121,7 @@ public class UsersServiceImpl implements UsersService {
             long shopId=shop.getShopId();
             Pharmacists pharma=pharmasistRepo.findByShopId(shopId);
             Optional<Users> user=usersRepo.findById(pharma.getUserId());
-
+            String email=user.get().getEmail();
             ShopDto dto=new ShopDto();
             dto.setShopName(pharma.getShopName());
             dto.setLongitude(pharma.getLongitude());
@@ -125,12 +130,26 @@ public class UsersServiceImpl implements UsersService {
             dto.setCountry(pharma.getShopCountry());
             dto.setState(pharma.getShopState());
             dto.setAddressLine(pharma.getAddressLine());
+            dto.setEmail(email);
             if(user.isPresent()){
                 dto.setContact(user.get().getEmail());
             }
             shopDtoList.add(dto);
         }
         return shopDtoList;
+    }
+
+    @Override
+    public String sendReserve(
+            String username,
+            MailDTO dto) throws JsonProcessingException {
+
+        dto.setUserName(username);
+        Users user=usersRepo.findByUsername(username);
+        dto.setUserEmail(user.getEmail());
+        notificationPublisher.publish(dto);
+
+        return "Reservation request sent successfully";
     }
 
 

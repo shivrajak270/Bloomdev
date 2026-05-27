@@ -1,7 +1,48 @@
 import React from "react";
 import BASE_URL from '../config.js'; 
+import axios from "axios";
 
-const ResultCard = ({ results }) => {
+const ResultCard = ({ results,medicinename}) => {
+
+ const handleReserve = async () => {
+
+  try {
+
+    const token = localStorage.getItem("token");
+
+    const data = {
+      to: results.email,
+      medicineName: medicinename
+    };
+
+    console.log("DATA SENT");
+    console.log(data);
+
+    const response = await axios.post(
+      `${BASE_URL}/users/sendreserve`,
+      data,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+    );
+
+    console.log(response.data);
+
+    alert("Medicine reserved successfully");
+
+  } catch(error) {
+
+    console.log(error);
+
+    alert("Reservation failed");
+
+  }
+
+}
+
+
 
   const mapwala = (long, lat) => {
     const url = `https://www.google.com/maps?q=${long},${lat}`;
@@ -56,17 +97,17 @@ const ResultCard = ({ results }) => {
 
       <div className="result-footer">
 
-        <button
-          className="result-btn result-btn-primary"
-          onClick={() =>
-            window.open(
-              "mailto:shivrajak280@gmail.com?subject=Enquiry&body=Hello, I would like to know about...",
-              "_blank"
-            )
-          }
-        >
-          Contact
-        </button>
+       <button
+  className="result-btn result-btn-primary"
+  onClick={() =>
+    window.open(
+      `mailto:${results.email}?subject=Enquiry&body=Hello, I would like to know about...`,
+      "_blank"
+    )
+  }
+>
+  Contact
+</button>
 
         <button
           className="result-btn result-btn-secondary"
@@ -74,6 +115,13 @@ const ResultCard = ({ results }) => {
         >
           View Map
         </button>
+         <button
+    className="result-btn result-btn-reserve"
+    onClick={handleReserve}
+  >
+    Reserve Medicine
+  </button>
+
 
       </div>
     </div>
